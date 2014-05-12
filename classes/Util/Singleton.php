@@ -33,4 +33,6 @@ trait Util_Singleton {
 
     protected function __clone() {}
 
+    protected function __wakeup() {}
+
 }

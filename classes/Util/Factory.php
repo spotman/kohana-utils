@@ -17,7 +17,7 @@ trait Util_Factory {
         $class_name = static::make_instance_class_name($name);
 
         if ( ! class_exists($class_name) )
-            throw new HTTP_Exception_500('Class :class is absent');
+            throw new HTTP_Exception_500('Class :class is absent', array(':class' => $class_name));
 
         $args = array_merge(array($class_name), func_get_args());
 
