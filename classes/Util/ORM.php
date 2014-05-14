@@ -140,7 +140,7 @@ class Util_ORM extends Kohana_ORM {
         return $this->and_where_close()->find_all();
     }
 
-    protected function _autocomplete($query, array $search_fields)
+    protected function _autocomplete(Model_User $current_user, $query, array $search_fields)
     {
         /** @var ORM[] $results */
         $results = $this->search($query, $search_fields);
