@@ -19,8 +19,7 @@ trait Util_Singleton {
     {
         if ( ! static::$instance )
         {
-            $class = __CLASS__;
-            static::$instance = new $class;
+            static::$instance = new static;
         }
         return static::$instance;
     }
