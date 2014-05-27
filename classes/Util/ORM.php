@@ -123,6 +123,99 @@ class Util_ORM extends Kohana_ORM {
         return $this->get($alias);
     }
 
+    public function join_related($relation_alias)
+    {
+        if (isset($this->_belongs_to[$relation_alias]))
+        {
+            throw new HTTP_Exception_501;
+//            $model = $this->_related($column);
+//
+//            // Use this model's column and foreign model's primary key
+//            $col = $model->_object_name.'.'.$model->_primary_key;
+//            $val = $this->_object[];
+//
+//            $foreign_key = $this->_belongs_to[$column]['foreign_key'];
+//
+//            // Make sure we don't run WHERE "AUTO_INCREMENT column" = NULL queries. This would
+//            // return the last inserted record instead of an empty result.
+//            // See: http://mysql.localhost.net.ar/doc/refman/5.1/en/server-session-variables.html#sysvar_sql_auto_is_null
+//            if ($val !== NULL)
+//            {
+//                $model->where($col, '=', $val)->find();
+//            }
+
+        }
+        elseif (isset($this->_has_one[$relation_alias]))
+        {
+            throw new HTTP_Exception_501;
+//            $model = $this->_related($column);
+//
+//            // Use this model's primary key value and foreign model's column
+//            $col = $model->_object_name.'.'.$this->_has_one[$column]['foreign_key'];
+//            $val = $this->pk();
+//
+//            $model->where($col, '=', $val)->find();
+//
+//            return $this->_related[$column] = $model;
+        }
+        elseif (isset($this->_has_many[$relation_alias]))
+        {
+            $model = ORM::factory($this->_has_many[$relation_alias]['model']);
+
+            if (isset($this->_has_many[$relation_alias]['through']))
+            {
+                throw new HTTP_Exception_501;
+
+//                // Grab has_many "through" relationship table
+//                $through = $this->_has_many[$column]['through'];
+//
+//                // Join on through model's target foreign key (far_key) and target model's primary key
+//                $join_col1 = $through.'.'.$this->_has_many[$column]['far_key'];
+//                $join_col2 = $model->_object_name.'.'.$model->_primary_key;
+//
+//                $model->join($through)->on($join_col1, '=', $join_col2);
+//
+//                // Through table's source foreign key (foreign_key) should be this model's primary key
+//                $col = $through.'.'.$this->_has_many[$column]['foreign_key'];
+//                $val = $this->pk();
+            }
+            else
+            {
+                // Simple has_many relationship, search where target model's foreign key is this model's primary key
+                return $this->_join(
+                    $model->table_name(),
+                    $this->_has_many[$relation_alias]['foreign_key'],
+                    $this->object_name().'.'.$this->primary_key(),
+                    $model->object_name()
+                );
+            }
+        }
+        else
+        {
+            throw new Kohana_Exception('The related model alias :property does not exist in the :class class',
+                array(':property' => $relation_alias, ':class' => get_class($this)));
+        }
+    }
+
+    /**
+     * @param $table_name
+     * @param $on_left
+     * @param $on_right
+     * @param null $table_alias
+     * @return $this
+     */
+    protected function _join($table_name, $on_left, $on_right, $table_alias = NULL)
+    {
+        if ( ! $table_alias )
+        {
+            $table_alias = $table_name;
+        }
+
+        return $this
+            ->join(array($table_name, $table_alias))
+            ->on($table_alias.'.'.$on_left, '=', $on_right);
+    }
+
     /**
      * @param string $term String to search for
      * @param array $search_columns Columns to search where
