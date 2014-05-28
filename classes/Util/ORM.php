@@ -123,7 +123,7 @@ class Util_ORM extends Kohana_ORM {
         return $this->get($alias);
     }
 
-    
+
     public function join_related($relation_alias)
     {
         if (isset($this->_belongs_to[$relation_alias]))
