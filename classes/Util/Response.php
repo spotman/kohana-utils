@@ -30,7 +30,7 @@ class Util_Response extends Kohana_Response {
         self::JSON_ERROR    =>  'error',
     );
 
-    protected static $_stack;
+    protected static $_stack = array();
 
     /**
      * @var View_Wrapper
@@ -43,10 +43,13 @@ class Util_Response extends Kohana_Response {
     protected $_request;
 
     /**
-     * @return Response
+     * @return Response|NULL
      */
     public static function & current()
     {
+        if ( ! static::$_stack )
+            return NULL;
+
         return static::$_stack[ key(static::$_stack) ];
     }
 
