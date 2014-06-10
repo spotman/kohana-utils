@@ -217,6 +217,11 @@ class Util_ORM extends Kohana_ORM {
             ->on($table_alias.'.'.$on_left, '=', $on_right);
     }
 
+    protected function _join_model(ORM $model, $on_left, $on_right)
+    {
+        return $this->_join($model->table_name(), $on_left, $on_right, $model->object_name());
+    }
+
     /**
      * @param string $term String to search for
      * @param array $search_columns Columns to search where
