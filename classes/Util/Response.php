@@ -47,9 +47,6 @@ class Util_Response extends Kohana_Response {
      */
     public static function & current()
     {
-        if ( ! static::$_stack )
-            return $response = NULL;
-
         return static::$_stack[ key(static::$_stack) ];
     }
 
