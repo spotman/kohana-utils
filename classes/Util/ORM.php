@@ -48,6 +48,16 @@ class Util_ORM extends Kohana_ORM {
         return $this->pk();
     }
 
+    public function group_by_primary_key()
+    {
+        return $this->group_by($this->object_primary_key());
+    }
+
+    public function object_primary_key()
+    {
+        return $this->object_name().'.'.$this->primary_key();
+    }
+
     /**
      * @return $this
      */
