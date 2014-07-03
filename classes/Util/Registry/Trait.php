@@ -10,6 +10,7 @@ trait Util_Registry_Trait
             throw new Kohana_Exception('Data for :key key already exists', array(':key' => $key));
 
         $this->_registry[$key] = $object;
+        return $this;
     }
 
     public function get($key)

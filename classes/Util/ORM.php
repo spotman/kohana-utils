@@ -43,6 +43,20 @@ class Util_ORM extends Kohana_ORM {
         return parent::load_with();
     }
 
+    public function list_columns()
+    {
+        $cache_key = $this->table_name().':list_columns()';
+        $columns = Kohana::cache($cache_key);
+
+        if ( ! $columns )
+        {
+            $columns = parent::list_columns();
+            Kohana::cache($cache_key, $columns);
+        }
+
+        return $columns;
+    }
+
     public function get_id()
     {
         return $this->pk();
