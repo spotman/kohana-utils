@@ -288,4 +288,34 @@ class Util_ORM extends Kohana_ORM {
             array(':class_name' => get_class($this)));
     }
 
+    /**
+     * Creates custom SELECT query from current db builder queue
+     */
+    protected function _build_custom_select()
+    {
+        $this->_build(Database::SELECT);
+
+        $this->_db_builder->from(array($this->_table_name, $this->_object_name));
+
+        return $this;
+    }
+
+    /**
+     * @return Database_Result|int
+     */
+    protected function _execute_query()
+    {
+        return $this->_db_builder->execute($this->_db);
+    }
+
+    protected function select_array($columns)
+    {
+        return $this->_db_builder->select_array($columns);
+    }
+
+    public function filter_ids(array $ids)
+    {
+        return $this->where($this->object_name().'.'.$this->primary_key(), 'IN', $ids);
+    }
+
 }
