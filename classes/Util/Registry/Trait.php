@@ -23,6 +23,7 @@ trait Util_Registry_Trait
     public function clear()
     {
         $this->_registry = array();
+        return $this;
     }
 
     public function get_all()
