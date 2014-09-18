@@ -220,6 +220,8 @@ class Util_ORM extends Kohana_ORM {
             throw new Kohana_Exception('The related model alias :property does not exist in the :class class',
                 array(':property' => $relation_alias, ':class' => get_class($this)));
         }
+
+        return $this;
     }
 
     /**
