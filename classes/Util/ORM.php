@@ -148,7 +148,7 @@ class Util_ORM extends Kohana_ORM {
     }
 
 
-    public function join_related($relation_alias)
+    public function join_related($relation_alias, $table_alias = NULL)
     {
         if (isset($this->_belongs_to[$relation_alias]))
         {
@@ -189,14 +189,28 @@ class Util_ORM extends Kohana_ORM {
 
             if (isset($this->_has_many[$relation_alias]['through']))
             {
-                throw new HTTP_Exception_501;
+                // Grab has_many "through" relationship table
+                $through_table = $this->_has_many[$relation_alias]['through'];
+                $through_table_alias = $relation_alias.':through';
 
-//                // Grab has_many "through" relationship table
-//                $through = $this->_has_many[$column]['through'];
+                $this
+                    ->_join(
+                        $through_table,
+                        $this->_has_many[$relation_alias]['foreign_key'],
+                        $this->object_name().'.'.$this->primary_key(),
+                        $through_table_alias
+                    )
+                    ->_join(
+                        $model->table_name(),
+                        $model->primary_key(),
+                        $through_table_alias.'.'.$this->_has_many[$relation_alias]['far_key'],
+                        $table_alias ?: $model->object_name()
+                    );
+
 //
 //                // Join on through model's target foreign key (far_key) and target model's primary key
 //                $join_col1 = $through.'.'.$this->_has_many[$column]['far_key'];
-//                $join_col2 = $model->_object_name.'.'.$model->_primary_key;
+//                $join_col2 = ;
 //
 //                $model->join($through)->on($join_col1, '=', $join_col2);
 //
@@ -211,7 +225,7 @@ class Util_ORM extends Kohana_ORM {
                     $model->table_name(),
                     $this->_has_many[$relation_alias]['foreign_key'],
                     $this->object_name().'.'.$this->primary_key(),
-                    $model->object_name()
+                    $table_alias ?: $model->object_name()
                 );
             }
         }
