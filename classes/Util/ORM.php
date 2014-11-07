@@ -334,4 +334,39 @@ class Util_ORM extends Kohana_ORM {
         return $this->where($this->object_name().'.'.$this->primary_key(), 'IN', $ids);
     }
 
+    /**
+     * Checks whether a column value is unique.
+     * Excludes itself if loaded.
+     *
+     * @param   string   $field  the field to check for uniqueness
+     * @param   callable   $additional_filtering  Additional filtering callback
+     * @return  bool     whatever the value is unique
+     */
+    public function unique_field_value($field, callable $additional_filtering = NULL)
+    {
+        $value = $this->get($field);
+
+        // Skip check if no value present
+        if ( !$value )
+            return true;
+
+        $orm = ORM::factory($this->object_name());
+
+        if ( $additional_filtering )
+        {
+            call_user_func($additional_filtering, $orm);
+        }
+
+		$model = $orm
+            ->where($this->object_name().'.'.$field, '=', $value)
+            ->find();
+
+        if ($this->loaded())
+        {
+            return ( ! ($model->loaded() AND $model->pk() != $this->pk()));
+        }
+
+        return ( ! $model->loaded());
+    }
+
 }
