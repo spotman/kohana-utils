@@ -144,9 +144,76 @@ class Util_Response extends Kohana_Response {
         return $this;
     }
 
-    public function last_modified($timestamp)
+    /**
+     * @param DateTime $dateTime
+     * @return $this|DateTime
+     */
+    public function last_modified(DateTime $dateTime = NULL)
     {
-        $this->headers('last-modified', gmdate("D, d M Y H:i:s \G\M\T", $timestamp));
+        $value = $dateTime ? gmdate("D, d M Y H:i:s \G\M\T", $dateTime->getTimestamp()) : NULL;
+
+        if ( $value )
+        {
+            return $this->headers('last-modified', $value);
+        }
+        else
+        {
+            $current_value = $this->headers('last-modified');
+            return $current_value
+                ? (new DateTime())->setTimestamp(strtotime($current_value))
+                : NULL;
+        }
+    }
+
+    public function expires(DateTime $dateTime)
+    {
+        $this->headers('expires', gmdate("D, d M Y H:i:s \G\M\T", $dateTime->getTimestamp()));
+    }
+
+    public function check_if_not_modified_since()
+    {
+        if ( $request_ts = $this->get_if_modified_since_timestamp() )
+        {
+            $document_dt = $this->last_modified();
+
+            if ( ! $document_dt )
+                return FALSE;
+
+            if ( $request_ts >= $document_dt->getTimestamp() )
+            {
+                // Set status and drop body
+                $this->status(304)->body('');
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    protected function get_if_modified_since_timestamp()
+    {
+        if ( isset($_SERVER['HTTP_IF_MODIFIED_SINCE']))
+        {
+            $mod_time = $_SERVER['HTTP_IF_MODIFIED_SINCE'];
+
+            // Some versions of IE6 append "; length=####"
+            if (($strpos = strpos($mod_time, ';')) !== FALSE)
+            {
+                $mod_time = substr($mod_time, 0, $strpos);
+            }
+
+            return strtotime($mod_time);
+        }
+
+        return NULL;
+    }
+
+    public function render()
+    {
+        // If content was not modified
+        $this->check_if_not_modified_since();
+
+        return parent::render();
     }
 
     /**
