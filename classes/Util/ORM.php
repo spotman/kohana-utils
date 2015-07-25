@@ -238,6 +238,12 @@ class Util_ORM extends Kohana_ORM {
         return $this;
     }
 
+    protected function _join_through($ltable, $ltable_pk, $ttable, $ttable_lkey, $ttable_rkey, $rtable, $rtable_pk)
+    {
+        // TODO maybe
+
+    }
+
     /**
      * @param $table_name
      * @param $on_left
