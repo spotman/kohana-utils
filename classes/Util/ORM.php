@@ -147,6 +147,19 @@ class Util_ORM extends Kohana_ORM {
         return $this->get($alias);
     }
 
+    /**
+     * @param $relation_name
+     * @param $model
+     * @return $this
+     * @throws HTTP_Exception_501
+     * @throws Kohana_Exception
+     */
+    public function filter_related($relation_name, ORM $model)
+    {
+        return $this
+            ->join_related($relation_name)
+            ->where($model->object_primary_key(), '=', $model->pk());
+    }
 
     public function join_related($relation_alias, $table_alias = NULL)
     {
@@ -194,13 +207,13 @@ class Util_ORM extends Kohana_ORM {
                 $through_table_alias = $relation_alias.':through';
 
                 $this
-                    ->_join(
+                    ->join_on(
                         $through_table,
                         $this->_has_many[$relation_alias]['foreign_key'],
                         $this->object_name().'.'.$this->primary_key(),
                         $through_table_alias
                     )
-                    ->_join(
+                    ->join_on(
                         $model->table_name(),
                         $model->primary_key(),
                         $through_table_alias.'.'.$this->_has_many[$relation_alias]['far_key'],
@@ -221,7 +234,7 @@ class Util_ORM extends Kohana_ORM {
             else
             {
                 // Simple has_many relationship, search where target model's foreign key is this model's primary key
-                return $this->_join(
+                return $this->join_on(
                     $model->table_name(),
                     $this->_has_many[$relation_alias]['foreign_key'],
                     $this->object_name().'.'.$this->primary_key(),
@@ -246,12 +259,12 @@ class Util_ORM extends Kohana_ORM {
 
     /**
      * @param $table_name
-     * @param $on_left
-     * @param $on_right
+     * @param $table_key
+     * @param $equal_key
      * @param null $table_alias
      * @return $this
      */
-    protected function _join($table_name, $on_left, $on_right, $table_alias = NULL)
+    protected function join_on($table_name, $table_key, $equal_key, $table_alias = NULL)
     {
         if ( ! $table_alias )
         {
@@ -260,12 +273,12 @@ class Util_ORM extends Kohana_ORM {
 
         return $this
             ->join(array($table_name, $table_alias))
-            ->on($table_alias.'.'.$on_left, '=', $on_right);
+            ->on($table_alias.'.'.$table_key, '=', $equal_key);
     }
 
-    protected function _join_model(ORM $model, $on_left, $on_right)
+    protected function join_on_model(ORM $model, $on_left, $on_right)
     {
-        return $this->_join($model->table_name(), $on_left, $on_right, $model->object_name());
+        return $this->join_on($model->table_name(), $on_left, $on_right, $model->object_name());
     }
 
     /**
