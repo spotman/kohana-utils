@@ -73,6 +73,15 @@ class Util_ORM extends Kohana_ORM {
     }
 
     /**
+     * @param array|integer $ids
+     * @return $this
+     */
+    public function filter_primary_key($ids)
+    {
+        return $this->where($this->object_primary_key(), 'IN', (is_array($ids) ? $ids : array($ids)));
+    }
+
+    /**
      * @return $this
      */
     public function randomize()
@@ -261,10 +270,11 @@ class Util_ORM extends Kohana_ORM {
      * @param $table_name
      * @param $table_key
      * @param $equal_key
-     * @param null $table_alias
+     * @param string|NULL $table_alias
+     * @param string|NULL $join_type
      * @return $this
      */
-    protected function join_on($table_name, $table_key, $equal_key, $table_alias = NULL)
+    protected function join_on($table_name, $table_key, $equal_key, $table_alias = NULL, $join_type = NULL)
     {
         if ( ! $table_alias )
         {
@@ -272,7 +282,7 @@ class Util_ORM extends Kohana_ORM {
         }
 
         return $this
-            ->join(array($table_name, $table_alias))
+            ->join(array($table_name, $table_alias), $join_type ?: 'LEFT')
             ->on($table_alias.'.'.$table_key, '=', $equal_key);
     }
 
@@ -341,6 +351,37 @@ class Util_ORM extends Kohana_ORM {
     protected function _execute_query()
     {
         return $this->_db_builder->execute($this->_db);
+    }
+
+    protected function compile()
+    {
+        $this->_build_custom_select();
+        return $this->_db_builder->compile($this->_db);
+    }
+
+    protected function select_all_columns()
+    {
+        $this->_db_builder->select_array($this->_build_select());
+        return $this;
+    }
+
+    /**
+     * Compile current query as a subquery and make COUNT(*) with from it
+     * @return integer
+     */
+    public function compile_as_subquery_and_count_all()
+    {
+        $query = 'SELECT COUNT(*) AS total FROM (' . $this->compile() . ') AS x';
+
+        /** @var Database_Result $result */
+        $result = DB::query(Database::SELECT, $query)->execute($this->_db);
+
+        return $result->get('total');
+    }
+
+    public function get_sql_counter_alias()
+    {
+        return $this->object_name().'_counter';
     }
 
     protected function select_array($columns)
