@@ -379,6 +379,10 @@ class Util_ORM extends Kohana_ORM {
         return $result->get('total');
     }
 
+    /**
+     * Get field alias for COUNT(N) expression
+     * @return string
+     */
     public function get_sql_counter_alias()
     {
         return $this->object_name().'_counter';
