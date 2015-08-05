@@ -69,7 +69,12 @@ class Util_ORM extends Kohana_ORM {
 
     public function object_primary_key()
     {
-        return $this->object_name().'.'.$this->primary_key();
+        return $this->object_column($this->primary_key());
+    }
+
+    public function object_column($column)
+    {
+        return $this->object_name().'.'.$column;
     }
 
     /**
@@ -174,23 +179,10 @@ class Util_ORM extends Kohana_ORM {
     {
         if (isset($this->_belongs_to[$relation_alias]))
         {
-            throw new HTTP_Exception_501;
-//            $model = $this->_related($column);
-//
-//            // Use this model's column and foreign model's primary key
-//            $col = $model->_object_name.'.'.$model->_primary_key;
-//            $val = $this->_object[];
-//
-//            $foreign_key = $this->_belongs_to[$column]['foreign_key'];
-//
-//            // Make sure we don't run WHERE "AUTO_INCREMENT column" = NULL queries. This would
-//            // return the last inserted record instead of an empty result.
-//            // See: http://mysql.localhost.net.ar/doc/refman/5.1/en/server-session-variables.html#sysvar_sql_auto_is_null
-//            if ($val !== NULL)
-//            {
-//                $model->where($col, '=', $val)->find();
-//            }
+            $model = $this->_related($relation_alias);
+            $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
+            $this->join_on_model($model, $model->primary_key(), $this->object_name().'.'.$foreign_key);
         }
         elseif (isset($this->_has_one[$relation_alias]))
         {
@@ -265,6 +257,33 @@ class Util_ORM extends Kohana_ORM {
         // TODO maybe
 
     }
+
+//    protected function filter_related_ids($relation_alias, $ids)
+//    {
+//        $ids = is_array($ids) ? $ids : array($ids);
+//
+//        if (isset($this->_belongs_to[$relation_alias]))
+//        {
+//            $col = $this->_belongs_to[$relation_alias]['foreign_key'];
+//        }
+//        elseif (isset($this->_has_one[$relation_alias]))
+//        {
+//            throw new HTTP_Exception_501;
+//        }
+//        elseif (isset($this->_has_many[$relation_alias]))
+//        {
+//            $model = ORM::factory($this->_has_many[$relation_alias]['model']);
+//
+//            $col = $model->object_primary_key();
+//        }
+//        else
+//        {
+//            throw new Kohana_Exception('The related model alias :property does not exist in the :class class',
+//                array(':property' => $relation_alias, ':class' => get_class($this)));
+//        }
+//
+//        return $this->where($col, 'IN', $ids);
+//    }
 
     /**
      * @param $table_name
@@ -386,6 +405,26 @@ class Util_ORM extends Kohana_ORM {
     public function get_sql_counter_alias()
     {
         return $this->object_name().'_counter';
+    }
+
+    /**
+     * Get field alias for GROUP_CONCAT(N) expression
+     * @param string $field
+     * @return string
+     */
+    public function get_sql_column_group_concat_alias($field)
+    {
+        return $this->object_name().'_'.$field.'_group_concat';
+    }
+
+    /**
+     * Get field alias for CONCAT(N) expression
+     * @param string $field
+     * @return string
+     */
+    public function get_sql_column_concat_alias($field)
+    {
+        return $this->object_name().'_'.$field.'_concat';
     }
 
     protected function select_array($columns)
