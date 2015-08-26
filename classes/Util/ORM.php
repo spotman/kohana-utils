@@ -453,7 +453,7 @@ class Util_ORM extends Kohana_ORM {
         if ( !$value )
             return true;
 
-        $orm = ORM::factory($this->object_name());
+        $orm = $this->model_factory();
 
         if ( $additional_filtering )
         {
@@ -470,6 +470,15 @@ class Util_ORM extends Kohana_ORM {
         }
 
         return ( ! $model->loaded());
+    }
+
+    /**
+     * @param $pk
+     * @return $this
+     */
+    protected function model_factory($pk = NULL)
+    {
+        return ORM::factory($this->object_name(), $pk);
     }
 
 }
