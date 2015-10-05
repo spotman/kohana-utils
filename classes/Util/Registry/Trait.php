@@ -4,9 +4,9 @@ trait Util_Registry_Trait
 {
     protected $_registry = array();
 
-    public function set($key, $object)
+    public function set($key, $object, $ignore_duplicate = FALSE)
     {
-        if ( $this->__isset($key) )
+        if ( !$ignore_duplicate AND $this->__isset($key) )
             throw new Kohana_Exception('Data for :key key already exists', array(':key' => $key));
 
         $this->_registry[$key] = $object;
