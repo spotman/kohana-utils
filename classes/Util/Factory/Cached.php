@@ -4,22 +4,22 @@ trait Util_Factory_Cached {
 
     use Util_Factory;
 
-    protected static $_factory_instances = array();
+    protected static $_factory_instances_cache = array();
 
     /**
      * @param $name
      * @return static
      */
-    public static function factory($name)
+    public function create($name)
     {
         // Caching instances
-        if ( ! isset(static::$_factory_instances[$name]) )
+        if ( ! isset(static::$_factory_instances_cache[$name]) )
         {
-            $callable = array('static', 'instance_factory');
-            static::$_factory_instances[$name] = forward_static_call_array($callable, func_get_args());
+            $callable = array($this, 'instance_factory');
+            static::$_factory_instances_cache[$name] = call_user_func_array($callable, func_get_args());
         }
 
-        return static::$_factory_instances[$name];
+        return static::$_factory_instances_cache[$name];
     }
 
 }

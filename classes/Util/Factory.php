@@ -5,31 +5,44 @@ trait Util_Factory {
     /**
      * @param $name
      * @return static
-     * @throws HTTP_Exception_500
      */
-    public static function factory($name)
+    public function create($name)
     {
-        return forward_static_call_array(array('static', 'instance_factory'), func_get_args());
+        return call_user_func_array(array($this, 'instance_factory'), func_get_args());
     }
 
-    protected static function instance_factory($name)
+    protected function instance_factory($name)
     {
-        $class_name = static::make_instance_class_name($name);
+        $class_names = $this->make_instance_class_name($name);
 
-        if ( ! class_exists($class_name) )
-            throw new HTTP_Exception_500('Class :class is absent', array(':class' => $class_name));
+        if ( !is_array($class_names) )
+            $class_names = array($class_names);
+
+        $class_name = NULL;
+
+        foreach ($class_names as $class_names_item) {
+            if ( class_exists($class_names_item) ) {
+                $class_name = $class_names_item;
+                break;
+            }
+        }
+
+        if ( !$class_name )
+            throw new HTTP_Exception_500('Can not factory :name in :class',
+                array(':name' => $name, ':class' => __CLASS__));
 
         $args = array_merge(array($class_name), func_get_args());
 
-        return forward_static_call_array(array('static', 'make_instance'), $args);
+        return call_user_func_array(array($this, 'make_instance'), $args);
+//        return forward_static_call_array(array('static', 'make_instance'), $args);
     }
 
-    protected static function make_instance_class_name($name)
+    protected function make_instance_class_name($name)
     {
         return __CLASS__.'_'.$name;
     }
 
-    protected static function make_instance($class_name)
+    protected function make_instance($class_name)
     {
         return new $class_name;
     }

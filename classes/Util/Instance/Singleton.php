@@ -8,7 +8,9 @@
  *
  * Usage (client-code): CLASS::instance();
  */
-trait Util_Singleton {
+trait Util_Instance_Singleton {
+
+    use \Util_Instance_Simple;
 
     protected static $instance;
 
@@ -23,15 +25,5 @@ trait Util_Singleton {
         }
         return static::$instance;
     }
-
-    /**
-     * You can`t create Singleton objects directly, use CLASS::instance() instead
-     * Also you can define your own protected constructor in child class
-     */
-    protected function __construct() {}
-
-    protected function __clone() {}
-
-    protected function __wakeup() {}
 
 }

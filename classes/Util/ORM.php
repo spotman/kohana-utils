@@ -427,6 +427,10 @@ class Util_ORM extends Kohana_ORM {
         return $this->object_name().'_'.$field.'_concat';
     }
 
+    /**
+     * @param $columns
+     * @return $this
+     */
     protected function select_array($columns)
     {
         return $this->_db_builder->select_array($columns);
