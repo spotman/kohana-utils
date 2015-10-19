@@ -1,13 +1,16 @@
-<?php defined('SYSPATH') OR die('No direct script access');
+<?php
+namespace BetaKiller\Utils;
 
-trait Util_Registry_Trait
+use \BetaKiller\Utils\Registry\Exception;
+
+trait Registry
 {
     protected $_registry = array();
 
     public function set($key, $object, $ignore_duplicate = FALSE)
     {
         if ( !$ignore_duplicate AND $this->__isset($key) )
-            throw new Kohana_Exception('Data for :key key already exists', array(':key' => $key));
+            throw new Exception('Data for :key key already exists', array(':key' => $key));
 
         $this->_registry[$key] = $object;
         return $this;

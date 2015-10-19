@@ -1,7 +1,7 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils\Kohana;
 
-
-class Util_ORM extends Kohana_ORM {
+class ORM extends \Kohana_ORM {
 
     public function belongs_to(array $config = NULL)
     {
@@ -46,12 +46,12 @@ class Util_ORM extends Kohana_ORM {
     public function list_columns()
     {
         $cache_key = $this->table_name().':list_columns()';
-        $columns = Kohana::cache($cache_key);
+        $columns = \Kohana::cache($cache_key);
 
         if ( ! $columns )
         {
             $columns = parent::list_columns();
-            Kohana::cache($cache_key, $columns);
+            \Kohana::cache($cache_key, $columns);
         }
 
         return $columns;
@@ -91,7 +91,7 @@ class Util_ORM extends Kohana_ORM {
      */
     public function randomize()
     {
-        return $this->order_by(DB::expr('RAND()'));
+        return $this->order_by(\DB::expr('RAND()'));
     }
 
     /**
@@ -143,7 +143,7 @@ class Util_ORM extends Kohana_ORM {
     {
         $relation = $this->_get_relation($alias);
 
-        $query = DB::update($relation->table_name())
+        $query = \DB::update($relation->table_name())
             ->set(array($this->_has_many[$alias]['foreign_key'] => $value))
             ->where($relation->primary_key(), "IN", $far_keys);
 
@@ -165,8 +165,8 @@ class Util_ORM extends Kohana_ORM {
      * @param $relation_name
      * @param $model
      * @return $this
-     * @throws HTTP_Exception_501
-     * @throws Kohana_Exception
+     * @throws \HTTP_Exception_501
+     * @throws \Kohana_Exception
      */
     public function filter_related($relation_name, ORM $model)
     {
@@ -186,7 +186,7 @@ class Util_ORM extends Kohana_ORM {
         }
         elseif (isset($this->_has_one[$relation_alias]))
         {
-            throw new HTTP_Exception_501;
+            throw new \HTTP_Exception_501;
 //            $model = $this->_related($column);
 //
 //            // Use this model's primary key value and foreign model's column
@@ -245,18 +245,16 @@ class Util_ORM extends Kohana_ORM {
         }
         else
         {
-            throw new Kohana_Exception('The related model alias :property does not exist in the :class class',
+            throw new \Kohana_Exception('The related model alias :property does not exist in the :class class',
                 array(':property' => $relation_alias, ':class' => get_class($this)));
         }
 
         return $this;
     }
 
-    protected function _join_through($ltable, $ltable_pk, $ttable, $ttable_lkey, $ttable_rkey, $rtable, $rtable_pk)
-    {
-        // TODO maybe
-
-    }
+//    protected function _join_through($ltable, $ltable_pk, $ttable, $ttable_lkey, $ttable_rkey, $rtable, $rtable_pk)
+//    {
+//    }
 
 //    protected function filter_related_ids($relation_alias, $ids)
 //    {
@@ -343,12 +341,12 @@ class Util_ORM extends Kohana_ORM {
     }
 
     /**
-     * @throws Kohana_Exception
+     * @throws \Kohana_Exception
      * @return array
      */
     protected function autocomplete_formatter()
     {
-        throw new Kohana_Exception('Implement autocomplete_formatter for class :class_name',
+        throw new \Kohana_Exception('Implement autocomplete_formatter for class :class_name',
             array(':class_name' => get_class($this)));
     }
 
@@ -357,7 +355,7 @@ class Util_ORM extends Kohana_ORM {
      */
     protected function _build_custom_select()
     {
-        $this->_build(Database::SELECT);
+        $this->_build(\Database::SELECT);
 
         $this->_db_builder->from(array($this->_table_name, $this->_object_name));
 
@@ -365,7 +363,7 @@ class Util_ORM extends Kohana_ORM {
     }
 
     /**
-     * @return Database_Result|int
+     * @return \Database_Result|int
      */
     protected function _execute_query()
     {
@@ -392,8 +390,8 @@ class Util_ORM extends Kohana_ORM {
     {
         $query = 'SELECT COUNT(*) AS total FROM (' . $this->compile() . ') AS x';
 
-        /** @var Database_Result $result */
-        $result = DB::query(Database::SELECT, $query)->execute($this->_db);
+        /** @var \Database_Result $result */
+        $result = \DB::query(\Database::SELECT, $query)->execute($this->_db);
 
         return $result->get('total');
     }

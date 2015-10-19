@@ -1,8 +1,9 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils\Factory;
 
-trait Util_Factory_Namespaced {
+trait Namespaced {
 
-    use Util_Factory;
+    use Base;
 
     protected function make_instance_class_name($name)
     {

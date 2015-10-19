@@ -1,4 +1,7 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils\Instance;
+
+use \BetaKiller\Utils;
 
 /**
  * Trait Singleton
@@ -8,9 +11,9 @@
  *
  * Usage (client-code): CLASS::instance();
  */
-trait Util_Instance_Singleton {
+trait Singleton {
 
-    use \Util_Instance_Simple;
+    use Utils\Instance\Simple;
 
     protected static $instance;
 
@@ -25,5 +28,15 @@ trait Util_Instance_Singleton {
         }
         return static::$instance;
     }
+
+    /**
+     * You can`t create objects directly, use CLASS::instance() instead
+     * Also you can define your own protected constructor in child class
+     */
+    protected function __construct() {}
+
+    protected function __clone() {}
+
+    protected function __wakeup() {}
 
 }

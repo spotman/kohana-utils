@@ -1,8 +1,9 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils\Factory;
 
-trait Util_Factory_Cached {
+trait Cached {
 
-    use Util_Factory;
+    use Base;
 
     protected static $_factory_instances_cache = array();
 
@@ -10,7 +11,7 @@ trait Util_Factory_Cached {
      * @param $name
      * @return static
      */
-    public function create($name)
+    protected function _create($name)
     {
         // Caching instances
         if ( ! isset(static::$_factory_instances_cache[$name]) )

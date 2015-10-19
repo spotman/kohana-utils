@@ -1,13 +1,18 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils;
 
-
-trait Util_GetterAndSetterMethod {
+/**
+ * Class Util_GetterAndSetterMethod
+ * @deprecated
+ */
+trait GetterAndSetterMethod {
 
     /**
      * @param string $property
      * @param mixed|null $value
      * @param string|null $custom_getter_method
      * @return mixed
+     * @deprecated
      */
     protected function getter_and_setter_method($property, $value = NULL, $custom_getter_method = NULL)
     {

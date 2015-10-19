@@ -1,12 +1,24 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils\Factory;
 
-trait Util_Factory {
+trait Base {
+
+    /**
+     * Factory method
+     *
+     * @param $name
+     * @return static
+     */
+    public function create($name)
+    {
+        return $this->_create($name);
+    }
 
     /**
      * @param $name
      * @return static
      */
-    public function create($name)
+    protected function _create($name) // , ...$params
     {
         return call_user_func_array(array($this, 'instance_factory'), func_get_args());
     }
@@ -28,20 +40,18 @@ trait Util_Factory {
         }
 
         if ( !$class_name )
-            throw new HTTP_Exception_500('Can not factory :name in :class',
+            throw new Exception\Missing('Can not factory :name in :class',
                 array(':name' => $name, ':class' => __CLASS__));
 
         $args = array_merge(array($class_name), func_get_args());
 
         return call_user_func_array(array($this, 'make_instance'), $args);
-//        return forward_static_call_array(array('static', 'make_instance'), $args);
     }
 
     protected function make_instance_class_name($name)
     {
-        return __CLASS__.'_'.$name;
+        return '\\'.__CLASS__.'_'.$name;
     }
-
     protected function make_instance($class_name)
     {
         return new $class_name;

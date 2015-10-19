@@ -1,10 +1,11 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
+namespace BetaKiller\Utils\Kohana;
 
-class Util_Request extends Kohana_Request
+class Request extends \Kohana_Request
 {
     public static function redirect($url)
     {
-        HTTP::redirect($url);
+        \HTTP::redirect($url);
     }
 
     public function module()
