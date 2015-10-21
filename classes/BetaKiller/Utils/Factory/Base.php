@@ -41,17 +41,30 @@ trait Base {
 
         if ( !$class_name )
             throw new Exception\Missing('Can not factory :name in :class',
-                array(':name' => $name, ':class' => __CLASS__));
+                array(':name' => $name, ':class' => get_class($this)));
 
-        $args = array_merge(array($class_name), func_get_args());
+        $args = func_get_args();
+        array_shift($args);   // Remove codename
+        $args = array_merge(array($class_name), $args); // Add class name
 
-        return call_user_func_array(array($this, 'make_instance'), $args);
+        $instance = call_user_func_array(array($this, 'make_instance'), $args);
+
+        $this->store_codename($instance, $name);
+
+        return $instance;
+    }
+
+    protected function store_codename($instance, $codename)
+    {
+        // Empty by default
+        // Use this method to save original factory codename
     }
 
     protected function make_instance_class_name($name)
     {
         return '\\'.__CLASS__.'_'.$name;
     }
+
     protected function make_instance($class_name)
     {
         return new $class_name;

@@ -8,5 +8,6 @@ use BetaKiller\Utils;
  */
 class Base
 {
-    use Utils\Registry;
+    use Utils\Registry,
+        Utils\Instance\Simple;
 }

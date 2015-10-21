@@ -23,7 +23,7 @@ trait Namespaced {
      */
     protected function get_namespaces()
     {
-        throw new \Kohana_Exception('Define namespaces in :class', array(':class' => __CLASS__));
+        throw new Exception('Define namespaces in :class', array(':class' => __CLASS__));
     }
 
 }
