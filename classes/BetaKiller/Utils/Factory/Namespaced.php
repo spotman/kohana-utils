@@ -19,7 +19,7 @@ trait Namespaced {
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     protected function get_namespaces()
     {

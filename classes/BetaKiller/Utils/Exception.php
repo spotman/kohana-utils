@@ -1,4 +1,3 @@
-<?php
-namespace BetaKiller\Utils;
+<?php namespace BetaKiller\Utils;
 
-class Exception extends \Exception {}
+class Exception extends \BetaKiller\Exception {}

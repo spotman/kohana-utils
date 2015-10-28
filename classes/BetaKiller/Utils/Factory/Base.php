@@ -16,7 +16,7 @@ trait Base {
 
     /**
      * @param $name
-     * @return static
+     * @return mixed
      */
     protected function _create($name) // , ...$params
     {

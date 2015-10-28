@@ -325,7 +325,7 @@ class ORM extends \Kohana_ORM {
         return $this->and_where_close()->find_all();
     }
 
-    protected function _autocomplete($query, array $search_fields)
+    protected function _autocomplete($query, array $search_fields, $as_key_label_pairs = false)
     {
         /** @var ORM[] $results */
         $results = $this->search($query, $search_fields);
@@ -334,19 +334,48 @@ class ORM extends \Kohana_ORM {
 
         foreach ( $results as $item )
         {
-            $output[] = $item->autocomplete_formatter();
+            if ($as_key_label_pairs)
+                $output[$item->autocomplete_formatter_key()] = $item->autocomplete_formatter_label();
+            else
+                $output[] = $item->autocomplete_formatter();
         }
 
         return $output;
     }
 
     /**
-     * @throws \Kohana_Exception
+     * Returns prepared data for autocomplete
+     *
      * @return array
      */
     protected function autocomplete_formatter()
     {
-        throw new \Kohana_Exception('Implement autocomplete_formatter for class :class_name',
+        return array(
+            'id'    =>  $this->autocomplete_formatter_key(),
+            'text'  =>  $this->autocomplete_formatter_label(),
+        );
+//        throw new \Kohana_Exception('Implement :class_name::autocomplete_formatter() method',
+//            array(':class_name' => get_class($this)));
+    }
+
+    /**
+     * Returns "key" for autocomplete formatter
+     * @return int|string
+     */
+    protected function autocomplete_formatter_key()
+    {
+        return $this->get_id();
+    }
+
+    /**
+     * Returns "label" for autocomplete formatter
+     *
+     * @throws \Kohana_Exception
+     * @return string
+     */
+    protected function autocomplete_formatter_label()
+    {
+        throw new \Kohana_Exception('Implement :class::autocomplete_formatter_label() method',
             array(':class_name' => get_class($this)));
     }
 
@@ -434,9 +463,13 @@ class ORM extends \Kohana_ORM {
         return $this->_db_builder->select_array($columns);
     }
 
+    /**
+     * @param array $ids
+     * @return $this|\ORM|static
+     */
     public function filter_ids(array $ids)
     {
-        return $this->where($this->object_name().'.'.$this->primary_key(), 'IN', $ids);
+        return $this->where($this->object_primary_key(), 'IN', $ids);
     }
 
     /**
@@ -480,7 +513,7 @@ class ORM extends \Kohana_ORM {
      */
     protected function model_factory($pk = NULL)
     {
-        return ORM::factory($this->object_name(), $pk);
+        return \ORM::factory($this->object_name(), $pk);
     }
 
 }
