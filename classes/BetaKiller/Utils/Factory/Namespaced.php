@@ -1,6 +1,8 @@
 <?php
 namespace BetaKiller\Utils\Factory;
 
+use BetaKiller\Utils\Factory\Exception;
+
 trait Namespaced {
 
     use Base;
@@ -19,7 +21,7 @@ trait Namespaced {
 
     /**
      * @return array
-     * @throws Exception
+     * @throws \BetaKiller\Utils\Factory\Exception
      */
     protected function get_namespaces()
     {

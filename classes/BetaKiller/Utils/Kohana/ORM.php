@@ -376,7 +376,7 @@ class ORM extends \Kohana_ORM {
     protected function autocomplete_formatter_label()
     {
         throw new \Kohana_Exception('Implement :class::autocomplete_formatter_label() method',
-            array(':class_name' => get_class($this)));
+            array(':class' => get_class($this)));
     }
 
     /**
