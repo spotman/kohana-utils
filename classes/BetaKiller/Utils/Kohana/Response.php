@@ -46,7 +46,7 @@ class Response extends \Kohana_Response {
     /**
      * @return \Response|NULL
      */
-    public static function & current()
+    public static function current()
     {
         return static::$_stack[ key(static::$_stack) ];
     }
@@ -56,14 +56,14 @@ class Response extends \Kohana_Response {
         // Saving request
         $response->request($request);
 
-        static::$_stack[] = & $response;
+        static::$_stack[] = $response;
         end(static::$_stack);
     }
 
     /**
      * @return \Response
      */
-    public static function & pop()
+    public static function pop()
     {
         $response = static::current();
         array_pop(static::$_stack);
@@ -71,7 +71,7 @@ class Response extends \Kohana_Response {
         return $response;
     }
 
-    public function & request(\Request $request = NULL)
+    public function request(\Request $request = NULL)
     {
         if ( $request === NULL )
             return $this->_request;

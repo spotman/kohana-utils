@@ -61,6 +61,16 @@ trait Registry
     }
 
     /**
+     * Returns keys of currently added items
+     *
+     * @return array
+     */
+    public function keys()
+    {
+        return array_keys($this->_registry);
+    }
+
+    /**
      * @param $key
      * @return bool
      * @deprecated

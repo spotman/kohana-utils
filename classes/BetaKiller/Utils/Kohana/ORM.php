@@ -182,7 +182,12 @@ class ORM extends \Kohana_ORM {
             $model = $this->_related($relation_alias);
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
-            $this->join_on_model($model, $model->primary_key(), $this->object_name().'.'.$foreign_key);
+            $this->join_on_model(
+                $model,
+                $model->primary_key(),
+                $this->object_column($foreign_key),
+                $table_alias
+            );
         }
         elseif (isset($this->_has_one[$relation_alias]))
         {
@@ -303,9 +308,14 @@ class ORM extends \Kohana_ORM {
             ->on($table_alias.'.'.$table_key, '=', $equal_key);
     }
 
-    protected function join_on_model(ORM $model, $on_left, $on_right)
+    protected function join_on_model(ORM $model, $on_left, $on_right, $table_alias = NULL)
     {
-        return $this->join_on($model->table_name(), $on_left, $on_right, $model->object_name());
+        return $this->join_on(
+            $model->table_name(),
+            $on_left,
+            $on_right,
+            $table_alias ?: $model->object_name()
+        );
     }
 
     /**
@@ -460,7 +470,8 @@ class ORM extends \Kohana_ORM {
      */
     protected function select_array($columns)
     {
-        return $this->_db_builder->select_array($columns);
+        $this->_db_builder->select_array($columns);
+        return $this;
     }
 
     /**
