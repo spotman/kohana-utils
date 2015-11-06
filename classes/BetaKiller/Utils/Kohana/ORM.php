@@ -95,6 +95,36 @@ class ORM extends \Kohana_ORM {
     }
 
     /**
+     * Enables the query to be cached for a specified amount of time.
+     * Cache lifetime is taken from config file called "clt.php" with structure <table name> => <seconds>
+     *
+     * @param integer $lifetime number of seconds to cache
+     * @return  $this
+     * @uses    Kohana::$cache_life
+     */
+    public function cached($lifetime = NULL)
+    {
+        // Do nothing if not in production
+        if ( \Kohana::$environment !== \Kohana::PRODUCTION )
+            return $this;
+
+        if ( ! $lifetime OR is_string($lifetime) )
+        {
+            $key = $this->table_name();
+
+            if (is_string($lifetime))
+            {
+                $key .= '.'.$lifetime;
+            }
+
+            $group = \Kohana::$config->load('clt');
+            $lifetime = $group ? $group->get($key, 60) : 60;
+        }
+
+        return parent::cached($lifetime);
+    }
+
+    /**
      * Связывает элементы аласа (с указанными первичными ключами) с текущей моделью
      *
      * @param string $alias
@@ -325,14 +355,18 @@ class ORM extends \Kohana_ORM {
      */
     protected function search($term, array $search_columns)
     {
-        $this->and_where_open();
+        if ($term) {
+            $this->and_where_open();
 
-        foreach ( $search_columns as $search_column )
-        {
-            $this->or_where($search_column, 'LIKE', '%'.$term.'%');
+            foreach ( $search_columns as $search_column )
+            {
+                $this->or_where($search_column, 'LIKE', '%'.$term.'%');
+            }
+
+            $this->and_where_close();
         }
 
-        return $this->and_where_close()->find_all();
+        return $this->cached('search')->find_all();
     }
 
     protected function _autocomplete($query, array $search_fields, $as_key_label_pairs = false)
