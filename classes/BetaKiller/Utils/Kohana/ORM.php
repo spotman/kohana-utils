@@ -356,14 +356,19 @@ class ORM extends \Kohana_ORM {
     protected function search($term, array $search_columns)
     {
         if ($term) {
-            $this->and_where_open();
+            // Split into words
+            $words = explode(' ', $term);
 
-            foreach ( $search_columns as $search_column )
-            {
-                $this->or_where($search_column, 'LIKE', '%'.$term.'%');
+            // Make AND for every word
+            foreach ($words as $word) {
+                $this->and_where_open();
+
+                foreach ( $search_columns as $search_column ) {
+                    $this->or_where($search_column, 'LIKE', '%'.$word.'%');
+                }
+
+                $this->and_where_close();
             }
-
-            $this->and_where_close();
         }
 
         return $this->cached('search')->find_all();
