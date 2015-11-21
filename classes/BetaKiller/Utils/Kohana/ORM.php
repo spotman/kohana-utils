@@ -448,9 +448,9 @@ class ORM extends \Kohana_ORM {
         return $this->_db_builder->execute($this->_db);
     }
 
-    protected function compile()
+    protected function compile($buildSelect = true)
     {
-        $this->_build_custom_select();
+        $buildSelect AND $this->_build_custom_select();
         return $this->_db_builder->compile($this->_db);
     }
 
