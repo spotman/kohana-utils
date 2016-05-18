@@ -10,11 +10,13 @@ class Response extends \Kohana_Response {
     const HTML  = 1;
     const JSON  = 2;
     const JS    = 3;
+    const XML   = 4;
 
     protected static $_content_types_signatures = array(
         self::HTML  =>  'text/html',
         self::JSON  =>  'application/json',
         self::JS    =>  'text/javascript',
+        self::XML   =>  'text/xml',
     );
 
     protected $_content_type = self::HTML;
