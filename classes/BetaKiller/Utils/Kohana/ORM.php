@@ -62,6 +62,21 @@ class ORM extends \Kohana_ORM {
         return $this->pk();
     }
 
+    /**
+     * @param $id
+     * @return $this
+     * @throws \Kohana_Exception
+     */
+    public function get_by_id($id)
+    {
+        $model = $this->model_factory($id);
+
+        if (!$model->loaded())
+            throw new \Kohana_Exception('Model with id :id does not exists', [':id' => $id]);
+
+        return $model;
+    }
+
     public function group_by_primary_key()
     {
         return $this->group_by($this->object_primary_key());
