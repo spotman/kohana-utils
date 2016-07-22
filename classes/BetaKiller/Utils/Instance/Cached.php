@@ -23,7 +23,7 @@ trait Cached
 
         if (!isset(static::$_instances[$class_name]))
         {
-            static::$_instances[$class_name] = new static();
+            static::$_instances[$class_name] = new $class_name();
         }
 
         return static::$_instances[$class_name];
