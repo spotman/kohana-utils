@@ -149,7 +149,7 @@ class Response extends \Kohana_Response {
 
     /**
      * @param \DateTime $dateTime
-     * @return $this|\DateTime
+     * @return \Response|\DateTime|null
      */
     public function last_modified(\DateTime $dateTime = NULL)
     {
