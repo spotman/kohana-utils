@@ -19,3 +19,4 @@ More needs to be ported from original BetaKiller repo, but I need spare time for
 Suggestions and PRs are welcome :)
 
 [MIT license](LICENSE)
+
