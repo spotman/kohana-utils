@@ -300,7 +300,7 @@ class Response extends \Kohana_Response {
         switch ( $response->content_type() )
         {
             case self::JSON:
-                \Kohana_Exception::_handler($e);
+                \Kohana_Exception::log($e);
                 $response->send_json(self::JSON_ERROR, $e->get_user_message());
                 break;
 
