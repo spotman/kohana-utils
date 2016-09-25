@@ -13,12 +13,12 @@ use \BetaKiller\Utils;
  */
 trait Singleton {
 
-    use Utils\Instance\Simple;
+//    use Utils\Instance\Simple;
 
     protected static $instance;
 
     /**
-     * @return static
+     * @return mixed
      */
     public static function instance()
     {
