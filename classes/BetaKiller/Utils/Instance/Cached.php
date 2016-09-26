@@ -23,6 +23,7 @@ trait Cached
 
         if (!isset(static::$_instances[$class_name]))
         {
+            // TODO DI
             static::$_instances[$class_name] = new $class_name();
         }
 

@@ -18,7 +18,7 @@ trait Singleton {
     protected static $instance;
 
     /**
-     * @return mixed
+     * @return static
      */
     public static function instance()
     {
