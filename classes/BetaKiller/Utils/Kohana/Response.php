@@ -50,7 +50,7 @@ class Response extends \Kohana_Response {
      */
     public static function current()
     {
-        return static::$_stack[ key(static::$_stack) ];
+        return current(static::$_stack);
     }
 
     public static function push(\Response $response, \Request $request)

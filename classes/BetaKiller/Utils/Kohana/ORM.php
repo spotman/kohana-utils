@@ -1,7 +1,12 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-class ORM extends \Kohana_ORM {
+class ORM extends \Kohana_ORM
+{
+    public function get_model_name()
+    {
+        return strtolower(substr(get_class($this), 6));
+    }
 
     public function belongs_to(array $config = NULL)
     {
@@ -573,12 +578,13 @@ class ORM extends \Kohana_ORM {
     }
 
     /**
-     * @param $pk
+     * @param int $pk
+     * @param string|null $name
      * @return $this
      */
-    protected function model_factory($pk = NULL)
+    protected function model_factory($pk = NULL, $name = null)
     {
-        return \ORM::factory($this->object_name(), $pk);
+        return \ORM::factory($name ?: $this->object_name(), $pk);
     }
 
 }
