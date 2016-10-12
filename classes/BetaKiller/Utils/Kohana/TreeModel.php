@@ -29,6 +29,11 @@ abstract class TreeModel extends \ORM
         return (int)$this->get($this->get_parent_id_column_name());
     }
 
+    public function has_parent()
+    {
+        return (bool) $this->get_parent_id();
+    }
+
     /**
      * Returns list of child iface models
      *
@@ -96,8 +101,16 @@ abstract class TreeModel extends \ORM
         return $parent->loaded() ? $parent : NULL;
     }
 
-    public function filter_parent(TreeModel $parent)
+    public function filter_parent(TreeModel $parent = null)
     {
-        return $this->where($this->object_column($this->get_parent_id_column_name()), '=', $parent->get_id());
+        $col = $this->object_column($this->get_parent_id_column_name());
+
+        if ($parent) {
+            $this->where($col, '=', $parent->get_id());
+        } else {
+            $this->where($col, 'IS', null);
+        }
+
+        return $this;
     }
 }
