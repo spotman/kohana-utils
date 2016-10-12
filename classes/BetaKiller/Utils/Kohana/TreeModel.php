@@ -101,6 +101,15 @@ abstract class TreeModel extends \ORM
         return $parent->loaded() ? $parent : NULL;
     }
 
+    /**
+     * @param TreeModel|null $parent
+     * @return $this
+     */
+    public function set_parent(TreeModel $parent = null)
+    {
+        return $this->set('parent', $parent);
+    }
+
     public function filter_parent(TreeModel $parent = null)
     {
         $col = $this->object_column($this->get_parent_id_column_name());
