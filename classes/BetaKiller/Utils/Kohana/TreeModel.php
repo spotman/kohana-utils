@@ -1,7 +1,7 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-abstract class TreeModel extends \ORM
+abstract class TreeModel extends \ORM implements TreeModelInterface
 {
     protected function _initialize()
     {
@@ -22,16 +22,6 @@ abstract class TreeModel extends \ORM
     protected function get_parent_id_column_name()
     {
         return 'parent_id';
-    }
-
-    public function get_parent_id()
-    {
-        return (int)$this->get($this->get_parent_id_column_name());
-    }
-
-    public function has_parent()
-    {
-        return (bool) $this->get_parent_id();
     }
 
     /**
@@ -68,18 +58,18 @@ abstract class TreeModel extends \ORM
             ->as_array($key, $value);
     }
 
-    public function get_all_children_ids()
+    public function get_all_children($column = null)
     {
-        return $this->get_all_children_ids_by_parent_id($this->pk());
+        return $this->get_all_children_by_parent_id($this->pk(), $column);
     }
 
-    public function get_all_children_ids_by_parent_id($parent_id = null)
+    protected function get_all_children_by_parent_id($parent_id = null, $column = null)
     {
         $ids = [];
         $parent_ids = (array) $parent_id;
 
         do {
-            $layer_ids = $this->get_children_by_parent_ids($parent_ids, null, $this->primary_key());
+            $layer_ids = $this->get_children_by_parent_ids($parent_ids, null, $column);
 
             $ids = array_merge($ids, $layer_ids);
             $parent_ids = $layer_ids;
@@ -91,7 +81,7 @@ abstract class TreeModel extends \ORM
     /**
      * Return parent iface model or NULL
      *
-     * @return \BetaKiller\Utils\Kohana\TreeModel
+     * @return $this
      */
     public function get_parent()
     {
@@ -102,15 +92,15 @@ abstract class TreeModel extends \ORM
     }
 
     /**
-     * @param TreeModel|null $parent
+     * @param TreeModelInterface|null $parent
      * @return $this
      */
-    public function set_parent(TreeModel $parent = null)
+    public function set_parent(TreeModelInterface $parent = null)
     {
         return $this->set('parent', $parent);
     }
 
-    public function filter_parent(TreeModel $parent = null)
+    public function filter_parent(TreeModelInterface $parent = null)
     {
         $col = $this->object_column($this->get_parent_id_column_name());
 
