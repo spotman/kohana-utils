@@ -114,6 +114,11 @@ class ORM extends \Kohana_ORM
         return $this->order_by(\DB::expr('RAND()'));
     }
 
+    public function order_by_field_sequence($name, array $sequence)
+    {
+        return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $sequence).'")'), 'ASC');
+    }
+
     /**
      * Enables the query to be cached for a specified amount of time.
      * Cache lifetime is taken from config file called "clt.php" with structure <table name> => <seconds>
@@ -124,8 +129,8 @@ class ORM extends \Kohana_ORM
      */
     public function cached($lifetime = NULL)
     {
-        // Do nothing if not in production
-        if ( \Kohana::$environment !== \Kohana::PRODUCTION )
+        // Do nothing if caching is not enabled
+        if ( !\Kohana::$caching )
             return $this;
 
         if ( ! $lifetime OR is_string($lifetime) )
@@ -141,7 +146,9 @@ class ORM extends \Kohana_ORM
             $lifetime = $group ? $group->get($key, 60) : 60;
         }
 
-        return parent::cached($lifetime);
+        parent::cached($lifetime);
+
+        return $this;
     }
 
     /**
