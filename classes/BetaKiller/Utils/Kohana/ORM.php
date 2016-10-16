@@ -152,6 +152,18 @@ class ORM extends \Kohana_ORM
     }
 
     /**
+     * Returns TRUE if column exists in database
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function has_column($name)
+    {
+        $columns = $this->list_columns();
+        return isset($columns[$name]);
+    }
+
+    /**
      * Связывает элементы алиаса (с указанными первичными ключами) с текущей моделью
      *
      * @param string $alias
@@ -401,10 +413,10 @@ class ORM extends \Kohana_ORM
         return $this->cached('search')->find_all();
     }
 
-    protected function _autocomplete($query, array $search_fields, $as_key_label_pairs = false)
+    protected function _autocomplete($term, array $search_fields, $as_key_label_pairs = false)
     {
         /** @var ORM[] $results */
-        $results = $this->search($query, $search_fields);
+        $results = $this->search($term, $search_fields);
 
         $output = array();
 
@@ -589,7 +601,7 @@ class ORM extends \Kohana_ORM
      * @param string|null $name
      * @return $this
      */
-    protected function model_factory($pk = NULL, $name = null)
+    public function model_factory($pk = NULL, $name = null)
     {
         return \ORM::factory($name ?: $this->object_name(), $pk);
     }
