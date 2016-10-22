@@ -3,6 +3,13 @@ namespace BetaKiller\Utils\Kohana;
 
 abstract class TreeModel extends \ORM implements TreeModelInterface
 {
+    /**
+     * Place here additional query params
+     *
+     * @return $this
+     */
+    abstract protected function additional_tree_model_filtering();
+
     protected function _initialize()
     {
         $this->belongs_to(array(
@@ -25,9 +32,17 @@ abstract class TreeModel extends \ORM implements TreeModelInterface
     }
 
     /**
+     * @return $this[]
+     */
+    public function get_root()
+    {
+        return $this->get_children_by_parent_ids();
+    }
+
+    /**
      * Returns list of child iface models
      *
-     * @return \BetaKiller\Utils\Kohana\TreeModel[]
+     * @return $this[]
      */
     public function get_children()
     {
@@ -38,13 +53,13 @@ abstract class TreeModel extends \ORM implements TreeModelInterface
      * @param int|int[] $parent_ids
      * @param string|null $key
      * @param string|null $value
-     * @return \BetaKiller\Utils\Kohana\TreeModel[]
+     * @return $this[]
      */
-    private function get_children_by_parent_ids($parent_ids, $key = null, $value = null)
+    private function get_children_by_parent_ids($parent_ids = null, $key = null, $value = null)
     {
         $parent_id_col = $this->object_column($this->get_parent_id_column_name());
 
-        $model = $this->model_factory();
+        $model = $this->model_factory()->additional_tree_model_filtering();
 
         if ($parent_ids) {
             $model->where($parent_id_col, 'IN', (array) $parent_ids);

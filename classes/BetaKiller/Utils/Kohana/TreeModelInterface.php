@@ -19,9 +19,14 @@ interface TreeModelInterface
     /**
      * Returns list of child iface models
      *
-     * @return $this
+     * @return $this[]
      */
     public function get_children();
+
+    /**
+     * @return $this[]
+     */
+    public function get_root();
 
     /**
      * @param string|null $column
