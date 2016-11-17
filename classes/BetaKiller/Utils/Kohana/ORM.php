@@ -554,11 +554,13 @@ class ORM extends \Kohana_ORM
 
     /**
      * @param array $ids
+     * @param bool $not_in
+     *
      * @return $this|\ORM|static
      */
-    public function filter_ids(array $ids)
+    public function filter_ids(array $ids, $not_in = FALSE)
     {
-        return $this->where($this->object_primary_key(), 'IN', $ids);
+        return $this->where($this->object_primary_key(), $not_in ? 'NOT IN': 'IN', $ids);
     }
 
     /**
