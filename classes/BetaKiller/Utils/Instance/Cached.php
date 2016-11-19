@@ -1,6 +1,5 @@
 <?php
 namespace BetaKiller\Utils\Instance;
-use BetaKiller\Service;
 
 /**
  * Use this trait if you need cached instance creator.
@@ -10,7 +9,7 @@ use BetaKiller\Service;
 trait Cached
 {
     /**
-     * @var Service[]
+     * @var static[]
      */
     protected static $_instances;
 
