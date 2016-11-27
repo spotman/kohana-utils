@@ -616,7 +616,12 @@ class ORM extends \Kohana_ORM
     {
         $value = $this->get($name);
 
-        return $value ? \DateTime::createFromFormat('Y-m-d H:i:s', $value, $tz) : NULL;
+        if (!$value)
+            return NULL;
+
+        return $tz
+            ? \DateTime::createFromFormat('Y-m-d H:i:s', $value, $tz)
+            : \DateTime::createFromFormat('Y-m-d H:i:s', $value);
     }
 
     /**
