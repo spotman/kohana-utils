@@ -114,6 +114,12 @@ class ORM extends \Kohana_ORM
         return $this->order_by(\DB::expr('RAND()'));
     }
 
+    /**
+     * @param string    $name
+     * @param array     $sequence
+     *
+     * @return $this
+     */
     public function order_by_field_sequence($name, array $sequence)
     {
         return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $sequence).'")'), 'ASC');
