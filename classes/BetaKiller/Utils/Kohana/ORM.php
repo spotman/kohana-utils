@@ -605,6 +605,40 @@ class ORM extends \Kohana_ORM
     }
 
     /**
+     * Converts value of MySQL datetime column to PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeZone|NULL $tz
+     *
+     * @return \DateTime|null
+     */
+    protected function get_datetime_column_value($name, \DateTimeZone $tz = NULL)
+    {
+        $value = $this->get($name);
+
+        return $value ? \DateTime::createFromFormat('Y-m-d H:i:s', $value, $tz) : NULL;
+    }
+
+    /**
+     * Sets value of MySQL datetime column from PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTime          $value
+     * @param \DateTimeZone|NULL $tz
+     *
+     * @return $this
+     */
+    protected function set_datetime_column_value($name, \DateTime $value, \DateTimeZone $tz = NULL)
+    {
+        if ($tz)
+        {
+            $value->setTimezone($tz);
+        }
+
+        return $this->set($name, $value->format('Y-m-d H:i:s'));
+    }
+
+    /**
      * @param int $pk
      * @param string|null $name
      * @return $this
