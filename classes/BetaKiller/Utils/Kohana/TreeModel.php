@@ -3,6 +3,8 @@ namespace BetaKiller\Utils\Kohana;
 
 abstract class TreeModel extends \ORM implements TreeModelInterface
 {
+    use TreeModelTrait;
+
     /**
      * Place here additional query params
      *

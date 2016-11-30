@@ -39,4 +39,16 @@ interface TreeModelInterface
      * @return $this
      */
     public function set_parent(TreeModelInterface $parent = null);
+
+    /**
+     * @return $this[]
+     */
+    public function get_parents();
+
+    /**
+     * @param TreeModelInterface $model
+     *
+*@return bool
+     */
+    public function has_in_ascending_branch(TreeModelInterface $model);
 }
