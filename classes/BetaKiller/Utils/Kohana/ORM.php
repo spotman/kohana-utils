@@ -68,6 +68,16 @@ class ORM extends \Kohana_ORM
     }
 
     /**
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function set_id($value)
+    {
+        return $this->set($this->primary_key(), $value);
+    }
+
+    /**
      * @param $id
      * @return $this
      * @throws \Kohana_Exception
@@ -641,6 +651,16 @@ class ORM extends \Kohana_ORM
         }
 
         return $this->set($name, $value->format('Y-m-d H:i:s'));
+    }
+
+    protected function filter_datetime_column_value($name, \DateTime $value, $operator, \DateTimeZone $tz = NULL)
+    {
+        if ($tz)
+        {
+            $value->setTimezone($tz);
+        }
+
+        return $this->where($name, $operator, $value->format('Y-m-d H:i:s'));
     }
 
     /**
