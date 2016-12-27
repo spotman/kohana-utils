@@ -406,9 +406,9 @@ class ORM extends \Kohana_ORM
     /**
      * @param string $term String to search for
      * @param array $search_columns Columns to search where
-     * @return ORM[]
+     * @return $this
      */
-    protected function search($term, array $search_columns)
+    protected function search_query($term, array $search_columns)
     {
         if ($term) {
             // Split into words
@@ -426,13 +426,13 @@ class ORM extends \Kohana_ORM
             }
         }
 
-        return $this->cached('search')->find_all();
+        return $this->cached('search');
     }
 
     protected function _autocomplete($term, array $search_fields, $as_key_label_pairs = false)
     {
         /** @var ORM[] $results */
-        $results = $this->search($term, $search_fields);
+        $results = $this->search_query($term, $search_fields)->find_all();
 
         $output = array();
 
