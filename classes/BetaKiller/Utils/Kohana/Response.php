@@ -211,6 +211,35 @@ class Response extends \Kohana_Response {
         return NULL;
     }
 
+    public function http2_server_push($url)
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+        $type = $this->detect_http2_server_push_type($path);
+
+        $value = $path.'; rel=preload; as='.$type;
+
+        $this->_header->offsetSet('link', $value, false);
+    }
+
+    protected function detect_http2_server_push_type($path)
+    {
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+        $map = [
+            'image'     =>  ['jpg', 'jpeg', 'png', 'gif', 'svg'],
+            'script'    =>  ['js'],
+            'style'     =>  ['css'],
+        ];
+
+        foreach ($map as $type => $extensions) {
+            if (in_array($ext, $extensions)) {
+                return $type;
+            }
+        }
+
+        throw new \Exception('Can not detect HTTP2 Server Push type for url :url', [':url' => $path]);
+    }
+
     public function render()
     {
         // If content was not modified
