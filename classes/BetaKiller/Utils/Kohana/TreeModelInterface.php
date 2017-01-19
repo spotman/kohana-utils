@@ -48,7 +48,7 @@ interface TreeModelInterface
     /**
      * @param TreeModelInterface $model
      *
-*@return bool
+     * @return bool
      */
     public function has_in_ascending_branch(TreeModelInterface $model);
 }

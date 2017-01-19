@@ -1,7 +1,7 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-abstract class TreeModel extends \ORM implements TreeModelInterface
+abstract class TreeModelOrm extends \ORM implements TreeModelInterface
 {
     use TreeModelTrait;
 

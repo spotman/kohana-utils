@@ -1,7 +1,9 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-class ORM extends \Kohana_ORM
+use BetaKiller\Utils\Kohana\ORM\OrmInterface;
+
+class ORM extends \Kohana_ORM implements OrmInterface
 {
     public function get_model_name()
     {
@@ -10,8 +12,7 @@ class ORM extends \Kohana_ORM
 
     public function belongs_to(array $config = NULL)
     {
-        if ( $config )
-        {
+        if ($config) {
             $this->_belongs_to = array_merge($this->_belongs_to, $config);
         }
 
@@ -20,8 +21,7 @@ class ORM extends \Kohana_ORM
 
     public function has_one(array $config = NULL)
     {
-        if ( $config )
-        {
+        if ($config) {
             $this->_has_one = array_merge($this->_has_one, $config);
         }
 
@@ -30,8 +30,7 @@ class ORM extends \Kohana_ORM
 
     public function has_many(array $config = NULL)
     {
-        if ( $config )
-        {
+        if ($config) {
             $this->_has_many = array_merge($this->_has_many, $config);
         }
 
@@ -40,8 +39,7 @@ class ORM extends \Kohana_ORM
 
     public function load_with(array $config = NULL)
     {
-        if ( $config )
-        {
+        if ($config) {
             $this->_load_with = array_merge($this->_load_with, $config);
         }
 
@@ -53,8 +51,7 @@ class ORM extends \Kohana_ORM
         $cache_key = $this->table_name().':list_columns()';
         $columns = \Kohana::cache($cache_key);
 
-        if ( ! $columns )
-        {
+        if (!$columns) {
             $columns = parent::list_columns();
             \Kohana::cache($cache_key, $columns);
         }
@@ -79,7 +76,7 @@ class ORM extends \Kohana_ORM
 
     /**
      * @param $id
-     * @return $this
+     * @return OrmInterface
      * @throws \Kohana_Exception
      */
     public function get_by_id($id)
@@ -92,16 +89,27 @@ class ORM extends \Kohana_ORM
         return $model;
     }
 
+    /**
+     * @return $this
+     */
     public function group_by_primary_key()
     {
         return $this->group_by($this->object_primary_key());
     }
 
+    /**
+     * @return string
+     */
     public function object_primary_key()
     {
         return $this->object_column($this->primary_key());
     }
 
+    /**
+     * @param string $column
+     *
+     * @return string
+     */
     public function object_column($column)
     {
         return $this->object_name().'.'.$column;
@@ -146,15 +154,13 @@ class ORM extends \Kohana_ORM
     public function cached($lifetime = NULL)
     {
         // Do nothing if caching is not enabled
-        if ( !\Kohana::$caching )
+        if (!\Kohana::$caching)
             return $this;
 
-        if ( ! $lifetime OR is_string($lifetime) )
-        {
+        if (!$lifetime || is_string($lifetime)) {
             $key = $this->table_name();
 
-            if (is_string($lifetime))
-            {
+            if (is_string($lifetime)) {
                 $key .= '.'.$lifetime;
             }
 
@@ -201,8 +207,7 @@ class ORM extends \Kohana_ORM
     public function unlink_related($alias, array $far_keys = NULL)
     {
         // Если элементы не указаны
-        if ( ! $far_keys )
-        {
+        if (!$far_keys) {
             // Попробуем достать их из алиаса
             $relation = $this->_get_relation($alias);
             $relation_data = $relation->find_all()->as_array($relation->primary_key());
@@ -210,7 +215,7 @@ class ORM extends \Kohana_ORM
         }
 
         // Если нет связанных элементов, то и делать нечего
-        if ( ! $far_keys )
+        if (!$far_keys)
             return $this;
 
         return $this->_update_related_alias_foreign_key_field($alias, $far_keys, NULL);
@@ -260,10 +265,17 @@ class ORM extends \Kohana_ORM
             ->where($model->object_primary_key(), '=', $model->pk());
     }
 
+    /**
+     * @param string        $relation_alias
+     * @param string|null   $table_alias
+     *
+     * @return $this|OrmInterface
+     * @throws \HTTP_Exception_501
+     * @throws \Kohana_Exception
+     */
     public function join_related($relation_alias, $table_alias = NULL)
     {
-        if (isset($this->_belongs_to[$relation_alias]))
-        {
+        if (isset($this->_belongs_to[$relation_alias])) {
             $model = $this->_related($relation_alias);
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
@@ -273,9 +285,7 @@ class ORM extends \Kohana_ORM
                 $this->object_column($foreign_key),
                 $table_alias
             );
-        }
-        elseif (isset($this->_has_one[$relation_alias]))
-        {
+        } elseif (isset($this->_has_one[$relation_alias])) {
             throw new \HTTP_Exception_501;
 //            $model = $this->_related($column);
 //
@@ -286,13 +296,10 @@ class ORM extends \Kohana_ORM
 //            $model->where($col, '=', $val)->find();
 //
 //            return $this->_related[$column] = $model;
-        }
-        elseif (isset($this->_has_many[$relation_alias]))
-        {
+        } elseif (isset($this->_has_many[$relation_alias])) {
             $model = ORM::factory($this->_has_many[$relation_alias]['model']);
 
-            if (isset($this->_has_many[$relation_alias]['through']))
-            {
+            if (isset($this->_has_many[$relation_alias]['through'])) {
                 // Grab has_many "through" relationship table
                 $through_table = $this->_has_many[$relation_alias]['through'];
                 $through_table_alias = $relation_alias.':through';
@@ -321,9 +328,7 @@ class ORM extends \Kohana_ORM
 //                // Through table's source foreign key (foreign_key) should be this model's primary key
 //                $col = $through.'.'.$this->_has_many[$column]['foreign_key'];
 //                $val = $this->pk();
-            }
-            else
-            {
+            } else {
                 // Simple has_many relationship, search where target model's foreign key is this model's primary key
                 return $this->join_on(
                     $model->table_name(),
@@ -383,8 +388,7 @@ class ORM extends \Kohana_ORM
      */
     protected function join_on($table_name, $table_key, $equal_key, $table_alias = NULL, $join_type = NULL)
     {
-        if ( ! $table_alias )
-        {
+        if ( ! $table_alias ) {
             $table_alias = $table_name;
         }
 
@@ -429,19 +433,19 @@ class ORM extends \Kohana_ORM
         return $this->cached('search');
     }
 
-    protected function _autocomplete($term, array $search_fields, $as_key_label_pairs = false)
+    public function autocomplete($term, array $search_fields, $as_key_label_pairs = false)
     {
         /** @var ORM[] $results */
         $results = $this->search_query($term, $search_fields)->find_all();
 
         $output = array();
 
-        foreach ( $results as $item )
-        {
-            if ($as_key_label_pairs)
+        foreach ( $results as $item ) {
+            if ($as_key_label_pairs) {
                 $output[$item->autocomplete_formatter_key()] = $item->autocomplete_formatter_label();
-            else
+            } else {
                 $output[] = $item->autocomplete_formatter();
+            }
         }
 
         return $output;
@@ -458,8 +462,6 @@ class ORM extends \Kohana_ORM
             'id'    =>  $this->autocomplete_formatter_key(),
             'text'  =>  $this->autocomplete_formatter_label(),
         );
-//        throw new \Kohana_Exception('Implement :class_name::autocomplete_formatter() method',
-//            array(':class_name' => get_class($this)));
     }
 
     /**
@@ -505,7 +507,7 @@ class ORM extends \Kohana_ORM
 
     protected function compile($buildSelect = true)
     {
-        $buildSelect AND $this->_build_custom_select();
+        $buildSelect && $this->_build_custom_select();
         return $this->_db_builder->compile($this->_db);
     }
 
@@ -597,8 +599,7 @@ class ORM extends \Kohana_ORM
 
         $orm = $this->model_factory();
 
-        if ( $additional_filtering )
-        {
+        if ( $additional_filtering ) {
             call_user_func($additional_filtering, $orm);
         }
 
@@ -606,12 +607,11 @@ class ORM extends \Kohana_ORM
             ->where($this->object_name().'.'.$field, '=', $value)
             ->find();
 
-        if ($this->loaded())
-        {
-            return ( ! ($model->loaded() AND $model->pk() != $this->pk()));
+        if ($this->loaded()) {
+            return ( ! ($model->loaded() && $model->pk() != $this->pk()));
         }
 
-        return ( ! $model->loaded());
+        return !$model->loaded();
     }
 
     /**
@@ -645,8 +645,7 @@ class ORM extends \Kohana_ORM
      */
     protected function set_datetime_column_value($name, \DateTime $value, \DateTimeZone $tz = NULL)
     {
-        if ($tz)
-        {
+        if ($tz) {
             $value->setTimezone($tz);
         }
 
@@ -655,8 +654,7 @@ class ORM extends \Kohana_ORM
 
     protected function filter_datetime_column_value($name, \DateTime $value, $operator, \DateTimeZone $tz = NULL)
     {
-        if ($tz)
-        {
+        if ($tz) {
             $value->setTimezone($tz);
         }
 
@@ -666,11 +664,10 @@ class ORM extends \Kohana_ORM
     /**
      * @param int $pk
      * @param string|null $name
-     * @return $this
+     * @return OrmInterface
      */
     public function model_factory($pk = NULL, $name = null)
     {
         return \ORM::factory($name ?: $this->object_name(), $pk);
     }
-
 }
