@@ -190,4 +190,15 @@ trait ControllerHelperTrait
             $response->headers('Content-Disposition', 'attachment; filename='.$alias);
         }
     }
+
+    /**
+     * Performs HTTP redirect
+     *
+     * @param string    $url
+     * @param int       $status
+     */
+    protected function redirect($url, $status = 302)
+    {
+        $this->getResponse()->redirect($url, $status);
+    }
 }
