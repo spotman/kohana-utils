@@ -7,8 +7,6 @@ abstract class TreeModelOrm extends \ORM implements TreeModelInterface
 
     /**
      * Place here additional query params
-     *
-     * @return $this
      */
     abstract protected function additional_tree_model_filtering();
 
@@ -61,7 +59,10 @@ abstract class TreeModelOrm extends \ORM implements TreeModelInterface
     {
         $parent_id_col = $this->object_column($this->get_parent_id_column_name());
 
-        $model = $this->model_factory()->additional_tree_model_filtering();
+        /** @var TreeModelOrm $model */
+        $model = $this->model_factory();
+
+        $model->additional_tree_model_filtering();
 
         if ($parent_ids) {
             $model->where($parent_id_col, 'IN', (array) $parent_ids);

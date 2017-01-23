@@ -5,9 +5,20 @@ use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 
 class ORM extends \Kohana_ORM implements OrmInterface
 {
-    public function get_model_name()
+    public function get_model_name(OrmInterface $object = null)
     {
-        return strtolower(substr(get_class($this), 6));
+        $className = get_class($object ?: $this);
+
+        // Try namespaces first
+        $pos = strrpos($className, '\\');
+
+
+        if ($pos === false) {
+            // Use legacy naming
+            $pos = 5; // "Model_" is 6 letters
+        }
+
+        return substr($className, $pos + 1);
     }
 
     public function belongs_to(array $config = NULL)
