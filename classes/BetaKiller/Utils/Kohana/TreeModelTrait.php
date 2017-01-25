@@ -19,11 +19,11 @@ trait TreeModelTrait
     }
 
     /**
-     * @param TreeModelInterface $model
+     * @param TreeModelSingleParentInterface $model
      *
      * @return bool
      */
-    public function has_in_ascending_branch(TreeModelInterface $model)
+    public function has_in_ascending_branch(TreeModelSingleParentInterface $model)
     {
         $current = $this;
 

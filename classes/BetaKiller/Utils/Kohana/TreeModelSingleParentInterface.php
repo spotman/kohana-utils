@@ -2,7 +2,7 @@
 
 namespace BetaKiller\Utils\Kohana;
 
-interface TreeModelInterface
+interface TreeModelSingleParentInterface
 {
     /**
      * @return int
@@ -10,14 +10,14 @@ interface TreeModelInterface
     public function get_id();
 
     /**
-     * Return parent iface model or null
+     * Return parent model or null
      *
      * @return $this|null
      */
     public function get_parent();
 
     /**
-     * Returns list of child iface models
+     * Returns list of child models
      *
      * @return $this[]
      */
@@ -35,10 +35,11 @@ interface TreeModelInterface
     public function get_all_children($column = null);
 
     /**
-     * @param TreeModelInterface|null $parent
+     * @param TreeModelSingleParentInterface|null $parent
+     *
      * @return $this
      */
-    public function set_parent(TreeModelInterface $parent = null);
+    public function set_parent(TreeModelSingleParentInterface $parent = null);
 
     /**
      * @return $this[]
@@ -46,9 +47,9 @@ interface TreeModelInterface
     public function get_parents();
 
     /**
-     * @param TreeModelInterface $model
+     * @param TreeModelSingleParentInterface $model
      *
      * @return bool
      */
-    public function has_in_ascending_branch(TreeModelInterface $model);
+    public function has_in_ascending_branch(TreeModelSingleParentInterface $model);
 }

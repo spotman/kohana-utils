@@ -328,17 +328,6 @@ class ORM extends \Kohana_ORM implements OrmInterface
                         $through_table_alias.'.'.$this->_has_many[$relation_alias]['far_key'],
                         $table_alias ?: $model->object_name()
                     );
-
-//
-//                // Join on through model's target foreign key (far_key) and target model's primary key
-//                $join_col1 = $through.'.'.$this->_has_many[$column]['far_key'];
-//                $join_col2 = ;
-//
-//                $model->join($through)->on($join_col1, '=', $join_col2);
-//
-//                // Through table's source foreign key (foreign_key) should be this model's primary key
-//                $col = $through.'.'.$this->_has_many[$column]['foreign_key'];
-//                $val = $this->pk();
             } else {
                 // Simple has_many relationship, search where target model's foreign key is this model's primary key
                 return $this->join_on(
@@ -348,9 +337,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                     $table_alias ?: $model->object_name()
                 );
             }
-        }
-        else
-        {
+        } else {
             throw new \Kohana_Exception('The related model alias :property does not exist in the :class class',
                 array(':property' => $relation_alias, ':class' => get_class($this)));
         }
@@ -675,10 +662,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * @param int $pk
      * @param string|null $name
-     * @return OrmInterface
+     * @return $this|OrmInterface
      */
     public function model_factory($pk = NULL, $name = null)
     {
-        return \ORM::factory($name ?: $this->object_name(), $pk);
+        return static::factory($name ?: $this->object_name(), $pk);
     }
 }
