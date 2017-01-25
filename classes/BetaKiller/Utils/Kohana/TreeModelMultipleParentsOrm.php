@@ -30,6 +30,24 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     }
 
     /**
+     * Return parents model or null
+     *
+     * @return $this[]
+     */
+    public function get_parents()
+    {
+        return $this->get_parents_relation()->find_all()->as_array();
+    }
+
+    /**
+     * @return $this
+     */
+    protected function get_parents_relation()
+    {
+        return $this->get('parents');
+    }
+
+    /**
      * @param int[]|null $parent_ids
      *
      * @return $this
@@ -50,6 +68,8 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
 
         return $this;
     }
+
+
 
     /**
      * @param TreeModelMultipleParentsInterface $parent

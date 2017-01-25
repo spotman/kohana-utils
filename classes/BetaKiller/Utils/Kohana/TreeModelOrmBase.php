@@ -3,8 +3,6 @@ namespace BetaKiller\Utils\Kohana;
 
 abstract class TreeModelOrmBase extends \ORM
 {
-    use TreeModelTrait;
-
     /**
      * @param int[]|null $parent_ids
      *

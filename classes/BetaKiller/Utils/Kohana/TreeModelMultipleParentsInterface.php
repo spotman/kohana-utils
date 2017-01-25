@@ -10,9 +10,9 @@ interface TreeModelMultipleParentsInterface
     public function get_id();
 
     /**
-     * Return parents model or null
+     * Return parents models
      *
-     * @return $this[]|null
+     * @return $this[]
      */
     public function get_parents();
 

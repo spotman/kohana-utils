@@ -1,7 +1,7 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-trait TreeModelTrait
+trait TreeModelSingleParentTrait
 {
     /**
      * @return $this[]

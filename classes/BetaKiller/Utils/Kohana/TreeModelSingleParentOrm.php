@@ -3,6 +3,8 @@ namespace BetaKiller\Utils\Kohana;
 
 abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements TreeModelSingleParentInterface
 {
+    use TreeModelSingleParentTrait;
+
     protected function _initialize()
     {
         $this->belongs_to([
