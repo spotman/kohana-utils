@@ -144,12 +144,12 @@ trait ControllerHelperTrait
         $this->getResponse()->send_json($result, $data);
     }
 
-    protected function send_success_json($data)
+    protected function send_success_json($data = null)
     {
         $this->send_json(self::JSON_SUCCESS, $data);
     }
 
-    protected function send_error_json($data)
+    protected function send_error_json($data = null)
     {
         $this->send_json(self::JSON_ERROR, $data);
     }
