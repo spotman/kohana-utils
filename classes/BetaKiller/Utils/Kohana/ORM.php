@@ -12,7 +12,6 @@ class ORM extends \Kohana_ORM implements OrmInterface
         // Try namespaces first
         $pos = strrpos($className, '\\');
 
-
         if ($pos === false) {
             // Use legacy naming
             $pos = 5; // "Model_" is 6 letters
@@ -86,15 +85,17 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param $id
+     * @param int  $id
+     * @param bool $allow_missing
+     *
      * @return OrmInterface
      * @throws \Kohana_Exception
      */
-    public function get_by_id($id)
+    public function get_by_id($id, $allow_missing = false)
     {
-        $model = $this->model_factory($id);
+        $model = $this->filter_primary_key($id)->find();
 
-        if (!$model->loaded())
+        if (!$allow_missing && !$model->loaded())
             throw new \Kohana_Exception('Model with id :id does not exists', [':id' => $id]);
 
         return $model;
@@ -147,7 +148,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * @param string    $name
      * @param array     $sequence
      *
-     * @return $this
+     * @return $this|OrmInterface
      */
     public function order_by_field_sequence($name, array $sequence)
     {

@@ -444,11 +444,13 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function set_id($value);
 
     /**
-     * @param $id
+     * @param int  $id
+     * @param bool $allow_missing
+     *
      * @return $this
      * @throws \Kohana_Exception
      */
-    public function get_by_id($id);
+    public function get_by_id($id, $allow_missing = false);
 
     /**
      * @return $this
