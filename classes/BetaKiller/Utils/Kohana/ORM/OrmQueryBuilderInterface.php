@@ -262,7 +262,7 @@ interface OrmQueryBuilderInterface
      * Finds multiple database rows and returns an iterator of the rows found.
      *
      * @throws Exception
-     * @return Database_Result
+     * @return Database_Result|OrmInterface[]
      */
     public function find_all();
 

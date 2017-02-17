@@ -27,7 +27,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
     /**
      * Return parent iface model or NULL
      *
-     * @return $this
+     * @return $this|null
      */
     public function get_parent()
     {
