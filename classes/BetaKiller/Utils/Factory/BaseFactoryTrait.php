@@ -1,8 +1,8 @@
 <?php
 namespace BetaKiller\Utils\Factory;
 
-trait Base {
-
+trait BaseFactoryTrait
+{
     /**
      * Factory method
      *
@@ -69,5 +69,4 @@ trait Base {
     {
         return new $class_name;
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 namespace BetaKiller\Utils\Instance;
 
-use \BetaKiller\Utils;
-
 /**
  * Trait Singleton
  *
@@ -11,10 +9,8 @@ use \BetaKiller\Utils;
  *
  * Usage (client-code): CLASS::instance();
  */
-trait Singleton {
-
-//    use Utils\Instance\Simple;
-
+trait SingletonTrait
+{
     protected static $instance;
 
     /**
@@ -22,8 +18,7 @@ trait Singleton {
      */
     public static function instance()
     {
-        if ( ! static::$instance )
-        {
+        if (!static::$instance) {
             static::$instance = new static;
         }
         return static::$instance;
@@ -38,5 +33,4 @@ trait Singleton {
     protected function __clone() {}
 
     protected function __wakeup() {}
-
 }

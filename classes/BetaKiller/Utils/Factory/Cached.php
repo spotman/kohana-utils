@@ -3,7 +3,7 @@ namespace BetaKiller\Utils\Factory;
 
 trait Cached {
 
-    use Base;
+    use BaseFactoryTrait;
 
     protected static $_factory_instances_cache = array();
 

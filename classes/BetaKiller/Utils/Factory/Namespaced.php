@@ -5,7 +5,7 @@ use BetaKiller\Utils\Factory\Exception;
 
 trait Namespaced {
 
-    use Base;
+    use BaseFactoryTrait;
 
     protected function make_instance_class_name($name)
     {
