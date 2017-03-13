@@ -1,6 +1,8 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
+use BetaKiller\Model\RoleInterface;
+
 abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements TreeModelMultipleParentsInterface
 {
     abstract protected function get_through_table_name();
@@ -37,6 +39,30 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     public function get_parents()
     {
         return $this->get_parents_relation()->find_all()->as_array();
+    }
+
+    /**
+     * Return all parent models including in hierarchy
+     *
+     * @return $this[]
+     */
+    public function get_all_parents()
+    {
+        return $this->get_role_parents_recursively($this);
+    }
+
+    protected function get_role_parents_recursively(RoleInterface $role)
+    {
+        $parents = [];
+
+        $parents[$role->get_name()] = $role;
+
+        foreach ($role->get_parents() as $parent) {
+            $parent_parents = $this->get_role_parents_recursively($parent);
+            $parents = array_merge($parents, $parent_parents);
+        }
+
+        return $parents;
     }
 
     /**

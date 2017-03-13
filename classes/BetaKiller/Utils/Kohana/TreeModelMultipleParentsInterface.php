@@ -17,6 +17,13 @@ interface TreeModelMultipleParentsInterface
     public function get_parents();
 
     /**
+     * Return all parent models including in hierarchy
+     *
+     * @return $this[]
+     */
+    public function get_all_parents();
+
+    /**
      * @param TreeModelMultipleParentsInterface $parent
      *
      * @return $this
