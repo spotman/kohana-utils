@@ -625,8 +625,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         $value = $this->get($name);
 
-        if (!$value)
+        if (!$value) {
             return NULL;
+        }
 
         return $tz
             ? \DateTime::createFromFormat('Y-m-d H:i:s', $value, $tz)
