@@ -1,25 +1,25 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-class Response extends \Kohana_Response {
-
+class Response extends \Kohana_Response
+{
     /**
      * Response types and signatures
      */
 
-    const HTML  = 1;
-    const JSON  = 2;
-    const JS    = 3;
-    const XML   = 4;
+    const TYPE_HTML = 1;
+    const TYPE_JSON = 2;
+    const TYPE_JS   = 3;
+    const TYPE_XML  = 4;
 
     protected static $_content_types_signatures = array(
-        self::HTML  =>  'text/html',
-        self::JSON  =>  'application/json',
-        self::JS    =>  'text/javascript',
-        self::XML   =>  'text/xml',
+        self::TYPE_HTML =>  'text/html',
+        self::TYPE_JSON =>  'application/json',
+        self::TYPE_JS   =>  'text/javascript',
+        self::TYPE_XML  =>  'text/xml',
     );
 
-    protected $_content_type = self::HTML;
+    protected $_content_type = self::TYPE_HTML;
 
     /**
      * JSON response types and signatures
@@ -132,12 +132,14 @@ class Response extends \Kohana_Response {
     public function content_type($value = NULL)
     {
         // Act as a getter
-        if ( ! $value )
+        if ( ! $value ) {
             return $this->_content_type;
+        }
 
         // Act s a setter
-        if ( ! in_array($value, array_keys(static::$_content_types_signatures)) )
+        if (!array_key_exists($value, static::$_content_types_signatures)) {
             throw new \HTTP_Exception_500('Unknown content type: :value', array(':value' => $value));
+        }
 
         $this->_content_type = $value;
 
@@ -253,7 +255,7 @@ class Response extends \Kohana_Response {
      * @param string $string Plain text for output
      * @param int $content_type Content type constant like Response::HTML
      */
-    public function send_string($string, $content_type = self::HTML)
+    public function send_string($string, $content_type = self::TYPE_HTML)
     {
         $this->content_type($content_type);
         $this->body($string);
@@ -271,7 +273,7 @@ class Response extends \Kohana_Response {
             $result = $this->prepare_json($result, $data);
         }
 
-        $this->send_string(json_encode($result), self::JSON);
+        $this->send_string(json_encode($result), self::TYPE_JSON);
     }
 
     /**
@@ -315,7 +317,7 @@ class Response extends \Kohana_Response {
 
         $response = $_GET[$callback_key] ."(". json_encode($data) .");";
 
-        $this->send_string($response, self::JS);
+        $this->send_string($response, self::TYPE_JS);
     }
 
     /**
@@ -339,7 +341,7 @@ class Response extends \Kohana_Response {
 
         switch ( $response->content_type() )
         {
-            case self::JSON:
+            case self::TYPE_JSON:
                 \Kohana_Exception::log($e);
                 $response->send_json(self::JSON_ERROR, $e->get_user_message());
                 break;

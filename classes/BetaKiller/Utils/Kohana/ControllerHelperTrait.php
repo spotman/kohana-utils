@@ -91,7 +91,7 @@ trait ControllerHelperTrait
      */
     protected function content_type_json()
     {
-        $this->content_type(Response::JSON);
+        $this->content_type(Response::TYPE_JSON);
     }
 
     /**
@@ -118,7 +118,7 @@ trait ControllerHelperTrait
      * @param string $string Plain text for output
      * @param int $content_type Content type constant like Response::HTML
      */
-    protected function send_string($string, $content_type = Response::HTML)
+    protected function send_string($string, $content_type = Response::TYPE_HTML)
     {
         $this->getResponse()->send_string($string, $content_type);
     }
