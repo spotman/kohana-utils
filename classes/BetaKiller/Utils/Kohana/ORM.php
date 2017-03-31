@@ -159,7 +159,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * Enables the query to be cached for a specified amount of time.
      * Cache lifetime is taken from config file called "clt.php" with structure <table name> => <seconds>
      *
-     * @param integer $lifetime number of seconds to cache
+     * @param string|integer $lifetime number of seconds to cache or cache lifetime config key
      * @return  $this
      * @uses    Kohana::$cache_life
      */
@@ -169,7 +169,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         if (!\Kohana::$caching)
             return $this;
 
-        if (!$lifetime || is_string($lifetime)) {
+        if (!is_int($lifetime)) {
             $key = $this->table_name();
 
             if (is_string($lifetime)) {
@@ -522,12 +522,13 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function compile_as_subquery_and_count_all()
     {
-        $query = 'SELECT COUNT(*) AS total FROM (' . $this->compile() . ') AS x';
+        $sql = 'SELECT COUNT(*) AS total FROM (' . $this->compile() . ') AS x';
 
-        /** @var \Database_Result $result */
-        $result = \DB::query(\Database::SELECT, $query)->execute($this->_db);
+        $query = \DB::query(\Database::SELECT, $sql);
 
-        return $result->get('total');
+        $result = $query->execute($this->_db);
+
+        return (int)$result->get('total');
     }
 
     /**
