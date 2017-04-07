@@ -69,6 +69,16 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $columns;
     }
 
+    /**
+     * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface $model
+     *
+     * @return bool
+     */
+    public function isEqualTo(OrmInterface $model)
+    {
+        return ($this->get_id() === $model->get_id());
+    }
+
     public function get_id()
     {
         return $this->pk();
