@@ -36,7 +36,7 @@ class Response extends \Kohana_Response
     protected static $_stack = array();
 
 //    /**
-//     * @var View_Wrapper
+//     * @var WrapperView
 //     */
 //    protected $_wrapper;
 
@@ -119,7 +119,7 @@ class Response extends \Kohana_Response
 //    public function get_body($render_wrapper = TRUE)
 //    {
 //        return ( $render_wrapper AND $this->_request AND $this->_request->is_initial() )
-//            ? $this->wrapper()->set_content($this->_body)->render()
+//            ? $this->wrapper()->setContent($this->_body)->render()
 //            : $this->_body;
 //    }
 

@@ -1,10 +1,13 @@
 <?php
 namespace BetaKiller\Utils\Instance;
 
+use BetaKiller\DI\Container;
+
 /**
  * Use this trait if you need cached instance creator.
  * Override protected constructor if needed.
  * Usage (client-code): CLASS::instance();
+ * @deprecated Use NamespaceBasedFactory instead
  */
 trait Cached
 {
@@ -15,18 +18,11 @@ trait Cached
 
     /**
      * @return static
+     * @deprecated Use NamespaceBasedFactory instead
      */
-    public static function instance()
+    public static function getInstance()
     {
-        $class_name = get_called_class();
-
-        if (!isset(static::$_instances[$class_name]))
-        {
-            // TODO DI
-            static::$_instances[$class_name] = new $class_name();
-        }
-
-        return static::$_instances[$class_name];
+        return Container::instance()->get(get_called_class());
     }
 
     final private function __clone() {}
