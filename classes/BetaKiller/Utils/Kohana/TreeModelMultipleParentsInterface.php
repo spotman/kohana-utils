@@ -7,51 +7,51 @@ interface TreeModelMultipleParentsInterface
     /**
      * @return int
      */
-    public function get_id();
+    public function get_id(); // BC for Kohana ORM models
 
     /**
      * Return parents models
      *
      * @return $this[]
      */
-    public function get_parents();
+    public function getParents();
 
     /**
      * Return all parent models including in hierarchy
      *
      * @return $this[]
      */
-    public function get_all_parents();
+    public function getAllParents();
 
     /**
      * @param TreeModelMultipleParentsInterface $parent
      *
      * @return $this
      */
-    public function add_parent(TreeModelMultipleParentsInterface $parent);
+    public function addParent(TreeModelMultipleParentsInterface $parent);
 
     /**
      * @param TreeModelMultipleParentsInterface $parent
      *
      * @return $this
      */
-    public function remove_parent(TreeModelMultipleParentsInterface $parent);
+    public function removeParent(TreeModelMultipleParentsInterface $parent);
 
     /**
      * @return $this[]
      */
-    public function get_root();
+    public function getRoot();
 
     /**
      * Returns list of child iface models
      *
      * @return $this[]
      */
-    public function get_children();
+    public function getChildren();
 
     /**
      * @param string|null $column
      * @return $this[]|int[]
      */
-    public function get_all_children($column = null);
+    public function getAllChildren($column = null);
 }

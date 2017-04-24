@@ -29,7 +29,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      *
      * @return $this|null
      */
-    public function get_parent()
+    public function getParent()
     {
         /** @var static $parent */
         $parent = $this->get('parent');
@@ -42,7 +42,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      *
      * @return $this
      */
-    public function set_parent(TreeModelSingleParentInterface $parent = null)
+    public function setParent(TreeModelSingleParentInterface $parent = null)
     {
         return $this->set('parent', $parent);
     }
@@ -65,7 +65,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      *
      * @return $this
      */
-    protected function filter_parent_ids($parent_ids = NULL)
+    protected function filterParentIDs($parent_ids = NULL)
     {
         $parent_id_col = $this->object_column($this->get_parent_id_column_name());
 

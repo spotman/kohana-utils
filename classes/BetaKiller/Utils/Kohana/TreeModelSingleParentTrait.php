@@ -6,12 +6,13 @@ trait TreeModelSingleParentTrait
     /**
      * @return $this[]
      */
-    public function get_parents()
+    public function getParents()
     {
-        $parents = [];
+        /** @var \BetaKiller\Utils\Kohana\TreeModelSingleParentInterface $current */
         $current = $this;
+        $parents = [];
 
-        while ($current = $current->get_parent()) {
+        while ($current = $current->getParent()) {
             $parents[] = $current;
         }
 
@@ -23,15 +24,16 @@ trait TreeModelSingleParentTrait
      *
      * @return bool
      */
-    public function has_in_ascending_branch(TreeModelSingleParentInterface $model)
+    public function hasInAscendingBranch(TreeModelSingleParentInterface $model)
     {
+        /** @var \BetaKiller\Utils\Kohana\TreeModelSingleParentInterface $current */
         $current = $this;
 
         do {
-            if ($current->get_id() == $model->get_id()) {
+            if ($current->get_id() === $model->get_id()) {
                 return TRUE;
             }
-        } while ($current = $current->get_parent());
+        } while ($current = $current->getParent());
 
         return FALSE;
     }

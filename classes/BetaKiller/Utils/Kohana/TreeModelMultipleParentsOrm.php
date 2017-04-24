@@ -36,7 +36,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      *
      * @return $this[]
      */
-    public function get_parents()
+    public function getParents()
     {
         return $this->get_parents_relation()->find_all()->as_array();
     }
@@ -46,7 +46,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      *
      * @return $this[]
      */
-    public function get_all_parents()
+    public function getAllParents()
     {
         return $this->get_role_parents_recursively($this);
     }
@@ -57,7 +57,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
 
         $parents[$role->get_name()] = $role;
 
-        foreach ($role->get_parents() as $parent) {
+        foreach ($role->getParents() as $parent) {
             $parent_parents = $this->get_role_parents_recursively($parent);
             $parents = array_merge($parents, $parent_parents);
         }
@@ -78,7 +78,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      *
      * @return $this
      */
-    protected function filter_parent_ids($parent_ids = NULL)
+    protected function filterParentIDs($parent_ids = NULL)
     {
         $parents_table_name_alias = $this->table_name().'_parents';
 
@@ -102,7 +102,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      *
      * @return $this
      */
-    public function add_parent(TreeModelMultipleParentsInterface $parent)
+    public function addParent(TreeModelMultipleParentsInterface $parent)
     {
         $this->add('parents', $parent);
         return $this;
@@ -113,7 +113,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      *
      * @return $this
      */
-    public function remove_parent(TreeModelMultipleParentsInterface $parent)
+    public function removeParent(TreeModelMultipleParentsInterface $parent)
     {
         $this->remove('parents', $parent);
         return $this;

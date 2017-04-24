@@ -4,23 +4,23 @@ namespace BetaKiller\Utils\Kohana;
 abstract class TreeModelOrmBase extends \ORM
 {
     /**
-     * @param int[]|null $parent_ids
+     * @param int[]|null $parentIDs
      *
      * @return $this
      */
-    abstract protected function filter_parent_ids($parent_ids = null);
+    abstract protected function filterParentIDs($parentIDs = null);
 
     /**
      * Place here additional query params
      */
-    abstract protected function additional_tree_model_filtering();
+    abstract protected function additionalTreeModelFiltering();
 
     /**
      * @return $this[]
      */
-    public function get_root()
+    public function getRoot()
     {
-        return $this->get_children_by_parent_ids();
+        return $this->getChildrenByParentIDs();
     }
 
     /**
@@ -28,9 +28,9 @@ abstract class TreeModelOrmBase extends \ORM
      *
      * @return $this[]
      */
-    public function get_children()
+    public function getChildren()
     {
-        return $this->get_children_by_parent_ids($this->pk());
+        return $this->getChildrenByParentIDs($this->pk());
     }
 
     /**
@@ -39,14 +39,14 @@ abstract class TreeModelOrmBase extends \ORM
      * @param string|null $value
      * @return $this[]
      */
-    private function get_children_by_parent_ids($parent_ids = null, $key = null, $value = null)
+    private function getChildrenByParentIDs($parent_ids = null, $key = null, $value = null)
     {
         /** @var TreeModelOrmBase $model */
         $model = $this->model_factory();
 
-        $model->filter_parent_ids($parent_ids);
+        $model->filterParentIDs($parent_ids);
 
-        $model->additional_tree_model_filtering();
+        $model->additionalTreeModelFiltering();
 
         return $model
             ->cached()
@@ -54,22 +54,22 @@ abstract class TreeModelOrmBase extends \ORM
             ->as_array($key, $value);
     }
 
-    public function get_all_children($column = null)
+    public function getAllChildren($column = null)
     {
-        return $this->get_all_children_by_parent_id($this->pk(), $column);
+        return $this->getAllChildrenByParentID($this->pk(), $column);
     }
 
-    protected function get_all_children_by_parent_id($parent_id = null, $column = null)
+    protected function getAllChildrenByParentID($parentID = null, $column = null)
     {
         $ids = [];
-        $parent_ids = (array) $parent_id;
+        $parentIDs = (array) $parentID;
 
         do {
-            $layer_ids = $this->get_children_by_parent_ids($parent_ids, null, $column);
+            $layer_ids = $this->getChildrenByParentIDs($parentIDs, null, $column);
 
             $ids = array_merge($ids, $layer_ids);
-            $parent_ids = $layer_ids;
-        } while ($parent_ids);
+            $parentIDs = $layer_ids;
+        } while ($parentIDs);
 
         return $ids;
     }

@@ -5,6 +5,7 @@ namespace BetaKiller\Utils\Kohana;
 interface TreeModelSingleParentInterface
 {
     /**
+     * Redundant fix for autocomplete ORM::get_id();
      * @return int
      */
     public function get_id();
@@ -14,42 +15,42 @@ interface TreeModelSingleParentInterface
      *
      * @return $this|null
      */
-    public function get_parent();
+    public function getParent();
 
     /**
      * Returns list of child models
      *
      * @return $this[]
      */
-    public function get_children();
+    public function getChildren();
 
     /**
      * @return $this[]
      */
-    public function get_root();
+    public function getRoot();
 
     /**
      * @param string|null $column
      * @return int[]
      */
-    public function get_all_children($column = null);
+    public function getAllChildren($column = null);
 
     /**
      * @param TreeModelSingleParentInterface|null $parent
      *
      * @return $this
      */
-    public function set_parent(TreeModelSingleParentInterface $parent = null);
+    public function setParent(TreeModelSingleParentInterface $parent = null);
 
     /**
      * @return $this[]
      */
-    public function get_parents();
+    public function getParents();
 
     /**
      * @param TreeModelSingleParentInterface $model
      *
      * @return bool
      */
-    public function has_in_ascending_branch(TreeModelSingleParentInterface $model);
+    public function hasInAscendingBranch(TreeModelSingleParentInterface $model);
 }
