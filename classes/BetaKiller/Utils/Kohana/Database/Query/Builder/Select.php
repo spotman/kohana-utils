@@ -1,7 +1,7 @@
 <?php
-namespace \BetaKiller\Utils\Kohana;
+namespace BetaKiller\Utils\Kohana\Database\Query\Builder;
 
-class Database_Query_Builder_Select extends Kohana_Database_Query_Builder_Select {
+class Select extends \Kohana_Database_Query_Builder_Select {
     /**
      * Кеширует результаты запроса
      * Можно явно указать время жизни в секундах.
