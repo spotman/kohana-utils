@@ -176,8 +176,9 @@ trait ControllerHelperTrait
      */
     protected function send_file($content, $mime_type = NULL, $alias = NULL, $force_download = FALSE)
     {
-        if (!$content)
+        if (!$content) {
             throw new \HTTP_Exception_500('Content is empty');
+        }
 
         $response = $this->getResponse();
 

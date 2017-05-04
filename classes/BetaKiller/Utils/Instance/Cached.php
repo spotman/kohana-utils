@@ -22,7 +22,7 @@ trait Cached
      */
     public static function getInstance()
     {
-        return Container::instance()->get(get_called_class());
+        return Container::getInstance()->get(get_called_class());
     }
 
     final private function __clone() {}

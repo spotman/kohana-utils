@@ -1,6 +1,9 @@
 <?php
 namespace BetaKiller\Utils\Instance;
 
+use BetaKiller\Utils\Exception;
+use BetaKiller\DI\Container;
+
 /**
  * Trait Singleton
  *
@@ -19,7 +22,7 @@ trait SingletonTrait
     public static function instance()
     {
         if (!static::$instance) {
-            static::$instance = new static;
+            static::$instance = Container::getInstance()->get(static::class);
         }
         return static::$instance;
     }
@@ -28,9 +31,12 @@ trait SingletonTrait
      * You can`t create objects directly, use CLASS::instance() instead
      * Also you can define your own protected constructor in child class
      */
-    protected function __construct() {}
+    public function __construct()
+    {
+        if (static::$instance) {
+            throw new Exception('Duplicate instantiating is not allowed');
+        }
+    }
 
     protected function __clone() {}
-
-    protected function __wakeup() {}
 }
