@@ -9,7 +9,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
     {
         $this->belongs_to([
             'parent' => [
-                'model'       => $this->get_model_name(),
+                'model'       => $this->getModelName(),
                 'foreign_key' => $this->get_parent_id_column_name(),
             ],
         ]);

@@ -427,7 +427,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
 
     // Extended methods
 
-    public function get_model_name();
+    public function getModelName();
 
     public function belongs_to(array $config = NULL);
     public function has_one(array $config = NULL);

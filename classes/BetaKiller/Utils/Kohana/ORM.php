@@ -5,9 +5,14 @@ use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 
 class ORM extends \Kohana_ORM implements OrmInterface
 {
-    public function get_model_name(OrmInterface $object = null)
+    public function getModelName(OrmInterface $object = null)
     {
-        $className = get_class($object ?: $this);
+        return static::detectModelName($object);
+    }
+
+    protected static function detectModelName(OrmInterface $object = null)
+    {
+        $className = $object ? get_class($object) : static::class;
 
         // Try namespaces first
         $pos = strrpos($className, '\\');

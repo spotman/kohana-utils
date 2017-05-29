@@ -11,7 +11,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     {
         $this->has_many([
             'parents' => [
-                'model'         =>  $this->get_model_name(),
+                'model'         =>  $this->getModelName(),
                 'foreign_key'   =>  $this->get_child_id_column_name(),
                 'far_key'       =>  $this->get_parent_id_column_name(),
                 'through'       =>  $this->get_through_table_name(),
