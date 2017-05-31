@@ -343,7 +343,7 @@ class Response extends \Kohana_Response
         {
             case self::TYPE_JSON:
                 \Kohana_Exception::log($e);
-                $response->send_json(self::JSON_ERROR, $e->get_user_message());
+                $response->send_json(self::JSON_ERROR, $e->getUserMessage());
                 break;
 
             default:

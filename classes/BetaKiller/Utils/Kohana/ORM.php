@@ -680,7 +680,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * @param int $pk
      * @param string|null $name
-     * @return OrmInterface
+     * @return OrmInterface|mixed
      */
     public function model_factory($pk = NULL, $name = null)
     {
