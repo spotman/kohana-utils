@@ -20,7 +20,7 @@ interface TreeModelSingleParentInterface
     /**
      * Returns list of child models
      *
-     * @return $this[]
+     * @return $this[]|mixed
      */
     public function getChildren();
 

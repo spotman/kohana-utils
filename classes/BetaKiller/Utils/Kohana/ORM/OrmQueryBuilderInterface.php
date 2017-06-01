@@ -4,17 +4,16 @@ namespace BetaKiller\Utils\Kohana\ORM;
 use BetaKiller\Exception;
 use BetaKiller\Utils\Kohana\ORM;
 use Database_Result;
-use Validation;
-use ORM_Validation_Exception;
 
 interface OrmQueryBuilderInterface
 {
     /**
      * Alias of and_where()
      *
-     * @param   mixed   $column  column name or array($column, $alias) or object
-     * @param   string  $op      logic operator
-     * @param   mixed   $value   column value
+     * @param   mixed  $column column name or array($column, $alias) or object
+     * @param   string $op     logic operator
+     * @param   mixed  $value  column value
+     *
      * @return  $this
      */
     public function where($column, $op, $value);
@@ -22,9 +21,10 @@ interface OrmQueryBuilderInterface
     /**
      * Creates a new "AND WHERE" condition for the query.
      *
-     * @param   mixed   $column  column name or array($column, $alias) or object
-     * @param   string  $op      logic operator
-     * @param   mixed   $value   column value
+     * @param   mixed  $column column name or array($column, $alias) or object
+     * @param   string $op     logic operator
+     * @param   mixed  $value  column value
+     *
      * @return  $this
      */
     public function and_where($column, $op, $value);
@@ -32,9 +32,10 @@ interface OrmQueryBuilderInterface
     /**
      * Creates a new "OR WHERE" condition for the query.
      *
-     * @param   mixed   $column  column name or array($column, $alias) or object
-     * @param   string  $op      logic operator
-     * @param   mixed   $value   column value
+     * @param   mixed  $column column name or array($column, $alias) or object
+     * @param   string $op     logic operator
+     * @param   mixed  $value  column value
+     *
      * @return  $this
      */
     public function or_where($column, $op, $value);
@@ -84,16 +85,18 @@ interface OrmQueryBuilderInterface
     /**
      * Applies sorting with "ORDER BY ..."
      *
-     * @param   mixed   $column     column name or array($column, $alias) or object
-     * @param   string  $direction  direction of sorting
+     * @param   mixed  $column    column name or array($column, $alias) or object
+     * @param   string $direction direction of sorting
+     *
      * @return  $this
      */
-    public function order_by($column, $direction = NULL);
+    public function order_by($column, $direction = null);
 
     /**
      * Return up to "LIMIT ..." results
      *
-     * @param   integer  $number  maximum results to return
+     * @param   integer $number maximum results to return
+     *
      * @return  $this
      */
     public function limit($number);
@@ -101,7 +104,8 @@ interface OrmQueryBuilderInterface
     /**
      * Enables or disables selecting only unique columns using "SELECT DISTINCT"
      *
-     * @param   boolean  $value  enable or disable distinct columns
+     * @param   boolean $value enable or disable distinct columns
+     *
      * @return  $this
      */
     public function distinct($value);
@@ -109,17 +113,19 @@ interface OrmQueryBuilderInterface
     /**
      * Choose the columns to select from.
      *
-     * @param   mixed  $columns  column name or array($column, $alias) or object
+     * @param   mixed $columns column name or array($column, $alias) or object
      * @param   ...
+     *
      * @return  $this
      */
-    public function select($columns = NULL);
+    public function select($columns = null);
 
     /**
      * Choose the tables to select "FROM ..."
      *
-     * @param   mixed  $tables  table name or array($table, $alias) or object
+     * @param   mixed $tables table name or array($table, $alias) or object
      * @param   ...
+     *
      * @return  $this
      */
     public function from($tables);
@@ -127,18 +133,20 @@ interface OrmQueryBuilderInterface
     /**
      * Adds addition tables to "JOIN ...".
      *
-     * @param   mixed   $table  column name or array($column, $alias) or object
-     * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
+     * @param   mixed  $table column name or array($column, $alias) or object
+     * @param   string $type  join type (LEFT, RIGHT, INNER, etc)
+     *
      * @return  $this
      */
-    public function join($table, $type = NULL);
+    public function join($table, $type = null);
 
     /**
      * Adds "ON ..." conditions for the last created JOIN statement.
      *
-     * @param   mixed   $c1  column name or array($column, $alias) or object
-     * @param   string  $op  logic operator
-     * @param   mixed   $c2  column name or array($column, $alias) or object
+     * @param   mixed  $c1 column name or array($column, $alias) or object
+     * @param   string $op logic operator
+     * @param   mixed  $c2 column name or array($column, $alias) or object
+     *
      * @return  $this
      */
     public function on($c1, $op, $c2);
@@ -146,7 +154,8 @@ interface OrmQueryBuilderInterface
     /**
      * Adds "USING ..." conditions for the last created JOIN statement.
      *
-     * @param   string  $columns  column name
+     * @param   string $columns column name
+     *
      * @return  $this
      */
     public function using($columns);
@@ -154,8 +163,9 @@ interface OrmQueryBuilderInterface
     /**
      * Creates a "GROUP BY ..." filter.
      *
-     * @param   mixed   $columns  column name or array($column, $alias) or object
+     * @param   mixed $columns column name or array($column, $alias) or object
      * @param   ...
+     *
      * @return  $this
      */
     public function group_by($columns);
@@ -163,32 +173,35 @@ interface OrmQueryBuilderInterface
     /**
      * Alias of and_having()
      *
-     * @param   mixed   $column  column name or array($column, $alias) or object
-     * @param   string  $op      logic operator
-     * @param   mixed   $value   column value
+     * @param   mixed  $column column name or array($column, $alias) or object
+     * @param   string $op     logic operator
+     * @param   mixed  $value  column value
+     *
      * @return  $this|OrmInterface
      */
-    public function having($column, $op, $value = NULL);
+    public function having($column, $op, $value = null);
 
     /**
      * Creates a new "AND HAVING" condition for the query.
      *
-     * @param   mixed   $column  column name or array($column, $alias) or object
-     * @param   string  $op      logic operator
-     * @param   mixed   $value   column value
+     * @param   mixed  $column column name or array($column, $alias) or object
+     * @param   string $op     logic operator
+     * @param   mixed  $value  column value
+     *
      * @return  $this
      */
-    public function and_having($column, $op, $value = NULL);
+    public function and_having($column, $op, $value = null);
 
     /**
      * Creates a new "OR HAVING" condition for the query.
      *
-     * @param   mixed   $column  column name or array($column, $alias) or object
-     * @param   string  $op      logic operator
-     * @param   mixed   $value   column value
+     * @param   mixed  $column column name or array($column, $alias) or object
+     * @param   string $op     logic operator
+     * @param   mixed  $value  column value
+     *
      * @return  $this
      */
-    public function or_having($column, $op, $value = NULL);
+    public function or_having($column, $op, $value = null);
 
     /**
      * Alias of and_having_open()
@@ -235,7 +248,8 @@ interface OrmQueryBuilderInterface
     /**
      * Start returning results after "OFFSET ..."
      *
-     * @param   integer   $number  starting result number
+     * @param   integer $number starting result number
+     *
      * @return  $this
      */
     public function offset($number);
@@ -243,11 +257,12 @@ interface OrmQueryBuilderInterface
     /**
      * Enables the query to be cached for a specified amount of time.
      *
-     * @param   integer  $lifetime  number of seconds to cache
+     * @param   integer $lifetime number of seconds to cache
+     *
      * @return  $this
      * @uses    Kohana::$cache_life
      */
-    public function cached($lifetime = NULL);
+    public function cached($lifetime = null);
 
     /**
      * Finds and loads a single database row into the object.
@@ -271,8 +286,8 @@ interface OrmQueryBuilderInterface
      * query conditions for another query.
      *
      * @param bool $next Pass FALSE to avoid resetting on the next call
+     *
      * @return ORM
      */
-    public function reset($next = TRUE);
-
+    public function reset($next = true);
 }
