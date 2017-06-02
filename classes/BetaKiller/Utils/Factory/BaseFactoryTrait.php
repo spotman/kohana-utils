@@ -27,8 +27,9 @@ trait BaseFactoryTrait
     {
         $class_names = $this->make_instance_class_name($name);
 
-        if ( !is_array($class_names) )
+        if ( !is_array($class_names) ) {
             $class_names = array($class_names);
+        }
 
         $class_name = NULL;
 
@@ -39,9 +40,10 @@ trait BaseFactoryTrait
             }
         }
 
-        if ( !$class_name )
+        if ( !$class_name ) {
             throw new Exception\Missing('Can not factory :name in :class',
                 array(':name' => $name, ':class' => get_class($this)));
+        }
 
         $args = func_get_args();
         array_shift($args);   // Remove codename

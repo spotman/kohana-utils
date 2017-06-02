@@ -11,13 +11,18 @@ use BetaKiller\DI\Container;
  * Override protected constructor if needed.
  *
  * Usage (client-code): CLASS::instance();
+ *
+ * @deprecated Use DI instead
  */
 trait SingletonTrait
 {
     protected static $instance;
 
     /**
+     * Use DI instead of calling ::instance()
+     *
      * @return static
+     * @deprecated
      */
     public static function instance()
     {
