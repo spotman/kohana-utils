@@ -3,7 +3,7 @@ namespace BetaKiller;
 
 class Exception extends \Kohana_Exception
 {
-    public function oneLiner()
+    public function oneLiner(): string
     {
         return sprintf(
             '%s [ %s ]: %s ~ %s [ %d ]',
