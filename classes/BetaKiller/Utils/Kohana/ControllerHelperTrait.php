@@ -133,11 +133,11 @@ trait ControllerHelperTrait
     /**
      * Helper for setting "Last-Modified" header
      *
-     * @param \DateTime $dateTime
+     * @param \DateTimeInterface $dateTime
      *
      * @deprecated
      */
-    protected function last_modified(\DateTime $dateTime)
+    protected function last_modified(\DateTimeInterface $dateTime)
     {
         $this->getResponse()->last_modified($dateTime);
     }
@@ -149,7 +149,7 @@ trait ControllerHelperTrait
      *
      * @deprecated
      */
-    protected function expires(\DateTime $dateTime)
+    protected function expires(\DateTimeInterface $dateTime)
     {
         $this->getResponse()->expires($dateTime);
     }

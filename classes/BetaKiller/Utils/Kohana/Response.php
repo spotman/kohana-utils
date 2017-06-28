@@ -150,10 +150,10 @@ class Response extends \Kohana_Response
     }
 
     /**
-     * @param \DateTime $dateTime
-     * @return \Response|\DateTime|null
+     * @param \DateTimeInterface $dateTime
+     * @return \Response|\DateTimeInterface|null
      */
-    public function last_modified(\DateTime $dateTime = NULL)
+    public function last_modified(\DateTimeInterface $dateTime = NULL)
     {
         $value = $dateTime ? gmdate("D, d M Y H:i:s \G\M\T", $dateTime->getTimestamp()) : NULL;
 
@@ -170,7 +170,7 @@ class Response extends \Kohana_Response
         }
     }
 
-    public function expires(\DateTime $dateTime)
+    public function expires(\DateTimeInterface $dateTime)
     {
         $this->headers('expires', gmdate("D, d M Y H:i:s \G\M\T", $dateTime->getTimestamp()));
     }
@@ -285,7 +285,7 @@ class Response extends \Kohana_Response
      * Makes JSON-transport between backend and frontend
      * @param $result integer Constant Request::HTML or similar
      * @param $data mixed
-     * @return string
+     * @return array
      */
     protected function prepare_json($result, $data)
     {
