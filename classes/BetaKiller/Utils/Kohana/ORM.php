@@ -5,12 +5,12 @@ use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 
 class ORM extends \Kohana_ORM implements OrmInterface
 {
-    public function getModelName(OrmInterface $object = null)
+    public function getModelName(OrmInterface $object = null): string
     {
         return static::detectModelName($object);
     }
 
-    protected static function detectModelName(OrmInterface $object = null)
+    protected static function detectModelName(OrmInterface $object = null): string
     {
         $className = $object ? get_class($object) : static::class;
 
