@@ -8,13 +8,15 @@ trait RegistryTrait
     /**
      * @param string     $key
      * @param mixed      $object
-     * @param bool|FALSE $ignoreDuplicate
+     * @param bool|null  $ignoreDuplicate
      *
      * @return $this
      * @throws Exception
      */
-    public function set($key, $object, $ignoreDuplicate = false)
+    public function set(string $key, $object, ?bool $ignoreDuplicate = null)
     {
+        $ignoreDuplicate = $ignoreDuplicate ?? false;
+
         if (!$ignoreDuplicate && $this->has($key)) {
             throw new Exception('Data for :key key already exists', [':key' => $key]);
         }
@@ -49,7 +51,7 @@ trait RegistryTrait
     /**
      * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->_registry;
     }
@@ -59,9 +61,9 @@ trait RegistryTrait
      *
      * @return bool
      */
-    public function has($key)
+    public function has($key): bool
     {
-        return (isset($this->_registry[$key]));
+        return isset($this->_registry[$key]);
     }
 
     /**
@@ -69,7 +71,7 @@ trait RegistryTrait
      *
      * @return array
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->_registry);
     }

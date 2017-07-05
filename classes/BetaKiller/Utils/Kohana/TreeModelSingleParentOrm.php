@@ -28,6 +28,8 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      * Return parent iface model or NULL
      *
      * @return $this|null
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getParent()
     {
@@ -41,12 +43,21 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      * @param TreeModelSingleParentInterface|null $parent
      *
      * @return $this
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function setParent(TreeModelSingleParentInterface $parent = null)
     {
         return $this->set('parent', $parent);
     }
 
+    /**
+     * @param \BetaKiller\Utils\Kohana\TreeModelSingleParentInterface|null $parent
+     *
+     * @return $this
+     * @todo Rewrite this to tree model repository
+     * @deprecated
+     */
     public function filter_parent(TreeModelSingleParentInterface $parent = null)
     {
         $col = $this->object_column($this->get_parent_id_column_name());
@@ -64,6 +75,8 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      * @param int[]|null $parent_ids
      *
      * @return $this
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     protected function filterParentIDs($parent_ids = NULL)
     {

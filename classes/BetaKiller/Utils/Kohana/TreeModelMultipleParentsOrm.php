@@ -1,8 +1,6 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-use BetaKiller\Model\RoleInterface;
-
 abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements TreeModelMultipleParentsInterface
 {
     abstract protected function get_through_table_name();
@@ -11,10 +9,10 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     {
         $this->has_many([
             'parents' => [
-                'model'         =>  $this->getModelName(),
-                'foreign_key'   =>  $this->get_child_id_column_name(),
-                'far_key'       =>  $this->get_parent_id_column_name(),
-                'through'       =>  $this->get_through_table_name(),
+                'model'       => $this->getModelName(),
+                'foreign_key' => $this->get_child_id_column_name(),
+                'far_key'     => $this->get_parent_id_column_name(),
+                'through'     => $this->get_through_table_name(),
             ],
         ]);
 
@@ -48,18 +46,17 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      */
     public function getAllParents()
     {
-        return $this->get_role_parents_recursively($this);
+        return $this->getAllParentsRecursively($this);
     }
 
-    protected function get_role_parents_recursively(RoleInterface $role)
+    protected function getAllParentsRecursively(TreeModelMultipleParentsInterface $child): array
     {
         $parents = [];
 
-        $parents[$role->get_name()] = $role;
-
-        foreach ($role->getParents() as $parent) {
-            $parent_parents = $this->get_role_parents_recursively($parent);
-            $parents = array_merge($parents, $parent_parents);
+        foreach ($child->getParents() as $parent) {
+            $parents[]      = $parent;
+            $parent_parents = $this->getAllParentsRecursively($parent);
+            $parents        = array_merge($parents, $parent_parents);
         }
 
         return $parents;
@@ -78,7 +75,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      *
      * @return $this
      */
-    protected function filterParentIDs($parent_ids = NULL)
+    protected function filterParentIDs($parent_ids = null)
     {
         $parents_table_name_alias = $this->table_name().'_parents';
 
@@ -87,14 +84,13 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
         $parent_id_col = $parents_table_name_alias.'.'.$this->get_parent_id_column_name();
 
         if ($parent_ids) {
-            $this->where($parent_id_col, 'IN', (array) $parent_ids);
+            $this->where($parent_id_col, 'IN', (array)$parent_ids);
         } else {
             $this->where($parent_id_col, 'IS', null);
         }
 
         return $this;
     }
-
 
 
     /**
@@ -105,6 +101,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     public function addParent(TreeModelMultipleParentsInterface $parent)
     {
         $this->add('parents', $parent);
+
         return $this;
     }
 
@@ -116,6 +113,7 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     public function removeParent(TreeModelMultipleParentsInterface $parent)
     {
         $this->remove('parents', $parent);
+
         return $this;
     }
 }

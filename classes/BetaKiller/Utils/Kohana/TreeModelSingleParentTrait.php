@@ -5,6 +5,8 @@ trait TreeModelSingleParentTrait
 {
     /**
      * @return $this[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getParents()
     {
@@ -23,6 +25,8 @@ trait TreeModelSingleParentTrait
      * @param TreeModelSingleParentInterface $model
      *
      * @return bool
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function hasInAscendingBranch(TreeModelSingleParentInterface $model)
     {

@@ -5,27 +5,7 @@ use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 
 class ORM extends \Kohana_ORM implements OrmInterface
 {
-    public function getModelName(OrmInterface $object = null): string
-    {
-        return static::detectModelName($object);
-    }
-
-    protected static function detectModelName(OrmInterface $object = null): string
-    {
-        $className = $object ? get_class($object) : static::class;
-
-        // Try namespaces first
-        $pos = strrpos($className, '\\');
-
-        if ($pos === false) {
-            // Use legacy naming
-            $pos = 5; // "Model_" is 6 letters
-        }
-
-        return substr($className, $pos + 1);
-    }
-
-    public function belongs_to(array $config = NULL)
+    public function belongs_to(array $config = null): array
     {
         if ($config) {
             $this->_belongs_to = array_merge($this->_belongs_to, $config);
@@ -34,7 +14,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return parent::belongs_to();
     }
 
-    public function has_one(array $config = NULL)
+    public function has_one(array $config = null): array
     {
         if ($config) {
             $this->_has_one = array_merge($this->_has_one, $config);
@@ -43,7 +23,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return parent::has_one();
     }
 
-    public function has_many(array $config = NULL)
+    public function has_many(array $config = null): array
     {
         if ($config) {
             $this->_has_many = array_merge($this->_has_many, $config);
@@ -52,7 +32,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return parent::has_many();
     }
 
-    public function load_with(array $config = NULL)
+    public function load_with(array $config = null): array
     {
         if ($config) {
             $this->_load_with = array_merge($this->_load_with, $config);
@@ -64,7 +44,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     public function list_columns()
     {
         $cache_key = $this->table_name().':list_columns()';
-        $columns = \Kohana::cache($cache_key);
+        $columns   = \Kohana::cache($cache_key);
 
         if (!$columns) {
             $columns = parent::list_columns();
@@ -79,9 +59,18 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return bool
      */
-    public function isEqualTo(OrmInterface $model)
+    public function isEqualTo(OrmInterface $model): bool
     {
         return ($this->get_id() === $model->get_id());
+    }
+
+    /**
+     * @return $this[]|OrmInterface[]
+     * @throws \Kohana_Exception
+     */
+    public function get_all(): array
+    {
+        return $this->find_all()->as_array();
     }
 
     public function get_id()
@@ -103,15 +92,16 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * @param int  $id
      * @param bool $allow_missing
      *
-     * @return OrmInterface
+     * @return OrmInterface|mixed
      * @throws \Kohana_Exception
      */
-    public function get_by_id($id, $allow_missing = false)
+    public function get_by_id($id, ?bool $allow_missing = null)
     {
         $model = $this->filter_primary_key($id)->find();
 
-        if (!$allow_missing && !$model->loaded())
+        if (!$allow_missing && !$model->loaded()) {
             throw new \Kohana_Exception('Model with id :id does not exists', [':id' => $id]);
+        }
 
         return $model;
     }
@@ -127,7 +117,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * @return string
      */
-    public function object_primary_key()
+    public function object_primary_key(): string
     {
         return $this->object_column($this->primary_key());
     }
@@ -137,18 +127,19 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return string
      */
-    public function object_column($column)
+    public function object_column($column): string
     {
         return $this->object_name().'.'.$column;
     }
 
     /**
-     * @param array|integer $ids
+     * @param int $id
+     *
      * @return $this
      */
-    public function filter_primary_key($ids)
+    public function filter_primary_key(int $id)
     {
-        return $this->where($this->object_primary_key(), 'IN', (is_array($ids) ? $ids : array($ids)));
+        return $this->where($this->object_primary_key(), '=', $id);
     }
 
     /**
@@ -160,8 +151,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string    $name
-     * @param array     $sequence
+     * @param string $name
+     * @param array  $sequence
      *
      * @return $this|OrmInterface
      */
@@ -175,14 +166,16 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * Cache lifetime is taken from config file called "clt.php" with structure <table name> => <seconds>
      *
      * @param string|integer $lifetime number of seconds to cache or cache lifetime config key
+     *
      * @return  $this
      * @uses    Kohana::$cache_life
      */
-    public function cached($lifetime = NULL)
+    public function cached($lifetime = null)
     {
         // Do nothing if caching is not enabled
-        if (!\Kohana::$caching)
+        if (!\Kohana::$caching) {
             return $this;
+        }
 
         if (!is_int($lifetime)) {
             $key = $this->table_name();
@@ -191,7 +184,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                 $key .= '.'.$lifetime;
             }
 
-            $group = \Kohana::$config->load('clt');
+            $group    = \Kohana::$config->load('clt');
             $lifetime = $group ? $group->get($key, 60) : 60;
         }
 
@@ -204,11 +197,13 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * Returns TRUE if column exists in database
      *
      * @param string $name
+     *
      * @return bool
      */
-    public function has_column($name)
+    public function has_column($name): bool
     {
         $columns = $this->list_columns();
+
         return isset($columns[$name]);
     }
 
@@ -216,7 +211,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * Связывает элементы алиаса (с указанными первичными ключами) с текущей моделью
      *
      * @param string $alias
-     * @param array $far_keys
+     * @param array  $far_keys
+     *
      * @return $this
      */
     public function link_related($alias, array $far_keys)
@@ -227,33 +223,36 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * Отвязывает элементы алиаса (с указанными первичными ключами) от текущей модели
      *
-     * @param string $alias
+     * @param string     $alias
      * @param array|NULL $far_keys
+     *
      * @return $this
      */
-    public function unlink_related($alias, array $far_keys = NULL)
+    public function unlink_related($alias, array $far_keys = null)
     {
         // Если элементы не указаны
         if (!$far_keys) {
             // Попробуем достать их из алиаса
-            $relation = $this->_get_relation($alias);
+            $relation      = $this->_get_relation($alias);
             $relation_data = $relation->find_all()->as_array($relation->primary_key());
-            $far_keys = array_keys($relation_data);
+            $far_keys      = array_keys($relation_data);
         }
 
         // Если нет связанных элементов, то и делать нечего
-        if (!$far_keys)
+        if (!$far_keys) {
             return $this;
+        }
 
-        return $this->_update_related_alias_foreign_key_field($alias, $far_keys, NULL);
+        return $this->_update_related_alias_foreign_key_field($alias, $far_keys, null);
     }
 
     /**
      * Проставляет полю внешнего ключа у алиаса значение первичного ключа текущей модели
      *
-     * @param string $alias
-     * @param array $far_keys
+     * @param string   $alias
+     * @param array    $far_keys
      * @param int|NULL $value
+     *
      * @return $this
      */
     protected function _update_related_alias_foreign_key_field($alias, array $far_keys, $value)
@@ -261,8 +260,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
         $relation = $this->_get_relation($alias);
 
         $query = \DB::update($relation->table_name())
-            ->set(array($this->_has_many[$alias]['foreign_key'] => $value))
-            ->where($relation->primary_key(), "IN", $far_keys);
+            ->set([$this->_has_many[$alias]['foreign_key'] => $value])
+            ->where($relation->primary_key(), 'IN', $far_keys);
 
         $query->execute($this->_db);
 
@@ -271,6 +270,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     /**
      * @param string $alias
+     *
      * @return ORM
      */
     protected function _get_relation($alias)
@@ -281,6 +281,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * @param $relation_name
      * @param $model
+     *
      * @return $this
      * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
@@ -293,17 +294,17 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string        $relation_alias
-     * @param string|null   $table_alias
+     * @param string      $relation_alias
+     * @param string|null $table_alias
      *
      * @return $this|OrmInterface
      * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
      */
-    public function join_related($relation_alias, $table_alias = NULL)
+    public function join_related($relation_alias, $table_alias = null)
     {
         if (isset($this->_belongs_to[$relation_alias])) {
-            $model = $this->_related($relation_alias);
+            $model       = $this->_related($relation_alias);
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
             $this->join_on_model(
@@ -328,7 +329,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
             if (isset($this->_has_many[$relation_alias]['through'])) {
                 // Grab has_many "through" relationship table
-                $through_table = $this->_has_many[$relation_alias]['through'];
+                $through_table       = $this->_has_many[$relation_alias]['through'];
                 $through_table_alias = $relation_alias.':through';
 
                 $this
@@ -355,7 +356,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             }
         } else {
             throw new \Kohana_Exception('The related model alias :property does not exist in the :class class',
-                array(':property' => $relation_alias, ':class' => get_class($this)));
+                [':property' => $relation_alias, ':class' => get_class($this)]);
         }
 
         return $this;
@@ -393,25 +394,26 @@ class ORM extends \Kohana_ORM implements OrmInterface
 //    }
 
     /**
-     * @param $table_name
-     * @param $table_key
-     * @param $equal_key
+     * @param             $table_name
+     * @param             $table_key
+     * @param             $equal_key
      * @param string|NULL $table_alias
      * @param string|NULL $join_type
+     *
      * @return $this
      */
-    protected function join_on($table_name, $table_key, $equal_key, $table_alias = NULL, $join_type = NULL)
+    protected function join_on($table_name, $table_key, $equal_key, $table_alias = null, $join_type = null)
     {
-        if ( ! $table_alias ) {
+        if (!$table_alias) {
             $table_alias = $table_name;
         }
 
         return $this
-            ->join(array($table_name, $table_alias), $join_type ?: 'LEFT')
+            ->join([$table_name, $table_alias], $join_type ?: 'LEFT')
             ->on($table_alias.'.'.$table_key, '=', $equal_key);
     }
 
-    protected function join_on_model(ORM $model, $on_left, $on_right, $table_alias = NULL)
+    protected function join_on_model(ORM $model, $on_left, $on_right, $table_alias = null)
     {
         return $this->join_on(
             $model->table_name(),
@@ -422,11 +424,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string $term String to search for
-     * @param array $search_columns Columns to search where
+     * @param string $term           String to search for
+     * @param array  $search_columns Columns to search where
+     *
      * @return $this
      */
-    protected function search_query($term, array $search_columns)
+    public function search_query($term, array $search_columns)
     {
         if ($term) {
             // Split into words
@@ -436,7 +439,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             foreach ($words as $word) {
                 $this->and_where_open();
 
-                foreach ( $search_columns as $search_column ) {
+                foreach ($search_columns as $search_column) {
                     $this->or_where($search_column, 'LIKE', '%'.$word.'%');
                 }
 
@@ -447,14 +450,16 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this->cached('search');
     }
 
-    public function autocomplete($term, array $search_fields, $as_key_label_pairs = false)
+    public function autocomplete(string $term, array $search_fields, ?bool $as_key_label_pairs = null): array
     {
+        $as_key_label_pairs = $as_key_label_pairs ?? false;
+
         /** @var ORM[] $results */
         $results = $this->search_query($term, $search_fields)->find_all();
 
-        $output = array();
+        $output = [];
 
-        foreach ( $results as $item ) {
+        foreach ($results as $item) {
             if ($as_key_label_pairs) {
                 $output[$item->autocomplete_formatter_key()] = $item->autocomplete_formatter_label();
             } else {
@@ -470,21 +475,22 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return array
      */
-    protected function autocomplete_formatter()
+    protected function autocomplete_formatter(): array
     {
-        return array(
-            'id'    =>  $this->autocomplete_formatter_key(),
-            'text'  =>  $this->autocomplete_formatter_label(),
-        );
+        return [
+            'id'   => $this->autocomplete_formatter_key(),
+            'text' => $this->autocomplete_formatter_label(),
+        ];
     }
 
     /**
      * Returns "key" for autocomplete formatter
+     *
      * @return int|string
      */
-    protected function autocomplete_formatter_key()
+    protected function autocomplete_formatter_key(): string
     {
-        return $this->get_id();
+        return (string)$this->get_id();
     }
 
     /**
@@ -493,10 +499,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * @throws \Kohana_Exception
      * @return string
      */
-    protected function autocomplete_formatter_label()
+    protected function autocomplete_formatter_label(): string
     {
         throw new \Kohana_Exception('Implement :class::autocomplete_formatter_label() method',
-            array(':class' => get_class($this)));
+            [':class' => get_class($this)]);
     }
 
     /**
@@ -506,7 +512,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         $this->_build(\Database::SELECT);
 
-        $this->_db_builder->from(array($this->_table_name, $this->_object_name));
+        $this->_db_builder->from([$this->_table_name, $this->_object_name]);
 
         return $this;
     }
@@ -519,25 +525,28 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this->_db_builder->execute($this->_db);
     }
 
-    protected function compile($buildSelect = true)
+    protected function compile(?bool $buildSelect = null): string
     {
-        $buildSelect && $this->_build_custom_select();
+        ($buildSelect ?? true) && $this->_build_custom_select();
+
         return $this->_db_builder->compile($this->_db);
     }
 
     protected function select_all_columns()
     {
         $this->_db_builder->select_array($this->_build_select());
+
         return $this;
     }
 
     /**
      * Compile current query as a subquery and make COUNT(*) with from it
+     *
      * @return integer
      */
-    public function compile_as_subquery_and_count_all()
+    public function compile_as_subquery_and_count_all(): int
     {
-        $sql = 'SELECT COUNT(*) AS total FROM (' . $this->compile() . ') AS x';
+        $sql = 'SELECT COUNT(*) AS total FROM ('.$this->compile().') AS x';
 
         $query = \DB::query(\Database::SELECT, $sql);
 
@@ -548,82 +557,91 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     /**
      * Get field alias for COUNT(N) expression
+     *
      * @return string
      */
-    public function get_sql_counter_alias()
+    public function get_sql_counter_alias(): string
     {
         return $this->object_name().'_counter';
     }
 
     /**
      * Get field alias for GROUP_CONCAT(N) expression
+     *
      * @param string $field
+     *
      * @return string
      */
-    public function get_sql_column_group_concat_alias($field)
+    public function get_sql_column_group_concat_alias($field): string
     {
         return $this->object_name().'_'.$field.'_group_concat';
     }
 
     /**
      * Get field alias for CONCAT(N) expression
+     *
      * @param string $field
+     *
      * @return string
      */
-    public function get_sql_column_concat_alias($field)
+    public function get_sql_column_concat_alias($field): string
     {
         return $this->object_name().'_'.$field.'_concat';
     }
 
     /**
      * @param $columns
+     *
      * @return $this
      */
     protected function select_array($columns)
     {
         $this->_db_builder->select_array($columns);
+
         return $this;
     }
 
     /**
      * @param array $ids
-     * @param bool $not_in
+     * @param bool  $not_in
      *
      * @return $this|\ORM|static
      */
-    public function filter_ids(array $ids, $not_in = FALSE)
+    public function filter_ids(array $ids, $not_in = null)
     {
-        return $this->where($this->object_primary_key(), $not_in ? 'NOT IN': 'IN', $ids);
+        return $this->where($this->object_primary_key(), ($not_in ?? false) ? 'NOT IN' : 'IN', $ids);
     }
 
     /**
      * Checks whether a column value is unique.
      * Excludes itself if loaded.
      *
-     * @param   string   $field  the field to check for uniqueness
-     * @param   callable   $additional_filtering  Additional filtering callback
+     * @param   string   $field                the field to check for uniqueness
+     * @param   callable $additional_filtering Additional filtering callback
+     *
      * @return  bool     whatever the value is unique
      */
-    public function unique_field_value($field, callable $additional_filtering = NULL)
+    public function unique_field_value($field, callable $additional_filtering = null): bool
     {
         $value = $this->get($field);
 
         // Skip check if no value present
-        if ( !$value )
+        if (!$value) {
             return true;
+        }
 
         $orm = $this->model_factory();
 
-        if ( $additional_filtering ) {
-            call_user_func($additional_filtering, $orm);
+        if ($additional_filtering) {
+            $additional_filtering($orm);
         }
 
-		$model = $orm
+        $model = $orm
             ->where($this->object_name().'.'.$field, '=', $value)
             ->find();
 
         if ($this->loaded()) {
-            return ( ! ($model->loaded() && $model->pk() != $this->pk()));
+            return (!($model->loaded() && $model->pk() !== $this->pk()));
         }
 
         return !$model->loaded();
@@ -635,54 +653,46 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * @param string             $name
      * @param \DateTimeZone|NULL $tz
      *
-     * @return \DateTime|null
+     * @return \DateTimeImmutable|null
      */
-    protected function get_datetime_column_value($name, \DateTimeZone $tz = NULL)
+    public function get_datetime_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
     {
         $value = $this->get($name);
 
         if (!$value) {
-            return NULL;
+            return null;
         }
 
         return $tz
-            ? \DateTime::createFromFormat('Y-m-d H:i:s', $value, $tz)
-            : \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+            ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value, $tz)
+            : \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value);
     }
 
     /**
      * Sets value of MySQL datetime column from PHP DateTime object
      *
      * @param string             $name
-     * @param \DateTime          $value
-     * @param \DateTimeZone|NULL $tz
+     * @param \DateTimeInterface $value
      *
      * @return $this
      */
-    protected function set_datetime_column_value($name, \DateTime $value, \DateTimeZone $tz = NULL)
+    public function set_datetime_column_value(string $name, \DateTimeInterface $value)
     {
-        if ($tz) {
-            $value->setTimezone($tz);
-        }
-
         return $this->set($name, $value->format('Y-m-d H:i:s'));
     }
 
-    protected function filter_datetime_column_value($name, \DateTime $value, $operator, \DateTimeZone $tz = NULL)
+    public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator)
     {
-        if ($tz) {
-            $value->setTimezone($tz);
-        }
-
         return $this->where($name, $operator, $value->format('Y-m-d H:i:s'));
     }
 
     /**
-     * @param int $pk
+     * @param int         $pk
      * @param string|null $name
+     *
      * @return OrmInterface|mixed
      */
-    public function model_factory($pk = NULL, $name = null)
+    public function model_factory($pk = null, $name = null)
     {
         return static::factory($name ?: $this->object_name(), $pk);
     }

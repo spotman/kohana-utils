@@ -269,7 +269,7 @@ interface OrmQueryBuilderInterface
      *
      * @chainable
      * @throws Exception
-     * @return $this
+     * @return \BetaKiller\Utils\Kohana\ORM\OrmInterface|$this
      */
     public function find();
 

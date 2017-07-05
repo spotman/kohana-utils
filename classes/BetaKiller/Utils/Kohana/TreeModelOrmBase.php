@@ -7,16 +7,22 @@ abstract class TreeModelOrmBase extends \ORM
      * @param int[]|null $parentIDs
      *
      * @return $this
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     abstract protected function filterParentIDs($parentIDs = null);
 
     /**
      * Place here additional query params
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     abstract protected function additionalTreeModelFiltering();
 
     /**
      * @return $this[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getRoot()
     {
@@ -27,6 +33,8 @@ abstract class TreeModelOrmBase extends \ORM
      * Returns list of child iface models
      *
      * @return $this[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getChildren()
     {
@@ -38,6 +46,8 @@ abstract class TreeModelOrmBase extends \ORM
      * @param string|null $key
      * @param string|null $value
      * @return $this[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     private function getChildrenByParentIDs($parent_ids = null, $key = null, $value = null)
     {
@@ -54,11 +64,26 @@ abstract class TreeModelOrmBase extends \ORM
             ->as_array($key, $value);
     }
 
+    /**
+     * @param null $column
+     *
+     * @return array
+     * @todo Rewrite this to tree model repository
+     * @deprecated
+     */
     public function getAllChildren($column = null)
     {
         return $this->getAllChildrenByParentID($this->pk(), $column);
     }
 
+    /**
+     * @param null $parentID
+     * @param null $column
+     *
+     * @return array
+     * @todo Rewrite this to tree model repository
+     * @deprecated
+     */
     protected function getAllChildrenByParentID($parentID = null, $column = null)
     {
         $ids = [];

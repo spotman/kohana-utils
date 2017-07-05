@@ -3,8 +3,8 @@ namespace BetaKiller\Utils\Kohana\ORM;
 
 use BetaKiller\Exception;
 use BetaKiller\Utils\Kohana\ORM;
-use Validation;
 use ORM_Validation_Exception;
+use Validation;
 
 interface OrmInterface extends OrmQueryBuilderInterface
 {
@@ -14,10 +14,12 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Reload column definitions.
      *
      * @chainable
+     *
      * @param   boolean $force Force reloading
+     *
      * @return  ORM
      */
-    public function reload_columns($force = FALSE);
+    public function reload_columns($force = false);
 
     /**
      * Unloads the current object and clears the status.
@@ -39,6 +41,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Checks if object data is set.
      *
      * @param  string $column Column name
+     *
      * @return boolean
      */
     public function __isset($column);
@@ -47,6 +50,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Unsets object data.
      *
      * @param  string $column Column name
+     *
      * @return void
      */
     public function __unset($column);
@@ -70,15 +74,17 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Check whether the model data has been modified.
      * If $field is specified, checks whether that field was modified.
      *
-     * @param string  $field  field to check for changes
+     * @param string $field field to check for changes
+     *
      * @return  bool  Whether or not the field has changed
      */
-    public function changed($field = NULL);
+    public function changed($field = null);
 
     /**
      * Prepares the database connection and reloads the object.
      *
      * @param string $data String for unserialization
+     *
      * @return  void
      */
     public function unserialize($data);
@@ -88,6 +94,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * [!!] This should not be overridden.
      *
      * @param   string $column Column name
+     *
      * @return  mixed
      */
     public function __get($column);
@@ -97,6 +104,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Override this method to add custom get behavior
      *
      * @param   string $column Column name
+     *
      * @throws Exception
      * @return mixed|OrmInterface
      */
@@ -106,8 +114,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Base set method.
      * [!!] This should not be overridden.
      *
-     * @param  string $column  Column name
-     * @param  mixed  $value   Column value
+     * @param  string $column Column name
+     * @param  mixed  $value  Column value
+     *
      * @return void
      */
     public function __set($column, $value);
@@ -118,6 +127,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @param  string $column Column name
      * @param  mixed  $value  Column value
+     *
      * @throws Exception
      * @return $this
      */
@@ -129,9 +139,10 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @param  array $values   Array of column => val
      * @param  array $expected Array of keys to take from $values
+     *
      * @return $this
      */
-    public function values(array $values, array $expected = NULL);
+    public function values(array $values, array $expected = null);
 
     /**
      * Returns the values of this object as an array, including any related one-one
@@ -146,6 +157,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * can be nested using 'object1:object2' syntax
      *
      * @param  string $target_path Target model to bind to
+     *
      * @return $this
      */
     public function with($target_path);
@@ -176,37 +188,44 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Validates the current model's data
      *
      * @param  Validation $extra_validation Validation object
+     *
      * @throws ORM_Validation_Exception
      * @return ORM
      */
-    public function check(Validation $extra_validation = NULL);
+    public function check(Validation $extra_validation = null);
 
     /**
      * Insert a new object to the database
+     *
      * @param  Validation $validation Validation object
+     *
      * @throws Exception
      * @return $this
      */
-    public function create(Validation $validation = NULL);
+    public function create(Validation $validation = null);
 
     /**
      * Updates a single record or multiple records
      *
      * @chainable
+     *
      * @param  Validation $validation Validation object
+     *
      * @throws Exception
      * @return $this
      */
-    public function update(Validation $validation = NULL);
+    public function update(Validation $validation = null);
 
     /**
      * Updates or Creates the record depending on loaded()
      *
      * @chainable
+     *
      * @param  Validation $validation Validation object
+     *
      * @return $this
      */
-    public function save(Validation $validation = NULL);
+    public function save(Validation $validation = null);
 
     /**
      * Deletes a single record while ignoring relationships.
@@ -232,11 +251,12 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Check if $model has any roles
      *     $model->has('roles')
      *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+     * @param  string $alias    Alias of the has_many "through" relationship
+     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     *
      * @return boolean
      */
-    public function has($alias, $far_keys = NULL);
+    public function has($alias, $far_keys = null);
 
     /**
      * Tests if this object has a relationship to a different model,
@@ -252,11 +272,12 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Check if $model has any roles
      *     $model->has('roles')
      *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+     * @param  string $alias    Alias of the has_many "through" relationship
+     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     *
      * @return boolean
      */
-    public function has_any($alias, $far_keys = NULL);
+    public function has_any($alias, $far_keys = null);
 
     /**
      * Returns the number of relationships
@@ -271,11 +292,12 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Counts the number roles attached to $model
      *     $model->has('roles')
      *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+     * @param  string $alias    Alias of the has_many "through" relationship
+     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     *
      * @return integer
      */
-    public function count_relations($alias, $far_keys = NULL);
+    public function count_relations($alias, $far_keys = null);
 
     /**
      * Adds a new relationship to between this model and another.
@@ -287,8 +309,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Add multiple roles (for example, from checkboxes on a form)
      *     $model->add('roles', array(1, 2, 3, 4));
      *
-     * @param  string  $alias    Alias of the has_many "through" relationship
-     * @param  mixed   $far_keys Related model, primary key, or an array of primary keys
+     * @param  string $alias    Alias of the has_many "through" relationship
+     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     *
      * @return $this
      */
     public function add($alias, $far_keys);
@@ -307,9 +330,10 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @param  string $alias    Alias of the has_many "through" relationship
      * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     *
      * @return ORM
      */
-    public function remove($alias, $far_keys = NULL);
+    public function remove($alias, $far_keys = null);
 
     /**
      * Count the number of records in the table.
@@ -408,8 +432,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * Set the value of a parameter in the query.
      *
-     * @param   string   $param  parameter key to replace
-     * @param   mixed    $value  value to use
+     * @param   string $param parameter key to replace
+     * @param   mixed  $value value to use
+     *
      * @return  $this
      */
     public function param($param, $value);
@@ -418,8 +443,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Checks whether a column value is unique.
      * Excludes itself if loaded.
      *
-     * @param   string   $field  the field to check for uniqueness
-     * @param   mixed    $value  the value to check for uniqueness
+     * @param   string $field the field to check for uniqueness
+     * @param   mixed  $value the value to check for uniqueness
+     *
      * @return  bool     whteher the value is unique
      */
     public function unique($field, $value);
@@ -427,12 +453,26 @@ interface OrmInterface extends OrmQueryBuilderInterface
 
     // Extended methods
 
-    public function getModelName();
+    public function belongs_to(array $config = null);
 
-    public function belongs_to(array $config = NULL);
-    public function has_one(array $config = NULL);
-    public function has_many(array $config = NULL);
-    public function load_with(array $config = NULL);
+    public function has_one(array $config = null);
+
+    public function has_many(array $config = null);
+
+    public function load_with(array $config = null);
+
+    /**
+     * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface $model
+     *
+     * @return bool
+     */
+    public function isEqualTo(OrmInterface $model): bool;
+
+    /**
+     * @return $this[]|OrmInterface[]
+     * @throws \Kohana_Exception
+     */
+    public function get_all(): array;
 
     public function get_id();
 
@@ -450,7 +490,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @return $this
      * @throws \Kohana_Exception
      */
-    public function get_by_id($id, $allow_missing = false);
+    public function get_by_id($id, ?bool $allow_missing = null);
 
     /**
      * @return $this
@@ -470,10 +510,11 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function object_column($column);
 
     /**
-     * @param array|integer $ids
+     * @param integer $id
+     *
      * @return $this
      */
-    public function filter_primary_key($ids);
+    public function filter_primary_key(int $id);
 
     /**
      * @return $this
@@ -481,8 +522,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function randomize();
 
     /**
-     * @param string    $name
-     * @param array     $sequence
+     * @param string $name
+     * @param array  $sequence
      *
      * @return $this
      */
@@ -492,6 +533,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Returns TRUE if column exists in database
      *
      * @param string $name
+     *
      * @return bool
      */
     public function has_column($name);
@@ -500,7 +542,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Связывает элементы алиаса (с указанными первичными ключами) с текущей моделью
      *
      * @param string $alias
-     * @param array $far_keys
+     * @param array  $far_keys
+     *
      * @return $this
      */
     public function link_related($alias, array $far_keys);
@@ -508,15 +551,17 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * Отвязывает элементы алиаса (с указанными первичными ключами) от текущей модели
      *
-     * @param string $alias
+     * @param string     $alias
      * @param array|NULL $far_keys
+     *
      * @return $this
      */
-    public function unlink_related($alias, array $far_keys = NULL);
+    public function unlink_related($alias, array $far_keys = null);
 
     /**
      * @param $relation_name
      * @param $model
+     *
      * @return $this
      * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
@@ -529,65 +574,110 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @return $this
      */
-    public function join_related($relation_alias, $table_alias = NULL);
+    public function join_related($relation_alias, $table_alias = null);
 
     /**
      * Compile current query as a subquery and make COUNT(*) with from it
+     *
      * @return integer
      */
     public function compile_as_subquery_and_count_all();
 
     /**
      * Get field alias for COUNT(N) expression
+     *
      * @return string
      */
     public function get_sql_counter_alias();
 
     /**
      * Get field alias for GROUP_CONCAT(N) expression
+     *
      * @param string $field
+     *
      * @return string
      */
     public function get_sql_column_group_concat_alias($field);
 
     /**
      * Get field alias for CONCAT(N) expression
+     *
      * @param string $field
+     *
      * @return string
      */
     public function get_sql_column_concat_alias($field);
 
     /**
      * @param array $ids
-     * @param bool $not_in
+     * @param bool  $not_in
      *
      * @return $this|\ORM|static
      */
-    public function filter_ids(array $ids, $not_in = FALSE);
+    public function filter_ids(array $ids, $not_in = false);
 
     /**
      * Checks whether a column value is unique.
      * Excludes itself if loaded.
      *
-     * @param   string   $field  the field to check for uniqueness
-     * @param   callable   $additional_filtering  Additional filtering callback
+     * @param   string   $field                the field to check for uniqueness
+     * @param   callable $additional_filtering Additional filtering callback
+     *
      * @return  bool     whatever the value is unique
      */
-    public function unique_field_value($field, callable $additional_filtering = NULL);
+    public function unique_field_value($field, callable $additional_filtering = null);
 
     /**
-     * @param int $pk
+     * @param int         $pk
      * @param string|null $name
+     *
      * @return $this
      */
-    public function model_factory($pk = NULL, $name = null);
+    public function model_factory($pk = null, $name = null);
 
     /**
-     * @param string    $term Search term for
-     * @param array     $search_fields Array of fields to search in
-     * @param bool      $as_key_label_pairs
+     * @param string $term          Search term for
+     * @param array  $search_fields Array of fields to search in
+     * @param bool   $as_key_label_pairs
      *
      * @return string[]
      */
-    public function autocomplete($term, array $search_fields, $as_key_label_pairs = false);
+    public function autocomplete(string $term, array $search_fields, ?bool $as_key_label_pairs = null): array;
+
+    /**
+     * @param string $term           String to search for
+     * @param array  $search_columns Columns to search where
+     *
+     * @return $this
+     */
+    public function search_query($term, array $search_columns);
+
+    /**
+     * Converts value of MySQL datetime column to PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeZone|NULL $tz
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function get_datetime_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable;
+
+    /**
+     * Sets value of MySQL datetime column from PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeInterface $value
+     *
+     * @return $this
+     */
+    public function set_datetime_column_value(string $name, \DateTimeInterface $value);
+
+    /**
+     * @param string             $name
+     * @param \DateTimeInterface $value
+     * @param string             $operator
+     *
+     * @return $this
+     */
+    public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator);
 }
