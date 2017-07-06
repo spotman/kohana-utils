@@ -21,17 +21,23 @@ interface TreeModelSingleParentInterface
      * Returns list of child models
      *
      * @return $this[]|mixed
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getChildren();
 
     /**
      * @return $this[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getRoot();
 
     /**
      * @param string|null $column
      * @return int[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getAllChildren($column = null);
 
@@ -51,6 +57,8 @@ interface TreeModelSingleParentInterface
      * @param TreeModelSingleParentInterface $model
      *
      * @return bool
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function hasInAscendingBranch(TreeModelSingleParentInterface $model);
 }

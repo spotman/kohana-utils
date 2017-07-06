@@ -43,8 +43,6 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      * @param TreeModelSingleParentInterface|null $parent
      *
      * @return $this
-     * @todo Rewrite this to tree model repository
-     * @deprecated
      */
     public function setParent(TreeModelSingleParentInterface $parent = null)
     {
