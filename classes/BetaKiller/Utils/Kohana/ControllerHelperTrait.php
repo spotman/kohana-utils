@@ -15,7 +15,7 @@ trait ControllerHelperTrait
      * @return \Request
      * @deprecated
      */
-    public function getRequest()
+    public function getRequest(): \Request
     {
         return $this->request;
     }
@@ -41,7 +41,7 @@ trait ControllerHelperTrait
      * @return \Response
      * @deprecated
      */
-    public function getResponse()
+    public function getResponse(): \Response
     {
         return $this->response;
     }
