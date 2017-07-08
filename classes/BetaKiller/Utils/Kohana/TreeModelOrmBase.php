@@ -17,7 +17,7 @@ abstract class TreeModelOrmBase extends \ORM
      * @todo Rewrite this to tree model repository
      * @deprecated
      */
-    abstract protected function additionalTreeModelFiltering();
+    abstract protected function additionalTreeTraversalFiltering();
 
     /**
      * @return $this[]
@@ -56,7 +56,7 @@ abstract class TreeModelOrmBase extends \ORM
 
         $model->filterParentIDs($parent_ids);
 
-        $model->additionalTreeModelFiltering();
+        $model->additionalTreeTraversalFiltering();
 
         return $model
             ->cached()

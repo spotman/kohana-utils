@@ -12,7 +12,7 @@ trait ControllerHelperTrait
     /**
      * Getter for request
      *
-     * @return Request
+     * @return \Request
      * @deprecated
      */
     public function getRequest()
@@ -23,12 +23,12 @@ trait ControllerHelperTrait
     /**
      * Setter for request
      *
-     * @param Request $request
+     * @param \Request $request
      *
-     * @return Request|$this
+     * @return \Request|$this
      * @deprecated
      */
-    public function setRequest(Request $request)
+    public function setRequest(\Request $request)
     {
         $this->request = $request;
 
@@ -38,7 +38,7 @@ trait ControllerHelperTrait
     /**
      * Getter for response
      *
-     * @return Response
+     * @return \Response
      * @deprecated
      */
     public function getResponse()
@@ -49,12 +49,12 @@ trait ControllerHelperTrait
     /**
      * Setter for response
      *
-     * @param Response $response
+     * @param \Response $response
      *
      * @return $this
      * @deprecated
      */
-    public function setResponse(Response $response)
+    public function setResponse(\Response $response)
     {
         $this->response = $response;
 
