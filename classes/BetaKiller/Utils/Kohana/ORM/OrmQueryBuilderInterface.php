@@ -268,7 +268,7 @@ interface OrmQueryBuilderInterface
      * Finds and loads a single database row into the object.
      *
      * @chainable
-     * @throws Exception
+     * @throws \Kohana_Exception
      * @return \BetaKiller\Utils\Kohana\ORM\OrmInterface|$this
      */
     public function find();
@@ -276,7 +276,7 @@ interface OrmQueryBuilderInterface
     /**
      * Finds multiple database rows and returns an iterator of the rows found.
      *
-     * @throws Exception
+     * @throws \Kohana_Exception
      * @return Database_Result|OrmInterface[]
      */
     public function find_all();
