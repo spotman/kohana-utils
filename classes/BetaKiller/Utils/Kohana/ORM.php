@@ -601,6 +601,23 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this;
     }
 
+
+    /**
+     * Delete all objects in the associated table. This does NOT destroy
+     * relationships that have been created with other objects.
+     *
+     * @chainable
+     * @return  ORM
+     */
+    public function delete_all()
+    {
+        $this->_build(Database::DELETE);
+
+        $this->_db_builder->execute($this->_db);
+
+        return $this->clear();
+    }
+
     /**
      * @param array $ids
      * @param bool  $not_in

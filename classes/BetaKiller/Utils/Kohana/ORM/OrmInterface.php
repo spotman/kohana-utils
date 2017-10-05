@@ -600,6 +600,15 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function get_sql_column_group_concat_alias($field);
 
     /**
+     * Delete all objects in the associated table. This does NOT destroy
+     * relationships that have been created with other objects.
+     *
+     * @chainable
+     * @return  ORM
+     */
+    public function delete_all();
+
+    /**
      * Get field alias for CONCAT(N) expression
      *
      * @param string $field
