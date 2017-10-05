@@ -13,7 +13,7 @@ interface TreeModelSingleParentInterface
     /**
      * Return parent model or null
      *
-     * @return $this|null
+     * @return static|$this|null
      */
     public function getParent();
 
