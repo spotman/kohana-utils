@@ -611,7 +611,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function delete_all()
     {
-        $this->_build(Database::DELETE);
+        $this->_build(\Database::DELETE);
 
         $this->_db_builder->execute($this->_db);
 
