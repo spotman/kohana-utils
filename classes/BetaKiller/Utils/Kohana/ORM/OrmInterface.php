@@ -212,6 +212,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @param  Validation $validation Validation object
      *
      * @throws Exception
+     * @throws \ORM_Validation_Exception
      * @return $this
      */
     public function update(Validation $validation = null);
@@ -224,6 +225,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @param  Validation $validation Validation object
      *
      * @return $this
+     * @throws \ORM_Validation_Exception
      */
     public function save(Validation $validation = null);
 
