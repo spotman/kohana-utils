@@ -145,7 +145,7 @@ trait ControllerHelperTrait
     /**
      * Helper for setting "Expires" header
      *
-     * @param \DateTime $dateTime
+     * @param \DateTimeInterface $dateTime
      *
      * @deprecated
      */
@@ -187,7 +187,7 @@ trait ControllerHelperTrait
      *
      * @deprecated
      */
-    protected function send_json($result = self::JSON_SUCCESS, $data = null)
+    protected function send_json($result = Response::JSON_SUCCESS, $data = null)
     {
         $this->getResponse()->send_json($result, $data);
     }
@@ -199,7 +199,7 @@ trait ControllerHelperTrait
      */
     protected function send_success_json($data = null)
     {
-        $this->send_json(self::JSON_SUCCESS, $data);
+        $this->send_json(Response::JSON_SUCCESS, $data);
     }
 
     /**
@@ -209,7 +209,7 @@ trait ControllerHelperTrait
      */
     protected function send_error_json($data = null)
     {
-        $this->send_json(self::JSON_ERROR, $data);
+        $this->send_json(Response::JSON_ERROR, $data);
     }
 
     /**
