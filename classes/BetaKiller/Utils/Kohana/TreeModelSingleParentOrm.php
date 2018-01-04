@@ -14,9 +14,16 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
             ],
         ]);
 
-        $this->load_with(['parent']);
+        if ($this->load_with_parent()) {
+            $this->load_with(['parent']);
+        }
 
         parent::_initialize();
+    }
+
+    protected function load_with_parent()
+    {
+        return true;
     }
 
     protected function get_parent_id_column_name()
@@ -27,7 +34,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
     /**
      * Return parent iface model or NULL
      *
-     * @return $this|null
+     * @return $this|static|null
      * @todo Rewrite this to tree model repository
      * @deprecated
      */

@@ -32,7 +32,7 @@ abstract class TreeModelOrmBase extends \ORM
     /**
      * Returns list of child iface models
      *
-     * @return $this[]
+     * @return $this[]|mixed
      * @todo Rewrite this to tree model repository
      * @deprecated
      */
