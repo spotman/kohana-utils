@@ -1,6 +1,8 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
+use BetaKiller\View\ViewInterface;
+
 /**
  * Trait ControllerHelperTrait
  *
@@ -170,13 +172,13 @@ trait ControllerHelperTrait
     /**
      * Helper for sending view to Response
      *
-     * @param \View $view
+     * @param ViewInterface $view
      *
      * @deprecated
      */
-    protected function send_view(\View $view)
+    protected function send_view(ViewInterface $view)
     {
-        $this->send_string($view);
+        $this->send_string($view->render());
     }
 
     /**

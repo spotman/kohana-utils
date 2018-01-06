@@ -1,6 +1,8 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
+use BetaKiller\ExceptionInterface;
+
 class Response extends \Kohana_Response
 {
     /**
@@ -340,11 +342,19 @@ class Response extends \Kohana_Response
 
         $response = static::current();
 
+        if (!$response) {
+            throw $e;
+        }
+
         switch ( $response->content_type() )
         {
             case self::TYPE_JSON:
                 \Kohana_Exception::log($e);
-                $response->send_json(self::JSON_ERROR, \Kohana_Exception::getUserMessage($e));
+
+                $show = ($e instanceof ExceptionInterface) && $e->showOriginalMessageToUser();
+                $message = $show ? $e->getMessage() : null;
+
+                $response->send_json(self::JSON_ERROR, $message);
                 break;
 
             default:
