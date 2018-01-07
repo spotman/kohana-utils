@@ -1,18 +1,16 @@
 <?php
 namespace BetaKiller\Utils\Factory;
 
-use BetaKiller\Utils\Factory\Exception;
 
-trait Namespaced {
-
+trait NamespacedFactoryTrait
+{
     use BaseFactoryTrait;
 
     protected function make_instance_class_name($name)
     {
-        $output = array();
+        $output = [];
 
-        foreach ($this->get_namespaces() as $ns)
-        {
+        foreach ($this->get_namespaces() as $ns) {
             $output[] = $ns.'\\'.$name;
         }
 
@@ -21,7 +19,6 @@ trait Namespaced {
 
     /**
      * @return array
-     * @throws \BetaKiller\Utils\Factory\Exception
      */
     protected function get_namespaces()
     {
