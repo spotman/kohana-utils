@@ -34,7 +34,7 @@ trait TreeModelSingleParentTrait
         $current = $this;
 
         do {
-            if ($current->get_id() === $model->get_id()) {
+            if ($current->getID() === $model->getID()) {
                 return TRUE;
             }
         } while ($current = $current->getParent());

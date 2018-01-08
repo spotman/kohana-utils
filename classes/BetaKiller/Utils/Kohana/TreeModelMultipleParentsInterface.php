@@ -1,27 +1,21 @@
 <?php
-
 namespace BetaKiller\Utils\Kohana;
 
 interface TreeModelMultipleParentsInterface
 {
     /**
-     * @return int
-     */
-    public function get_id(); // BC for Kohana ORM models
-
-    /**
      * Return parents models
      *
-     * @return $this[]
+     * @return \BetaKiller\Utils\Kohana\TreeModelMultipleParentsInterface[]|mixed
      */
-    public function getParents();
+    public function getParents(): array;
 
     /**
      * Return all parent models including in hierarchy
      *
-     * @return $this[]
+     * @return \BetaKiller\Utils\Kohana\TreeModelMultipleParentsInterface[]|mixed
      */
-    public function getAllParents();
+    public function getAllParents(): array;
 
     /**
      * @param TreeModelMultipleParentsInterface $parent
@@ -50,8 +44,9 @@ interface TreeModelMultipleParentsInterface
     public function getChildren();
 
     /**
-     * @param string|null $column
-     * @return $this[]|int[]
+     * @param string|null $columnName
+     *
+     * @return \BetaKiller\Utils\Kohana\TreeModelMultipleParentsInterface[]|int[]
      */
-    public function getAllChildren($column = null);
+    public function getAllChildren(string $columnName = null);
 }

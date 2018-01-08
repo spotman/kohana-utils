@@ -1,15 +1,10 @@
 <?php
-
 namespace BetaKiller\Utils\Kohana;
 
-interface TreeModelSingleParentInterface
-{
-    /**
-     * Redundant fix for autocomplete ORM::get_id();
-     * @return int
-     */
-    public function get_id();
+use BetaKiller\Model\AbstractEntityInterface;
 
+interface TreeModelSingleParentInterface extends AbstractEntityInterface
+{
     /**
      * Return parent model or null
      *
@@ -34,12 +29,13 @@ interface TreeModelSingleParentInterface
     public function getRoot();
 
     /**
-     * @param string|null $column
+     * @param string|null $columnName
+     *
      * @return int[]
      * @todo Rewrite this to tree model repository
      * @deprecated
      */
-    public function getAllChildren($column = null);
+    public function getAllChildren(string $columnName = null);
 
     /**
      * @param TreeModelSingleParentInterface|null $parent

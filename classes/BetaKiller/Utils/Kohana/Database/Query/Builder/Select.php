@@ -11,21 +11,22 @@ class Select extends \Kohana_Database_Query_Builder_Select {
      * @param int|string|null $lifetime Время жизни кеша в секундах или строковый ключ для запроса или NULL для дефолтного кеширования на 60 секунд
      * @param bool $force
      * @return $this
-     * @throws Kohana_Exception
+     * @throws \Kohana_Exception
      */
     public function cached($lifetime = NULL, $force = FALSE)
     {
-        if (!Kohana::in_production())
+        if (!\Kohana::in_production()) {
             return $this;
+        }
 
-        if (!$lifetime OR is_string($lifetime))
+        $key = \Arr::get($this->_from, 0);
+
+        if (\is_string($lifetime)) {
+            $key .= '.'.$lifetime;
+        }
+
+        if (!$lifetime || \is_string($lifetime))
         {
-            $key = Arr::get($this->_from, 0);
-
-            if (is_string($lifetime))
-            {
-                $key .= '.'.$lifetime;
-            }
             $group = \Kohana::$config->load('clt');
             $lifetime = $group ? $group->get($key, 60) : 60;
         }

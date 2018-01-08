@@ -3,28 +3,28 @@ namespace BetaKiller\Utils\Kohana;
 
 abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements TreeModelMultipleParentsInterface
 {
-    abstract protected function get_through_table_name();
+    abstract protected function getTreeModelThroughTableName();
 
     protected function _initialize()
     {
         $this->has_many([
             'parents' => [
                 'model'       => $this->getModelName(),
-                'foreign_key' => $this->get_child_id_column_name(),
-                'far_key'     => $this->get_parent_id_column_name(),
-                'through'     => $this->get_through_table_name(),
+                'foreign_key' => $this->getChildIdColumnName(),
+                'far_key'     => $this->getParentIdColumnName(),
+                'through'     => $this->getTreeModelThroughTableName(),
             ],
         ]);
 
         parent::_initialize();
     }
 
-    protected function get_child_id_column_name()
+    protected function getChildIdColumnName(): string
     {
         return 'child_id';
     }
 
-    protected function get_parent_id_column_name()
+    protected function getParentIdColumnName(): string
     {
         return 'parent_id';
     }
@@ -33,30 +33,38 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
      * Return parents model or null
      *
      * @return $this[]
+     * @throws \Kohana_Exception
      */
-    public function getParents()
+    public function getParents(): array
     {
-        return $this->get_parents_relation()->find_all()->as_array();
+        return $this->getParentsRelation()->find_all()->as_array();
     }
 
     /**
      * Return all parent models including in hierarchy
      *
-     * @return $this[]
+     * @return \BetaKiller\Utils\Kohana\TreeModelMultipleParentsInterface[]
      */
-    public function getAllParents()
+    public function getAllParents(): array
     {
         return $this->getAllParentsRecursively($this);
     }
 
+    /**
+     * @param \BetaKiller\Utils\Kohana\TreeModelMultipleParentsInterface $child
+     *
+     * @return \BetaKiller\Utils\Kohana\TreeModelMultipleParentsInterface[]
+     */
     protected function getAllParentsRecursively(TreeModelMultipleParentsInterface $child): array
     {
         $parents = [];
 
         foreach ($child->getParents() as $parent) {
-            $parents[]      = $parent;
-            $parent_parents = $this->getAllParentsRecursively($parent);
-            $parents        = array_merge($parents, $parent_parents);
+            $parents[] = $parent;
+
+            foreach ($this->getAllParentsRecursively($parent) as $grandParent) {
+                $parents[] = $grandParent;
+            }
         }
 
         return $parents;
@@ -65,28 +73,30 @@ abstract class TreeModelMultipleParentsOrm extends TreeModelOrmBase implements T
     /**
      * @return $this
      */
-    protected function get_parents_relation()
+    protected function getParentsRelation()
     {
         return $this->get('parents');
     }
 
     /**
-     * @param int[]|null $parent_ids
+     * @param array|null $parentIDs
      *
      * @return $this
+     * @throws \HTTP_Exception_501
+     * @throws \Kohana_Exception
      */
-    protected function filterParentIDs($parent_ids = null)
+    protected function filterParentIDs($parentIDs = null)
     {
-        $parents_table_name_alias = $this->table_name().'_parents';
+        $parentsTableNameAlias = $this->table_name().'_parents';
 
-        $this->join_related('parents', $parents_table_name_alias);
+        $this->join_related('parents', $parentsTableNameAlias);
 
-        $parent_id_col = $parents_table_name_alias.'.'.$this->get_parent_id_column_name();
+        $parentIdCol = $parentsTableNameAlias.'.'.$this->getParentIdColumnName();
 
-        if ($parent_ids) {
-            $this->where($parent_id_col, 'IN', (array)$parent_ids);
+        if ($parentIDs) {
+            $this->where($parentIdCol, 'IN', (array)$parentIDs);
         } else {
-            $this->where($parent_id_col, 'IS', null);
+            $this->where($parentIdCol, 'IS', null);
         }
 
         return $this;

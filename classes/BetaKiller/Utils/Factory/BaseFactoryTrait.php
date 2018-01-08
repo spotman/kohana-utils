@@ -1,6 +1,12 @@
 <?php
 namespace BetaKiller\Utils\Factory;
 
+/**
+ * Trait BaseFactoryTrait
+ *
+ * @package BetaKiller\Utils\Factory
+ * @deprecated use NamespaceBasedFactory instead
+ */
 trait BaseFactoryTrait
 {
     /**
@@ -41,7 +47,7 @@ trait BaseFactoryTrait
         }
 
         if ( !$class_name ) {
-            throw new Exception\Missing('Can not factory :name in :class',
+            throw new Exception\FactoryMissingException('Can not factory :name in :class',
                 array(':name' => $name, ':class' => get_class($this)));
         }
 

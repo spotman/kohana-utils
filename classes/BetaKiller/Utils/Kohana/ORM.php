@@ -279,14 +279,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param $relation_name
-     * @param $model
+     * @param                                           $relation_name
+     * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface $model
      *
      * @return $this
      * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
      */
-    public function filter_related($relation_name, ORM $model)
+    public function filter_related($relation_name, OrmInterface $model)
     {
         return $this
             ->join_related($relation_name)

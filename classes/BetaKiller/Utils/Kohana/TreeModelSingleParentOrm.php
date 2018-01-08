@@ -10,23 +10,23 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
         $this->belongs_to([
             'parent' => [
                 'model'       => $this->getModelName(),
-                'foreign_key' => $this->get_parent_id_column_name(),
+                'foreign_key' => $this->getParentIdColumnName(),
             ],
         ]);
 
-        if ($this->load_with_parent()) {
+        if ($this->loadWithParent()) {
             $this->load_with(['parent']);
         }
 
         parent::_initialize();
     }
 
-    protected function load_with_parent()
+    protected function loadWithParent(): bool
     {
         return true;
     }
 
-    protected function get_parent_id_column_name()
+    protected function getParentIdColumnName(): string
     {
         return 'parent_id';
     }
@@ -43,7 +43,7 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
         /** @var static $parent */
         $parent = $this->get('parent');
 
-        return $parent->loaded() ? $parent : NULL;
+        return $parent->loaded() ? $parent : null;
     }
 
     /**
@@ -65,10 +65,10 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
      */
     public function filter_parent(TreeModelSingleParentInterface $parent = null)
     {
-        $col = $this->object_column($this->get_parent_id_column_name());
+        $col = $this->object_column($this->getParentIdColumnName());
 
         if ($parent) {
-            $this->where($col, '=', $parent->get_id());
+            $this->where($col, '=', $parent->getID());
         } else {
             $this->where($col, 'IS', null);
         }
@@ -77,20 +77,20 @@ abstract class TreeModelSingleParentOrm extends TreeModelOrmBase implements Tree
     }
 
     /**
-     * @param int[]|null $parent_ids
+     * @param int[]|null $parentIDs
      *
      * @return $this
      * @todo Rewrite this to tree model repository
      * @deprecated
      */
-    protected function filterParentIDs($parent_ids = NULL)
+    protected function filterParentIDs($parentIDs = null)
     {
-        $parent_id_col = $this->object_column($this->get_parent_id_column_name());
+        $parentIdCol = $this->object_column($this->getParentIdColumnName());
 
-        if ($parent_ids) {
-            $this->where($parent_id_col, 'IN', (array) $parent_ids);
+        if ($parentIDs) {
+            $this->where($parentIdCol, 'IN', (array)$parentIDs);
         } else {
-            $this->where($parent_id_col, 'IS', null);
+            $this->where($parentIdCol, 'IS', null);
         }
 
         return $this;

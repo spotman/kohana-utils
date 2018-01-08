@@ -1,7 +1,13 @@
 <?php
 namespace BetaKiller\Utils\Factory;
 
-trait Cached {
+/**
+ * Trait Cached
+ *
+ * @package BetaKiller\Utils\Factory
+ * @deprecated use NamespaceBasedFactory instead
+ */
+trait CachedFactoryTrait {
 
     use BaseFactoryTrait;
 

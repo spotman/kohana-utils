@@ -3,4 +3,4 @@ namespace BetaKiller\Utils\Registry;
 
 use \BetaKiller\Utils;
 
-class Exception extends Utils\Exception {}
+class Exception extends Utils\UtilsException {}

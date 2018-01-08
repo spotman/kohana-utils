@@ -1,8 +1,7 @@
 <?php
 namespace BetaKiller\Utils\Instance;
 
-use BetaKiller\Utils\Exception;
-use BetaKiller\DI\Container;
+use BetaKiller\Utils\UtilsException;
 
 /**
  * Trait Singleton
@@ -27,7 +26,7 @@ trait SingletonTrait
     public static function instance()
     {
         if (!static::$instance) {
-            static::$instance = Container::getInstance()->get(static::class);
+            static::$instance = new static;
         }
         return static::$instance;
     }
@@ -39,7 +38,7 @@ trait SingletonTrait
     public function __construct()
     {
         if (static::$instance) {
-            throw new Exception('Duplicate instantiating is not allowed');
+            throw new UtilsException('Duplicate instantiating is not allowed');
         }
     }
 

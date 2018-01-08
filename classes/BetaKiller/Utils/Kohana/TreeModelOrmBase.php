@@ -65,15 +65,15 @@ abstract class TreeModelOrmBase extends \ORM
     }
 
     /**
-     * @param null $column
+     * @param string|null $columnName
      *
      * @return array
      * @todo Rewrite this to tree model repository
      * @deprecated
      */
-    public function getAllChildren($column = null)
+    public function getAllChildren(string $columnName = null)
     {
-        return $this->getAllChildrenByParentID($this->pk(), $column);
+        return $this->getAllChildrenByParentID($this->pk(), $columnName);
     }
 
     /**

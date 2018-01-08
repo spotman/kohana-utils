@@ -2,6 +2,12 @@
 namespace BetaKiller\Utils\Factory;
 
 
+/**
+ * Trait NamespacedFactoryTrait
+ *
+ * @package BetaKiller\Utils\Factory
+ * @deprecated use NamespaceBasedFactory instead
+ */
 trait NamespacedFactoryTrait
 {
     use BaseFactoryTrait;
@@ -22,7 +28,7 @@ trait NamespacedFactoryTrait
      */
     protected function get_namespaces()
     {
-        throw new Exception('Define namespaces in :class', array(':class' => __CLASS__));
+        throw new FactoryException('Define namespaces in :class', array(':class' => __CLASS__));
     }
 
 }
