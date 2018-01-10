@@ -3,7 +3,7 @@ namespace BetaKiller\Utils\Registry;
 
 trait RegistryTrait
 {
-    protected $_registry = [];
+    protected $registry = [];
 
     /**
      * @param string     $key
@@ -11,17 +11,17 @@ trait RegistryTrait
      * @param bool|null  $ignoreDuplicate
      *
      * @return $this
-     * @throws Exception
+     * @throws RegistryException
      */
     public function set(string $key, $object, ?bool $ignoreDuplicate = null)
     {
         $ignoreDuplicate = $ignoreDuplicate ?? false;
 
         if (!$ignoreDuplicate && $this->has($key)) {
-            throw new Exception('Data for :key key already exists', [':key' => $key]);
+            throw new RegistryException('Data for :key key already exists', [':key' => $key]);
         }
 
-        $this->_registry[$key] = $object;
+        $this->registry[$key] = $object;
 
         return $this;
     }
@@ -34,7 +34,7 @@ trait RegistryTrait
     public function get($key)
     {
         return $this->has($key)
-            ? $this->_registry[$key]
+            ? $this->registry[$key]
             : null;
     }
 
@@ -43,7 +43,7 @@ trait RegistryTrait
      */
     public function clear()
     {
-        $this->_registry = [];
+        $this->registry = [];
 
         return $this;
     }
@@ -53,7 +53,7 @@ trait RegistryTrait
      */
     public function getAll(): array
     {
-        return $this->_registry;
+        return $this->registry;
     }
 
     /**
@@ -63,7 +63,7 @@ trait RegistryTrait
      */
     public function has($key): bool
     {
-        return isset($this->_registry[$key]);
+        return isset($this->registry[$key]);
     }
 
     /**
@@ -73,7 +73,7 @@ trait RegistryTrait
      */
     public function keys(): array
     {
-        return array_keys($this->_registry);
+        return array_keys($this->registry);
     }
 
     /**
@@ -103,7 +103,7 @@ trait RegistryTrait
      * @param $object
      *
      * @deprecated
-     * @throws Exception
+     * @throws RegistryException
      */
     public function __set($key, $object)
     {

@@ -16,6 +16,6 @@ class BasicRegistry implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->_registry);
+        return new \ArrayIterator($this->registry);
     }
 }
