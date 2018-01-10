@@ -6,7 +6,7 @@ class Exception extends \Kohana_Exception
     /**
      * @param \Throwable $e
      *
-     * @return static|mixed
+     * @return static
      */
     public static function wrap(\Throwable $e)
     {
