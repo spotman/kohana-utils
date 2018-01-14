@@ -15,7 +15,7 @@ class Select extends \Kohana_Database_Query_Builder_Select {
      */
     public function cached($lifetime = NULL, $force = FALSE)
     {
-        if (!\Kohana::in_production()) {
+        if (!\Kohana::$environment === \Kohana::PRODUCTION) {
             return $this;
         }
 
