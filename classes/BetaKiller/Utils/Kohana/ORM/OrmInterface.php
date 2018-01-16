@@ -211,7 +211,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @param  Validation $validation Validation object
      *
-     * @throws Exception
+     * @throws \Kohana_Exception
      * @throws \ORM_Validation_Exception
      * @return $this
      */
@@ -233,7 +233,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Deletes a single record while ignoring relationships.
      *
      * @chainable
-     * @throws Exception
+     * @throws \Kohana_Exception
      * @return $this
      */
     public function delete();
