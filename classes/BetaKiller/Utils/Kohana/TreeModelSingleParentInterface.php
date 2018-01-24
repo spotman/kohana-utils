@@ -9,6 +9,8 @@ interface TreeModelSingleParentInterface extends AbstractEntityInterface
      * Return parent model or null
      *
      * @return static|$this|null
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getParent();
 
@@ -41,11 +43,14 @@ interface TreeModelSingleParentInterface extends AbstractEntityInterface
      * @param TreeModelSingleParentInterface|null $parent
      *
      * @return $this
+     * @deprecated
      */
     public function setParent(TreeModelSingleParentInterface $parent = null);
 
     /**
      * @return $this[]
+     * @todo Rewrite this to tree model repository
+     * @deprecated
      */
     public function getParents();
 
