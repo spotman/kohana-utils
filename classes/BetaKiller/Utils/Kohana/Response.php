@@ -359,9 +359,15 @@ class Response extends \Kohana_Response
                 \Kohana_Exception::log($e);
 
                 $show = ($e instanceof ExceptionInterface) && $e->showOriginalMessageToUser();
-                $message = $show ? $e->getMessage() : null;
 
-                $response->send_json(self::JSON_ERROR, $message);
+                if ($show) {
+                    $message = $e->getMessage() ?: __($e->getDefaultMessageI18nKey());
+
+                    $response->send_json(self::JSON_ERROR, $message);
+                } else {
+                    $response->send_json(self::JSON_ERROR);
+                }
+
                 break;
 
             default:
