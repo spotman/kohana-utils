@@ -77,6 +77,11 @@ trait ControllerHelperTrait
         return $this->getRequest()->param($key, $default);
     }
 
+    protected function action(): string
+    {
+        return $this->getRequest()->action();
+    }
+
     /**
      * @param null $key
      *
