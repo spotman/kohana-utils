@@ -325,7 +325,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 //
 //            return $this->_related[$column] = $model;
         } elseif (isset($this->_has_many[$relation_alias])) {
-            $model = ORM::factory($this->_has_many[$relation_alias]['model']);
+            $model = \ORM::factory($this->_has_many[$relation_alias]['model']);
 
             if (isset($this->_has_many[$relation_alias]['through'])) {
                 // Grab has_many "through" relationship table
