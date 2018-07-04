@@ -5,6 +5,9 @@ use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 
 class ORM extends \Kohana_ORM implements OrmInterface
 {
+    public const FORMAT_DATE     = 'Y-m-d';
+    public const FORMAT_DATETIME = 'Y-m-d H:i:s';
+
     public function belongs_to(array $config = null): array
     {
         if ($config) {
@@ -681,8 +684,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
         }
 
         return $tz
-            ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value, $tz)
-            : \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value);
+            ? \DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, $tz)
+            : \DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value);
     }
 
     /**
@@ -695,12 +698,51 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function set_datetime_column_value(string $name, \DateTimeInterface $value)
     {
-        return $this->set($name, $value->format('Y-m-d H:i:s'));
+        return $this->set($name, $value->format(self::FORMAT_DATETIME));
     }
 
     public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator)
     {
-        return $this->where($name, $operator, $value->format('Y-m-d H:i:s'));
+        return $this->where($name, $operator, $value->format(self::FORMAT_DATETIME));
+    }
+
+    /**
+     * Converts value of MySQL date column to PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeZone|NULL $tz
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function get_date_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
+    {
+        $value = $this->get($name);
+
+        if (!$value) {
+            return null;
+        }
+
+        return $tz
+            ? \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $tz)
+            : \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value);
+    }
+
+    /**
+     * Sets value of MySQL date column from PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeInterface $value
+     *
+     * @return $this
+     */
+    public function set_date_column_value(string $name, \DateTimeInterface $value)
+    {
+        return $this->set($name, $value->format(self::FORMAT_DATE));
+    }
+
+    public function filter_date_column_value(string $name, \DateTimeInterface $value, string $operator)
+    {
+        return $this->where($name, $operator, $value->format(self::FORMAT_DATE));
     }
 
     /**

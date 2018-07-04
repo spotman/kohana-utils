@@ -689,4 +689,28 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @return $this
      */
     public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator);
+
+
+    /**
+     * Converts value of MySQL date column to PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeZone|NULL $tz
+     *
+     * @return \DateTimeImmutable|null
+     */
+    public function get_date_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable;
+
+    /**
+     * Sets value of MySQL date column from PHP DateTime object
+     *
+     * @param string             $name
+     * @param \DateTimeInterface $value
+     *
+     * @return $this
+     */
+    public function set_date_column_value(string $name, \DateTimeInterface $value);
+
+    public function filter_date_column_value(string $name, \DateTimeInterface $value, string $operator);
+
 }
