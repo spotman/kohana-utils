@@ -67,6 +67,14 @@ trait RegistryTrait
     }
 
     /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return \count($this->registry);
+    }
+
+    /**
      * Returns keys of currently added items
      *
      * @return array
