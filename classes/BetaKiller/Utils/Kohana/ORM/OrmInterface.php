@@ -569,12 +569,12 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function filter_related($relation_name, OrmInterface $model);
 
     /**
-     * @param      $relation_alias
-     * @param null $table_alias
+     * @param string $relation_alias
+     * @param string $table_alias
      *
      * @return $this
      */
-    public function join_related($relation_alias, $table_alias = null);
+    public function join_related(string $relation_alias, string $table_alias = null);
 
     /**
      * Compile current query as a subquery and make COUNT(*) with from it

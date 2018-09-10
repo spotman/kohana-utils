@@ -297,14 +297,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string      $relation_alias
-     * @param string|null $table_alias
+     * @param string $relation_alias
+     * @param string $table_alias
      *
      * @return $this|OrmInterface
      * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
      */
-    public function join_related($relation_alias, $table_alias = null)
+    public function join_related(string $relation_alias, string $table_alias = null)
     {
         if (isset($this->_belongs_to[$relation_alias])) {
             $model       = $this->_related($relation_alias);
