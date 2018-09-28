@@ -8,12 +8,12 @@ class Request extends \Kohana_Request
         return $this->param('module');
     }
 
-    public function client_ip()
+    public function getClientIp(): string
     {
         return static::$client_ip;
     }
 
-    public function get_user_agent()
+    public function getUserAgent(): string
     {
         return static::$user_agent;
     }
