@@ -3,6 +3,12 @@ namespace BetaKiller\Utils\Kohana;
 
 use BetaKiller\ExceptionInterface;
 
+/**
+ * Class Response
+ *
+ * @package BetaKiller\Utils\Kohana
+ * @deprecated
+ */
 class Response extends \Kohana_Response
 {
     /**

@@ -1,6 +1,12 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
+/**
+ * Class Request
+ *
+ * @deprecated
+ * @package BetaKiller\Utils\Kohana
+ */
 class Request extends \Kohana_Request
 {
     public function module()
