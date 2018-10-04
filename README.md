@@ -4,8 +4,6 @@ kohana-utils
 Utils which I frequently use in BetaKiller apps.
 
 - [Registry](classes/BetaKiller/Utils/Registry) (trait + class)
-- [Factory](classes/BetaKiller/Utils/Factory) (Simple + Cached + Namespaced)
-- [Instance](classes/BetaKiller/Utils/Instance) (Simple + Singleton)
 
 
 Directory `Kohana` contains some useful utils for Kohana-based apps:
