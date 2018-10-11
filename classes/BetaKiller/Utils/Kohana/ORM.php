@@ -286,7 +286,6 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface $model
      *
      * @return $this
-     * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
      */
     public function filter_related($relation_name, OrmInterface $model)
@@ -301,7 +300,6 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * @param string $table_alias
      *
      * @return $this|OrmInterface
-     * @throws \HTTP_Exception_501
      * @throws \Kohana_Exception
      */
     public function join_related(string $relation_alias, string $table_alias = null)
@@ -317,7 +315,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                 $table_alias
             );
         } elseif (isset($this->_has_one[$relation_alias])) {
-            throw new \HTTP_Exception_501;
+            throw new \LogicException('Not implemented');
 //            $model = $this->_related($column);
 //
 //            // Use this model's primary key value and foreign model's column
@@ -379,7 +377,6 @@ class ORM extends \Kohana_ORM implements OrmInterface
 //        }
 //        elseif (isset($this->_has_one[$relation_alias]))
 //        {
-//            throw new HTTP_Exception_501;
 //        }
 //        elseif (isset($this->_has_many[$relation_alias]))
 //        {
