@@ -296,23 +296,23 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string $relation_alias
-     * @param string $table_alias
+     * @param string      $relation_alias
+     * @param string      $table_alias
+     *
+     * @param string|null $type
      *
      * @return $this|OrmInterface
+     * @throws \BetaKiller\Factory\FactoryException
      * @throws \Kohana_Exception
      */
-    public function join_related(string $relation_alias, string $table_alias = null)
+    public function join_related(string $relation_alias, string $table_alias = null, string $type = null)
     {
         if (isset($this->_belongs_to[$relation_alias])) {
             $model       = $this->_related($relation_alias);
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
             $this->join_on_model(
-                $model,
-                $model->primary_key(),
-                $this->object_column($foreign_key),
-                $table_alias
+                $model, $model->primary_key(), $this->object_column($foreign_key), $table_alias
             );
         } elseif (isset($this->_has_one[$relation_alias])) {
             throw new \LogicException('Not implemented');
@@ -413,13 +413,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
             ->on($table_alias.'.'.$table_key, '=', $equal_key);
     }
 
-    protected function join_on_model(ORM $model, $on_left, $on_right, $table_alias = null)
+    protected function join_on_model(ORM $model, $on_left, $on_right, $table_alias = null, string $type = null)
     {
         return $this->join_on(
             $model->table_name(),
             $on_left,
             $on_right,
-            $table_alias ?: $model->object_name()
+            $table_alias ?: $model->object_name(),
+            $type
         );
     }
 
