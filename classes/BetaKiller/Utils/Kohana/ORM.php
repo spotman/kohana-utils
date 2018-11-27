@@ -673,7 +673,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return \DateTimeImmutable|null
      */
-    public function get_datetime_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
+    protected function get_datetime_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
     {
         $value = $this->get($name);
 
@@ -694,7 +694,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return $this
      */
-    public function set_datetime_column_value(string $name, \DateTimeInterface $value)
+    protected function set_datetime_column_value(string $name, \DateTimeInterface $value)
     {
         return $this->set($name, $value->format(self::FORMAT_DATETIME));
     }
@@ -712,7 +712,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return \DateTimeImmutable|null
      */
-    public function get_date_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
+    protected function get_date_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
     {
         $value = $this->get($name);
 
@@ -733,7 +733,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return $this
      */
-    public function set_date_column_value(string $name, \DateTimeInterface $value)
+    protected function set_date_column_value(string $name, \DateTimeInterface $value)
     {
         return $this->set($name, $value->format(self::FORMAT_DATE));
     }

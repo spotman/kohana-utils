@@ -664,26 +664,6 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function search_query($term, array $search_columns);
 
     /**
-     * Converts value of MySQL datetime column to PHP DateTime object
-     *
-     * @param string             $name
-     * @param \DateTimeZone|NULL $tz
-     *
-     * @return \DateTimeImmutable|null
-     */
-    public function get_datetime_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable;
-
-    /**
-     * Sets value of MySQL datetime column from PHP DateTime object
-     *
-     * @param string             $name
-     * @param \DateTimeInterface $value
-     *
-     * @return $this
-     */
-    public function set_datetime_column_value(string $name, \DateTimeInterface $value);
-
-    /**
      * @param string             $name
      * @param \DateTimeInterface $value
      * @param string             $operator
@@ -692,27 +672,13 @@ interface OrmInterface extends OrmQueryBuilderInterface
      */
     public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator);
 
-
     /**
-     * Converts value of MySQL date column to PHP DateTime object
-     *
-     * @param string             $name
-     * @param \DateTimeZone|NULL $tz
-     *
-     * @return \DateTimeImmutable|null
-     */
-    public function get_date_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable;
-
-    /**
-     * Sets value of MySQL date column from PHP DateTime object
-     *
      * @param string             $name
      * @param \DateTimeInterface $value
+     * @param string             $operator
      *
      * @return $this
      */
-    public function set_date_column_value(string $name, \DateTimeInterface $value);
-
     public function filter_date_column_value(string $name, \DateTimeInterface $value, string $operator);
 
 }
