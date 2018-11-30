@@ -579,6 +579,13 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function join_related(string $relation_alias, string $table_alias = null, string $type = null);
 
     /**
+     * @param bool|null $buildSelect
+     *
+     * @return string
+     */
+    public function compile(bool $buildSelect = null): string;
+
+    /**
      * Compile current query as a subquery and make COUNT(*) with from it
      *
      * @return integer

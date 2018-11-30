@@ -526,7 +526,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this->_db_builder->execute($this->_db);
     }
 
-    protected function compile(?bool $buildSelect = null): string
+    public function compile(bool $buildSelect = null): string
     {
         ($buildSelect ?? true) && $this->_build_custom_select();
 
