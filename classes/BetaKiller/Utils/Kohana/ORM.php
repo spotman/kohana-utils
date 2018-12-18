@@ -356,8 +356,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
                 );
             }
         } else {
-            throw new \Kohana_Exception('The related model alias :property does not exist in the :class class',
-                [':property' => $relation_alias, ':class' => get_class($this)]);
+            throw new \Kohana_Exception('The related alias ":property" does not exist in the :class class', [
+                ':property' => $relation_alias,
+                ':class'    => get_class($this),
+            ]);
         }
 
         return $this;
