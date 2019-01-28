@@ -136,11 +136,11 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param int $id
+     * @param string $id
      *
      * @return $this
      */
-    public function filter_primary_key(int $id)
+    public function filter_primary_key(string $id)
     {
         return $this->where($this->object_primary_key(), '=', $id);
     }
@@ -159,7 +159,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return $this|OrmInterface
      */
-    public function order_by_field_sequence($name, array $sequence)
+    public function order_by_field_sequence(string $name, array $sequence)
     {
         return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $sequence).'")'), 'ASC');
     }

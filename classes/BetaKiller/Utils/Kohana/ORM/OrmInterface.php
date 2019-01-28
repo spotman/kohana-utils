@@ -512,11 +512,11 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function object_column($column);
 
     /**
-     * @param integer $id
+     * @param string $id
      *
      * @return $this
      */
-    public function filter_primary_key(int $id);
+    public function filter_primary_key(string $id);
 
     /**
      * @return $this
@@ -529,7 +529,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @return $this
      */
-    public function order_by_field_sequence($name, array $sequence);
+    public function order_by_field_sequence(string $name, array $sequence);
 
     /**
      * Returns TRUE if column exists in database
