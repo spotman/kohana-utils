@@ -315,16 +315,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
                 $model, $model->primary_key(), $this->object_column($foreign_key), $table_alias
             );
         } elseif (isset($this->_has_one[$relation_alias])) {
-            throw new \LogicException('Not implemented');
-//            $model = $this->_related($column);
-//
-//            // Use this model's primary key value and foreign model's column
-//            $col = $model->_object_name.'.'.$this->_has_one[$column]['foreign_key'];
-//            $val = $this->pk();
-//
-//            $model->where($col, '=', $val)->find();
-//
-//            return $this->_related[$column] = $model;
+            $model       = $this->_related($relation_alias);
+            $foreign_key = $this->_has_one[$relation_alias]['foreign_key'];
+
+            $this->join_on_model(
+                $model, $model->object_column($foreign_key), $this->primary_key(), $table_alias
+            );
         } elseif (isset($this->_has_many[$relation_alias])) {
             $model = \ORM::factory($this->_has_many[$relation_alias]['model']);
 
