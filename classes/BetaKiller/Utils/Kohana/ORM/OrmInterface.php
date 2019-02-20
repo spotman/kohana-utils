@@ -569,6 +569,14 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function filter_related($relation_name, OrmInterface $model);
 
     /**
+     * @param                                           $relation_name
+     * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface[] $models
+     *
+     * @return $this
+     */
+    public function filter_related_multiple($relation_name, array $models);
+
+    /**
      * @param string      $relation_alias
      * @param string      $table_alias
      *

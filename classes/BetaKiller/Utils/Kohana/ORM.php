@@ -296,6 +296,22 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
+     * @param                                             $relation_name
+     * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface[] $models
+     *
+     * @return $this
+     */
+    public function filter_related_multiple($relation_name, array $models)
+    {
+        $first = \reset($models);
+
+        return $this
+            ->join_related($relation_name)
+            ->where($first->object_primary_key(), 'IN', $models);
+    }
+
+
+    /**
      * @param string      $relation_alias
      * @param string      $table_alias
      *
