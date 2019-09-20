@@ -8,6 +8,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
     public const FORMAT_DATE     = 'Y-m-d';
     public const FORMAT_DATETIME = 'Y-m-d H:i:s';
 
+    private $joinedRelated = [];
+
     public function belongs_to(array $config = null): array
     {
         if ($config) {
@@ -310,6 +312,21 @@ class ORM extends \Kohana_ORM implements OrmInterface
             ->where($first->object_primary_key(), 'IN', $models);
     }
 
+    /**
+     * Clears query builder.  Passing FALSE is useful to keep the existing
+     * query conditions for another query.
+     *
+     * @param bool $next Pass FALSE to avoid resetting on the next call
+     *
+     * @return ORM
+     */
+    public function reset($next = true)
+    {
+        $this->joinedRelated = [];
+
+        return parent::reset($next);
+    }
+
 
     /**
      * @param string      $relation_alias
@@ -323,6 +340,15 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function join_related(string $relation_alias, string $table_alias = null, string $type = null)
     {
+        $key = $relation_alias.$table_alias;
+
+        // Prevent duplicate joins
+        if (isset($this->joinedRelated[$key])) {
+            return $this;
+        }
+
+        $this->joinedRelated[$key] = true;
+
         if (isset($this->_belongs_to[$relation_alias])) {
             $model       = $this->_related($relation_alias);
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
@@ -511,8 +537,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * Returns "label" for autocomplete formatter
      *
-     * @throws \Kohana_Exception
      * @return string
+     * @throws \Kohana_Exception
      */
     protected function autocomplete_formatter_label(): string
     {
@@ -648,8 +674,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * Checks whether a column value is unique.
      * Excludes itself if loaded.
      *
-     * @param   string   $field                the field to check for uniqueness
-     * @param   callable $additional_filtering Additional filtering callback
+     * @param string   $field                the field to check for uniqueness
+     * @param callable $additional_filtering Additional filtering callback
      *
      * @return  bool     whatever the value is unique
      */
