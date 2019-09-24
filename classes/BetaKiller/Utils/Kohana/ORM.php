@@ -104,7 +104,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         $model = $this->filter_primary_key($id)->find();
 
-        if (!$allow_missing && !$model->loaded()) {
+        $model = $model->loaded() ? $model : null;
+
+        if (!$allow_missing && !$model) {
             throw new \Kohana_Exception('Model with id :id does not exists', [':id' => $id]);
         }
 
