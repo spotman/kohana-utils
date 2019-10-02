@@ -762,9 +762,11 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        return $tz
+        $date = $tz
             ? \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $tz)
             : \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value);
+
+        return $date->setTime(0, 0, 0);
     }
 
     /**
@@ -811,7 +813,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         // Clear primary key
         $this->set($this->primary_key(), null);
         $this->_primary_key_value = null;
-        $this->_loaded = false;
+        $this->_loaded            = false;
 
         // Reset changes
         $this->_changed = array_merge(array_keys($this->_related), array_keys($this->_original_values));
