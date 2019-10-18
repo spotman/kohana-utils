@@ -723,27 +723,37 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        return $tz
-            ? \DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, $tz)
-            : \DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value);
+        $date = \DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, $this->getDbTimeZone());
+
+        if ($date === false) {
+            throw new \LogicException(
+                sprintf('Incorrect datetime format "%s" in %s.%s', $value, $this->table_name(), $name)
+            );
+        }
+
+        return $tz ? $date->setTimezone($tz) : $date;
     }
 
     /**
      * Sets value of MySQL datetime column from PHP DateTime object
      *
      * @param string             $name
-     * @param \DateTimeInterface $value
+     * @param \DateTimeImmutable $value
      *
      * @return $this
      */
-    protected function set_datetime_column_value(string $name, \DateTimeInterface $value)
+    protected function set_datetime_column_value(string $name, \DateTimeImmutable $value)
     {
-        return $this->set($name, $value->format(self::FORMAT_DATETIME));
+        return $this->set($name, $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME));
     }
 
-    public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator)
+    public function filter_datetime_column_value(string $name, \DateTimeImmutable $value, string $operator)
     {
-        return $this->where($name, $operator, $value->format(self::FORMAT_DATETIME));
+        return $this->where(
+            $name,
+            $operator,
+            $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME)
+        );
     }
 
     /**
@@ -762,9 +772,17 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        $date = $tz
-            ? \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $tz)
-            : \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value);
+        $date = \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $this->getDbTimeZone());
+
+        if ($date === false) {
+            throw new \LogicException(
+                sprintf('Incorrect date format "%s" in %s.%s', $value, $this->table_name(), $name)
+            );
+        }
+
+        if ($tz) {
+            $date = $date->setTimezone($tz);
+        }
 
         return $date->setTime(0, 0, 0);
     }
@@ -773,18 +791,28 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * Sets value of MySQL date column from PHP DateTime object
      *
      * @param string             $name
-     * @param \DateTimeInterface $value
+     * @param \DateTimeImmutable $value
      *
      * @return $this
      */
-    protected function set_date_column_value(string $name, \DateTimeInterface $value)
+    protected function set_date_column_value(string $name, \DateTimeImmutable $value)
     {
-        return $this->set($name, $value->format(self::FORMAT_DATE));
+        return $this->set($name, $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE));
     }
 
-    public function filter_date_column_value(string $name, \DateTimeInterface $value, string $operator)
+    protected function getDbTimeZone(): \DateTimeZone
     {
-        return $this->where($name, $operator, $value->format(self::FORMAT_DATE));
+        // Assume DB timezone is equal to PHP timezone
+        return new \DateTimeZone(\date_default_timezone_get());
+    }
+
+    public function filter_date_column_value(string $name, \DateTimeImmutable $value, string $operator)
+    {
+        return $this->where(
+            $name,
+            $operator,
+            $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE)
+        );
     }
 
     /**

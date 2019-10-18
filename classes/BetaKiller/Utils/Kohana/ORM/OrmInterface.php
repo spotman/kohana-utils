@@ -680,20 +680,20 @@ interface OrmInterface extends OrmQueryBuilderInterface
 
     /**
      * @param string             $name
-     * @param \DateTimeInterface $value
+     * @param \DateTimeImmutable $value
      * @param string             $operator
      *
      * @return $this
      */
-    public function filter_datetime_column_value(string $name, \DateTimeInterface $value, string $operator);
+    public function filter_datetime_column_value(string $name, \DateTimeImmutable $value, string $operator);
 
     /**
      * @param string             $name
-     * @param \DateTimeInterface $value
+     * @param \DateTimeImmutable $value
      * @param string             $operator
      *
      * @return $this
      */
-    public function filter_date_column_value(string $name, \DateTimeInterface $value, string $operator);
+    public function filter_date_column_value(string $name, \DateTimeImmutable $value, string $operator);
 
 }
