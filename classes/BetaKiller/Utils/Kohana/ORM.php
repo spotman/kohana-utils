@@ -825,27 +825,4 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         return static::factory($name ?: $this->object_name(), $pk);
     }
-
-    /**
-     * When an object is cloned, PHP 5 will perform a shallow copy of all of the object's properties.
-     * Any properties that are references to other variables, will remain references.
-     * Once the cloning is complete, if a __clone() method is defined,
-     * then the newly created object's __clone() method will be called, to allow any necessary properties that need to be changed.
-     * NOT CALLABLE DIRECTLY.
-     *
-     * @return void
-     * @link https://php.net/manual/en/language.oop5.cloning.php
-     */
-    public function __clone()
-    {
-        // Clear primary key
-        $this->set($this->primary_key(), null);
-        $this->_primary_key_value = null;
-        $this->_loaded            = false;
-
-        // Reset changes
-        $this->_changed = array_merge(array_keys($this->_related), array_keys($this->_original_values));
-
-        throw new \LogicException('ORM::__clone() is incomplete');
-    }
 }
