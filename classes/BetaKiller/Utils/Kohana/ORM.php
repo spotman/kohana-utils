@@ -392,7 +392,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                     $model->table_name(),
                     $this->_has_many[$relation_alias]['foreign_key'],
                     $this->object_name().'.'.$this->primary_key(),
-                    $table_alias ?: $model->object_name()
+                    $table_alias ?: $relation_alias
                 );
             }
         } else {
