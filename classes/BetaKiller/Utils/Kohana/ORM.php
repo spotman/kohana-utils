@@ -825,4 +825,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         return static::factory($name ?: $this->object_name(), $pk);
     }
+
+    /**
+     * @param array $columns
+     */
+    protected function serialize_columns(array $columns)
+    {
+        $this->_serialize_columns = $columns;
+    }
 }
