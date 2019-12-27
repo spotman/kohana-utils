@@ -570,6 +570,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function compile(bool $buildSelect = null): string
     {
+        // Required for complex selects with GROUP BY and WHERE on related entities
         if ($buildSelect ?? true) {
             if (!empty($this->_load_with)) {
                 foreach ($this->_load_with as $alias) {
@@ -579,6 +580,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             }
 
             $this->_build_custom_select();
+            $this->select_all_columns();
         }
 
         return $this->_db_builder->compile($this->_db);
