@@ -570,7 +570,16 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function compile(bool $buildSelect = null): string
     {
-        ($buildSelect ?? true) && $this->_build_custom_select();
+        if ($buildSelect ?? true) {
+            if (!empty($this->_load_with)) {
+                foreach ($this->_load_with as $alias) {
+                    // Bind auto relationships
+                    $this->with($alias);
+                }
+            }
+
+            $this->_build_custom_select();
+        }
 
         return $this->_db_builder->compile($this->_db);
     }
@@ -596,6 +605,17 @@ class ORM extends \Kohana_ORM implements OrmInterface
         $result = $query->execute($this->_db);
 
         return (int)$result->get('total');
+    }
+
+    /**
+     * Count the number of records in the table.
+     *
+     * @return integer
+     */
+    public function count_all()
+    {
+        // Allow counting complex queries with GROUP BY
+        return $this->compile_as_subquery_and_count_all();
     }
 
     /**
