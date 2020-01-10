@@ -15,7 +15,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @chainable
      *
-     * @param   boolean $force Force reloading
+     * @param boolean $force Force reloading
      *
      * @return  ORM
      */
@@ -40,7 +40,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * Checks if object data is set.
      *
-     * @param  string $column Column name
+     * @param string $column Column name
      *
      * @return boolean
      */
@@ -49,7 +49,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * Unsets object data.
      *
-     * @param  string $column Column name
+     * @param string $column Column name
      *
      * @return void
      */
@@ -93,7 +93,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Handles retrieval of all model values, relationships, and metadata.
      * [!!] This should not be overridden.
      *
-     * @param   string $column Column name
+     * @param string $column Column name
      *
      * @return  mixed
      */
@@ -103,10 +103,10 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Handles getting of column
      * Override this method to add custom get behavior
      *
-     * @param   string $column Column name
+     * @param string $column Column name
      *
-     * @throws Exception
      * @return mixed|OrmInterface
+     * @throws Exception
      */
     public function get($column);
 
@@ -114,8 +114,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Base set method.
      * [!!] This should not be overridden.
      *
-     * @param  string $column Column name
-     * @param  mixed  $value  Column value
+     * @param string $column Column name
+     * @param mixed  $value  Column value
      *
      * @return void
      */
@@ -125,11 +125,11 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Handles setting of columns
      * Override this method to add custom set behavior
      *
-     * @param  string $column Column name
-     * @param  mixed  $value  Column value
+     * @param string $column Column name
+     * @param mixed  $value  Column value
      *
-     * @throws Exception
      * @return $this
+     * @throws Exception
      */
     public function set($column, $value);
 
@@ -137,8 +137,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Set values from an array with support for one-one relationships.  This method should be used
      * for loading in post data, etc.
      *
-     * @param  array $values   Array of column => val
-     * @param  array $expected Array of keys to take from $values
+     * @param array $values   Array of column => val
+     * @param array $expected Array of keys to take from $values
      *
      * @return $this
      */
@@ -156,7 +156,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Binds another one-to-one object to this model.  One-to-one objects
      * can be nested using 'object1:object2' syntax
      *
-     * @param  string $target_path Target model to bind to
+     * @param string $target_path Target model to bind to
      *
      * @return $this
      */
@@ -187,20 +187,20 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * Validates the current model's data
      *
-     * @param  Validation $extra_validation Validation object
+     * @param Validation $extra_validation Validation object
      *
-     * @throws ORM_Validation_Exception
      * @return ORM
+     * @throws ORM_Validation_Exception
      */
     public function check(Validation $extra_validation = null);
 
     /**
      * Insert a new object to the database
      *
-     * @param  Validation $validation Validation object
+     * @param Validation $validation Validation object
      *
-     * @throws Exception
      * @return $this
+     * @throws Exception
      */
     public function create(Validation $validation = null);
 
@@ -209,11 +209,11 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @chainable
      *
-     * @param  Validation $validation Validation object
+     * @param Validation $validation Validation object
      *
-     * @throws \Kohana_Exception
-     * @throws \ORM_Validation_Exception
      * @return $this
+     * @throws \ORM_Validation_Exception
+     * @throws \Kohana_Exception
      */
     public function update(Validation $validation = null);
 
@@ -222,7 +222,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @chainable
      *
-     * @param  Validation $validation Validation object
+     * @param Validation $validation Validation object
      *
      * @return $this
      * @throws \ORM_Validation_Exception
@@ -233,8 +233,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Deletes a single record while ignoring relationships.
      *
      * @chainable
-     * @throws \Kohana_Exception
      * @return $this
+     * @throws \Kohana_Exception
      */
     public function delete();
 
@@ -253,8 +253,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Check if $model has any roles
      *     $model->has('roles')
      *
-     * @param  string $alias    Alias of the has_many "through" relationship
-     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     * @param string $alias    Alias of the has_many "through" relationship
+     * @param mixed  $far_keys Related model, primary key, or an array of primary keys
      *
      * @return boolean
      */
@@ -274,8 +274,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Check if $model has any roles
      *     $model->has('roles')
      *
-     * @param  string $alias    Alias of the has_many "through" relationship
-     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     * @param string $alias    Alias of the has_many "through" relationship
+     * @param mixed  $far_keys Related model, primary key, or an array of primary keys
      *
      * @return boolean
      */
@@ -294,8 +294,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Counts the number roles attached to $model
      *     $model->has('roles')
      *
-     * @param  string $alias    Alias of the has_many "through" relationship
-     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     * @param string $alias    Alias of the has_many "through" relationship
+     * @param mixed  $far_keys Related model, primary key, or an array of primary keys
      *
      * @return integer
      */
@@ -311,8 +311,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Add multiple roles (for example, from checkboxes on a form)
      *     $model->add('roles', array(1, 2, 3, 4));
      *
-     * @param  string $alias    Alias of the has_many "through" relationship
-     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     * @param string $alias    Alias of the has_many "through" relationship
+     * @param mixed  $far_keys Related model, primary key, or an array of primary keys
      *
      * @return $this
      */
@@ -330,8 +330,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *     // Remove all related roles
      *     $model->remove('roles');
      *
-     * @param  string $alias    Alias of the has_many "through" relationship
-     * @param  mixed  $far_keys Related model, primary key, or an array of primary keys
+     * @param string $alias    Alias of the has_many "through" relationship
+     * @param mixed  $far_keys Related model, primary key, or an array of primary keys
      *
      * @return ORM
      */
@@ -434,8 +434,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * Set the value of a parameter in the query.
      *
-     * @param   string $param parameter key to replace
-     * @param   mixed  $value value to use
+     * @param string $param parameter key to replace
+     * @param mixed  $value value to use
      *
      * @return  $this
      */
@@ -445,8 +445,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Checks whether a column value is unique.
      * Excludes itself if loaded.
      *
-     * @param   string $field the field to check for uniqueness
-     * @param   mixed  $value the value to check for uniqueness
+     * @param string $field the field to check for uniqueness
+     * @param mixed  $value the value to check for uniqueness
      *
      * @return  bool     whteher the value is unique
      */
@@ -569,7 +569,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function filter_related($relation_name, OrmInterface $model);
 
     /**
-     * @param                                           $relation_name
+     * @param                                             $relation_name
      * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface[] $models
      *
      * @return $this
@@ -646,8 +646,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * Checks whether a column value is unique.
      * Excludes itself if loaded.
      *
-     * @param   string   $field                the field to check for uniqueness
-     * @param   callable $additional_filtering Additional filtering callback
+     * @param string   $field                the field to check for uniqueness
+     * @param callable $additional_filtering Additional filtering callback
      *
      * @return  bool     whatever the value is unique
      */
@@ -689,6 +689,19 @@ interface OrmInterface extends OrmQueryBuilderInterface
 
     /**
      * @param string             $name
+     * @param \DateTimeImmutable $from
+     * @param \DateTimeImmutable $to
+     *
+     * @return $this
+     */
+    public function filter_datetime_column_value_between(
+        string $name,
+        \DateTimeImmutable $from,
+        \DateTimeImmutable $to
+    );
+
+    /**
+     * @param string             $name
      * @param \DateTimeImmutable $value
      * @param string             $operator
      *
@@ -696,4 +709,12 @@ interface OrmInterface extends OrmQueryBuilderInterface
      */
     public function filter_date_column_value(string $name, \DateTimeImmutable $value, string $operator);
 
+    /**
+     * @param string             $name
+     * @param \DateTimeImmutable $from
+     * @param \DateTimeImmutable $to
+     *
+     * @return $this
+     */
+    public function filter_date_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to);
 }

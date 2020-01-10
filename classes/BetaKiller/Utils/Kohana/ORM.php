@@ -766,16 +766,17 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     protected function set_datetime_column_value(string $name, \DateTimeImmutable $value)
     {
-        return $this->set($name, $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME));
+        return $this->set($name, $this->formatDateTime($value));
     }
 
     public function filter_datetime_column_value(string $name, \DateTimeImmutable $value, string $operator)
     {
-        return $this->where(
-            $name,
-            $operator,
-            $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME)
-        );
+        return $this->where($name, $operator, $this->formatDateTime($value));
+    }
+
+    public function filter_datetime_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to)
+    {
+        return $this->where($name, 'BETWEEN', [$this->formatDateTime($from), $this->formatDateTime($to)]);
     }
 
     /**
@@ -819,7 +820,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     protected function set_date_column_value(string $name, \DateTimeImmutable $value)
     {
-        return $this->set($name, $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE));
+        return $this->set($name, $this->formatDate($value));
     }
 
     protected function getDbTimeZone(): \DateTimeZone
@@ -830,11 +831,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function filter_date_column_value(string $name, \DateTimeImmutable $value, string $operator)
     {
-        return $this->where(
-            $name,
-            $operator,
-            $value->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE)
-        );
+        return $this->where($name, $operator, $this->formatDate($value));
+    }
+
+    public function filter_date_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to)
+    {
+        return $this->where($name, 'BETWEEN', [$this->formatDate($from), $this->formatDate($to)]);
     }
 
     /**
@@ -854,5 +856,15 @@ class ORM extends \Kohana_ORM implements OrmInterface
     protected function serialize_columns(array $columns)
     {
         $this->_serialize_columns = $columns;
+    }
+
+    private function formatDateTime(\DateTimeImmutable $dateTime): string
+    {
+        return $dateTime->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME);
+    }
+
+    private function formatDate(\DateTimeImmutable $date): string
+    {
+        return $date->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE);
     }
 }
