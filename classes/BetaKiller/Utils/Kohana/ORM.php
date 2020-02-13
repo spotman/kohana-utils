@@ -158,14 +158,20 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string $name
-     * @param array  $sequence
+     * @param string    $name
+     * @param array     $sequence
+     *
+     * @param bool|null $unknownFirst
      *
      * @return $this|OrmInterface
      */
-    public function order_by_field_sequence(string $name, array $sequence)
+    public function order_by_field_sequence(string $name, array $sequence, bool $unknownFirst = null)
     {
-        return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $sequence).'")'), 'ASC');
+        // Mysql marks unknown as "zero"
+        $direction = $unknownFirst ? 'asc' : 'desc';
+        $values = $unknownFirst ? $sequence : \array_reverse($sequence);
+
+        return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $values).'")'), $direction);
     }
 
     /**

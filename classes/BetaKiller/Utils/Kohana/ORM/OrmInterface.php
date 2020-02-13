@@ -524,12 +524,14 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function randomize();
 
     /**
-     * @param string $name
-     * @param array  $sequence
+     * @param string    $name
+     * @param array     $sequence
+     *
+     * @param bool|null $unknownFirst
      *
      * @return $this
      */
-    public function order_by_field_sequence(string $name, array $sequence);
+    public function order_by_field_sequence(string $name, array $sequence, bool $unknownFirst = null);
 
     /**
      * Returns TRUE if column exists in database
