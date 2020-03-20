@@ -169,7 +169,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         // Mysql marks unknown as "zero"
         $direction = $unknownFirst ? 'asc' : 'desc';
-        $values = $unknownFirst ? $sequence : \array_reverse($sequence);
+        $values    = $unknownFirst ? $sequence : \array_reverse($sequence);
 
         return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $values).'")'), $direction);
     }
@@ -482,17 +482,25 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         if ($term) {
             // Split into words
-            $words = explode(' ', $term);
+            $words = explode(' ', mb_strtolower($term));
 
             // Make AND for every word
             foreach ($words as $word) {
-                $this->and_where_open();
+                $this->and_having_open();
 
                 foreach ($search_columns as $search_column) {
-                    $this->or_where($search_column, 'LIKE', '%'.$word.'%');
+                    if (\is_string($search_column)) {
+                        $search_column = $this->_db->quote_column($search_column);
+                    }
+
+                    $this->or_having(
+                        \DB::expr(sprintf('LOWER(%s)', $search_column)),
+                        'LIKE',
+                        '%'.$word.'%'
+                    );
                 }
 
-                $this->and_where_close();
+                $this->and_having_close();
             }
         }
 
