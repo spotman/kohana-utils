@@ -481,8 +481,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
     public function search_query($term, array $search_columns)
     {
         if ($term) {
+            // Keep term lowercase to simplify search on case-sensitive encodings
+            $term = mb_strtolower($term);
+
             // Split into words
-            $words = explode(' ', mb_strtolower($term));
+            $words = explode(' ', $term);
+
+            // Search for full term too
+            $words[] = $term;
 
             // Make AND for every word
             foreach ($words as $word) {
