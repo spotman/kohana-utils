@@ -7,6 +7,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
 {
     public const FORMAT_DATE     = 'Y-m-d';
     public const FORMAT_DATETIME = 'Y-m-d H:i:s';
+    public const REL_SEP         = ':';
+    public const COL_SEP         = '.';
 
     private $joinedRelated = [];
 
@@ -302,7 +304,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         return $this
             ->join_related($relation_name)
-            ->where($model->object_primary_key(), '=', $model->pk());
+            ->where($relation_name.self::COL_SEP.$model->primary_key(), '=', $model->pk());
     }
 
     /**
@@ -317,7 +319,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
         return $this
             ->join_related($relation_name)
-            ->where($first->object_primary_key(), 'IN', $models);
+            ->where($relation_name.self::COL_SEP.$first->primary_key(), 'IN', $models);
     }
 
     /**
@@ -390,7 +392,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                         $model->table_name(),
                         $model->primary_key(),
                         $through_table_alias.'.'.$this->_has_many[$relation_alias]['far_key'],
-                        $table_alias ?: $model->object_name()
+                        $table_alias ?: $relation_alias
                     );
             } else {
                 // Simple has_many relationship, search where target model's foreign key is this model's primary key
@@ -488,7 +490,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
             $words = explode(' ', $term);
 
             // Search for full term too
-            $words[] = $term;
+            if (count($words) > 1) {
+                $words[] = $term;
+            }
 
             // Make AND for every word
             foreach ($words as $word) {
