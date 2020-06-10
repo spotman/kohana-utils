@@ -357,6 +357,11 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return $this;
         }
 
+        // Already joined via "load_with" (proceed join if table alias is defined)
+        if (in_array($key, $this->_load_with, true)) {
+            return $this;
+        }
+
         $this->joinedRelated[$key] = true;
 
         if (isset($this->_belongs_to[$relation_alias])) {
