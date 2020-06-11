@@ -133,7 +133,7 @@ interface OrmQueryBuilderInterface
     /**
      * Adds addition tables to "JOIN ...".
      *
-     * @param   mixed  $table column name or array($column, $alias) or object
+     * @param   mixed  $table table name or array($table, $alias) or object
      * @param   string $type  join type (LEFT, RIGHT, INNER, etc)
      *
      * @return  $this
