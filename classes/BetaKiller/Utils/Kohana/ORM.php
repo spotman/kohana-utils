@@ -494,6 +494,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
             // Split into words
             $words = explode(' ', $term);
 
+            if ($words === false) {
+                throw new \InvalidArgumentException();
+            }
+
             // Search for full term too
             if (count($words) > 1) {
                 $words[] = $term;
