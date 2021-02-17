@@ -296,15 +296,25 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * @param                                           $relation_name
      * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface $model
+     * @param bool|null                                 $or
      *
      * @return $this
      * @throws \Kohana_Exception
      */
-    public function filter_related($relation_name, OrmInterface $model)
+    public function filter_related($relation_name, OrmInterface $model, bool $or = null)
     {
-        return $this
-            ->join_related($relation_name)
-            ->where($relation_name.self::COL_SEP.$model->primary_key(), '=', $model->pk());
+        $col = $relation_name.self::COL_SEP.$model->primary_key();
+        $id  = $model->pk();
+
+        $this->join_related($relation_name);
+
+        if ($or) {
+            $this->or_where($col, '=', $id);
+        } else {
+            $this->and_where($col, '=', $id);
+        }
+
+        return $this;
     }
 
     /**

@@ -565,10 +565,11 @@ interface OrmInterface extends OrmQueryBuilderInterface
     /**
      * @param                                           $relation_name
      * @param \BetaKiller\Utils\Kohana\ORM\OrmInterface $model
+     * @param bool|null                                 $or
      *
      * @return $this
      */
-    public function filter_related($relation_name, OrmInterface $model);
+    public function filter_related($relation_name, OrmInterface $model, bool $or = null);
 
     /**
      * @param                                             $relation_name
