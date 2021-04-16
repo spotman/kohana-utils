@@ -68,7 +68,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function isEqualTo(OrmInterface $model): bool
     {
-        return ($this->table_name() === $model->table_name()) && ($this->pk() === $model->pk());
+        return ($this->table_name() === $model->table_name())
+            && $this->pk() && $model->pk()
+            && ($this->pk() === $model->pk());
     }
 
     /**
