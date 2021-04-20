@@ -370,7 +370,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         }
 
         // Already joined via "load_with" (proceed join if table alias is defined)
-        if (in_array($key, $this->_load_with, true)) {
+        if (in_array($key, $this->_load_with, true) && !$this->isToManyAlias($relation_alias)) {
             return $this;
         }
 
@@ -617,11 +617,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         // Required for complex selects with GROUP BY and WHERE on related entities
         if ($buildSelect ?? true) {
-            if (!empty($this->_load_with)) {
-                foreach ($this->_load_with as $alias) {
-                    // Bind auto relationships
-                    $this->with($alias);
+            foreach ($this->_load_with as $alias) {
+                // Skip *-to-many aliases
+                if ($this->isToManyAlias($alias)) {
+                    continue;
                 }
+
+                // Bind auto relationships
+                $this->with($alias);
             }
 
             $this->_build_custom_select();
