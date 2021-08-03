@@ -817,9 +817,15 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this->set($name, $this->formatDateTime($value));
     }
 
-    public function filter_datetime_column_value(string $name, \DateTimeImmutable $value, string $operator)
-    {
-        return $this->where($name, $operator, $this->formatDateTime($value));
+    public function filter_datetime_column_value(
+        string             $name,
+        \DateTimeImmutable $value,
+        string             $operator,
+        bool               $or = null
+    ) {
+        return $or
+            ? $this->or_where($name, $operator, $this->formatDateTime($value))
+            : $this->and_where($name, $operator, $this->formatDateTime($value));
     }
 
     public function filter_datetime_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to)

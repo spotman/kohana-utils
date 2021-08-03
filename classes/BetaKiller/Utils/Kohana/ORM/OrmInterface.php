@@ -682,13 +682,19 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function search_query($term, array $search_columns);
 
     /**
-     * @param string             $name
+     * @param string $name
      * @param \DateTimeImmutable $value
-     * @param string             $operator
+     * @param string $operator
+     * @param bool|null $or
      *
      * @return $this
      */
-    public function filter_datetime_column_value(string $name, \DateTimeImmutable $value, string $operator);
+    public function filter_datetime_column_value(
+        string             $name,
+        \DateTimeImmutable $value,
+        string             $operator,
+        bool               $or = null
+    );
 
     /**
      * @param string             $name
