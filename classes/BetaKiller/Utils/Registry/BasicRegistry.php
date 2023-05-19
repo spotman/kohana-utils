@@ -15,7 +15,7 @@ class BasicRegistry implements \IteratorAggregate
      *
      * @return \Traversable|mixed[]
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->registry);
     }
