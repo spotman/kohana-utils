@@ -613,10 +613,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this->_db_builder->execute($this->_db);
     }
 
-    public function compile(bool $buildSelect = null): string
+    public function compile(int $buildType = null): string
     {
         // Required for complex selects with GROUP BY and WHERE on related entities
-        if ($buildSelect ?? true) {
+        if ($buildType === null) {
             foreach ($this->_load_with as $alias) {
                 // Skip *-to-many aliases
                 if ($this->isToManyAlias($alias)) {
@@ -629,6 +629,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
             $this->_build_custom_select();
             $this->select_all_columns();
+        } elseif ($buildType === \Database::SELECT) {
+            $this->_build_custom_select();
+        } else {
+            $this->_build($buildType);
         }
 
         return $this->_db_builder->compile($this->_db);
@@ -639,6 +643,11 @@ class ORM extends \Kohana_ORM implements OrmInterface
         $this->_db_builder->select_array($this->_build_select());
 
         return $this;
+    }
+
+    public function compile_as_subquery(): \Database_Expression
+    {
+        return \DB::expr('('.$this->compile(\Database::SELECT).')');
     }
 
     /**
