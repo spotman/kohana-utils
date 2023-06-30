@@ -12,6 +12,16 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     private $joinedRelated = [];
 
+    public static function col(string $t, string $c): string
+    {
+        return $t.self::COL_SEP.$c;
+    }
+
+    public static function rel(string $r, string $c): string
+    {
+        return $r.self::REL_SEP.$c;
+    }
+
     public function belongs_to(array $config = null): array
     {
         if ($config) {
