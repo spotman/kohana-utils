@@ -374,6 +374,8 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return $this;
         }
 
+        $joinAlias = $table_alias ?: $relation_alias;
+
         $this->joinedRelated[$key] = true;
 
         if (isset($this->_belongs_to[$relation_alias])) {
@@ -381,14 +383,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
             $this->join_on_model(
-                $model, $model->primary_key(), $this->object_column($foreign_key), $table_alias
+                $model, $model->primary_key(), $this->object_column($foreign_key), $joinAlias
             );
         } elseif (isset($this->_has_one[$relation_alias])) {
             $model       = $this->_related($relation_alias);
             $foreign_key = $this->_has_one[$relation_alias]['foreign_key'];
 
             $this->join_on_model(
-                $model, $model->object_column($foreign_key), $this->primary_key(), $table_alias
+                $model, $model->object_column($foreign_key), $this->primary_key(), $joinAlias
             );
         } elseif (isset($this->_has_many[$relation_alias])) {
             $model = \ORM::factory($this->_has_many[$relation_alias]['model']);
@@ -409,7 +411,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                         $model->table_name(),
                         $model->primary_key(),
                         $through_table_alias.'.'.$this->_has_many[$relation_alias]['far_key'],
-                        $table_alias ?: $relation_alias
+                        $joinAlias
                     );
             } else {
                 // Simple has_many relationship, search where target model's foreign key is this model's primary key
@@ -417,7 +419,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
                     $model->table_name(),
                     $this->_has_many[$relation_alias]['foreign_key'],
                     $this->object_name().'.'.$this->primary_key(),
-                    $table_alias ?: $relation_alias
+                    $joinAlias
                 );
             }
         } else {
