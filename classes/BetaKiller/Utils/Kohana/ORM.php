@@ -17,9 +17,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $t.self::COL_SEP.$c;
     }
 
-    public static function rel(string $r, string $c): string
+    public static function rel(...$items): string
     {
-        return $r.self::REL_SEP.$c;
+        return implode(self::REL_SEP, $items);
     }
 
     public function belongs_to(array $config = null): array
