@@ -1,6 +1,7 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
+use BetaKiller\Utils\Kohana\ORM\Database_Expression;
 use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 
 class ORM extends \Kohana_ORM implements OrmInterface
@@ -839,10 +840,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     public function filter_datetime_column_value(
-        string             $name,
-        \DateTimeImmutable $value,
-        string             $operator,
-        bool               $or = null
+        \Database_Expression|string $name,
+        \DateTimeImmutable         $value,
+        string                     $operator,
+        bool                       $or = null
     ) {
         return $or
             ? $this->or_where($name, $operator, $this->formatDateTime($value))
