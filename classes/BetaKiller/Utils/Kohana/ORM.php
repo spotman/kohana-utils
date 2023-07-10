@@ -902,7 +902,13 @@ class ORM extends \Kohana_ORM implements OrmInterface
     protected function getDbTimeZone(): \DateTimeZone
     {
         // Assume DB timezone is equal to PHP timezone
-        return new \DateTimeZone(\date_default_timezone_get());
+        $tz = \date_default_timezone_get();
+
+        if (!$tz) {
+            throw new \LogicException('Missing default timezone for PHP');
+        }
+
+        return new \DateTimeZone($tz);
     }
 
     public function filter_date_column_value(string $name, \DateTimeImmutable $value, string $operator)
