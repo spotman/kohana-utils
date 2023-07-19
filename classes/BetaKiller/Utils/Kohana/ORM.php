@@ -1,8 +1,11 @@
 <?php
 namespace BetaKiller\Utils\Kohana;
 
-use BetaKiller\Utils\Kohana\ORM\Database_Expression;
 use BetaKiller\Utils\Kohana\ORM\OrmInterface;
+use Database_Expression;
+use DateTimeImmutable;
+use DateTimeZone;
+use LogicException;
 
 class ORM extends \Kohana_ORM implements OrmInterface
 {
@@ -658,7 +661,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this;
     }
 
-    public function compile_as_subquery(): \Database_Expression
+    public function compile_as_subquery(): Database_Expression
     {
         return \DB::expr('('.$this->compile(\Database::SELECT).')');
     }
@@ -807,7 +810,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return \DateTimeImmutable|null
      */
-    protected function get_datetime_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
+    protected function get_datetime_column_value($name, \DateTimeZone $tz = null): ?DateTimeImmutable
     {
         $value = $this->get($name);
 
@@ -815,10 +818,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        $date = \DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, $this->getDbTimeZone());
+        $date = DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, $this->getDbTimeZone());
 
         if ($date === false) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf('Incorrect datetime format "%s" in %s.%s', $value, $this->table_name(), $name)
             );
         }
@@ -834,23 +837,23 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return $this
      */
-    protected function set_datetime_column_value(string $name, \DateTimeImmutable $value)
+    protected function set_datetime_column_value(string $name, DateTimeImmutable $value)
     {
         return $this->set($name, $this->formatDateTime($value));
     }
 
     public function filter_datetime_column_value(
-        \Database_Expression|string $name,
-        \DateTimeImmutable         $value,
-        string                     $operator,
-        bool                       $or = null
+        Database_Expression|string $name,
+        DateTimeImmutable           $value,
+        string                      $operator,
+        bool                        $or = null
     ) {
         return $or
             ? $this->or_where($name, $operator, $this->formatDateTime($value))
             : $this->and_where($name, $operator, $this->formatDateTime($value));
     }
 
-    public function filter_datetime_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to)
+    public function filter_datetime_column_value_between(string $name, DateTimeImmutable $from, DateTimeImmutable $to)
     {
         return $this->where($name, 'BETWEEN', [$this->formatDateTime($from), $this->formatDateTime($to)]);
     }
@@ -863,7 +866,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return \DateTimeImmutable|null
      */
-    protected function get_date_column_value($name, \DateTimeZone $tz = null): ?\DateTimeImmutable
+    protected function get_date_column_value($name, DateTimeZone $tz = null): ?DateTimeImmutable
     {
         $value = $this->get($name);
 
@@ -871,10 +874,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        $date = \DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $this->getDbTimeZone());
+        $date = DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $this->getDbTimeZone());
 
         if ($date === false) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf('Incorrect date format "%s" in %s.%s', $value, $this->table_name(), $name)
             );
         }
@@ -894,29 +897,29 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return $this
      */
-    protected function set_date_column_value(string $name, \DateTimeImmutable $value)
+    protected function set_date_column_value(string $name, DateTimeImmutable $value)
     {
         return $this->set($name, $this->formatDate($value));
     }
 
-    protected function getDbTimeZone(): \DateTimeZone
+    protected function getDbTimeZone(): DateTimeZone
     {
         // Assume DB timezone is equal to PHP timezone
         $tz = \date_default_timezone_get();
 
         if (!$tz) {
-            throw new \LogicException('Missing default timezone for PHP');
+            throw new LogicException('Missing default timezone for PHP');
         }
 
-        return new \DateTimeZone($tz);
+        return new DateTimeZone($tz);
     }
 
-    public function filter_date_column_value(string $name, \DateTimeImmutable $value, string $operator)
+    public function filter_date_column_value(string $name, DateTimeImmutable $value, string $operator)
     {
         return $this->where($name, $operator, $this->formatDate($value));
     }
 
-    public function filter_date_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to)
+    public function filter_date_column_value_between(string $name, DateTimeImmutable $from, DateTimeImmutable $to)
     {
         return $this->where($name, 'BETWEEN', [$this->formatDate($from), $this->formatDate($to)]);
     }
@@ -940,12 +943,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
         $this->_serialize_columns = $columns;
     }
 
-    private function formatDateTime(\DateTimeImmutable $dateTime): string
+    private function formatDateTime(DateTimeImmutable $dateTime): string
     {
         return $dateTime->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME);
     }
 
-    private function formatDate(\DateTimeImmutable $date): string
+    private function formatDate(DateTimeImmutable $date): string
     {
         return $date->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE);
     }
