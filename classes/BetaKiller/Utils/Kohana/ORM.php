@@ -3,6 +3,7 @@ namespace BetaKiller\Utils\Kohana;
 
 use BetaKiller\Utils\Kohana\ORM\OrmInterface;
 use Database_Expression;
+use Database_Result;
 use DateTimeImmutable;
 use DateTimeZone;
 use LogicException;
@@ -611,12 +612,21 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     /**
      * Creates custom SELECT query from current db builder queue
+     *
+     * @param array|null $columns
+     * @param bool|null  $useLoadWith
      */
-    protected function _build_custom_select()
+    public function custom_select(array $columns = null, bool $useLoadWith = null): static
     {
+        if ($useLoadWith) {
+            $this->use_load_with();
+        }
+
         $this->_build(\Database::SELECT);
 
-        $this->_db_builder->from([$this->_table_name, $this->_object_name]);
+        $this->_db_builder
+            ->select_array($columns ?? [])
+            ->from([$this->_table_name, $this->_object_name]);
 
         return $this;
     }
@@ -624,34 +634,34 @@ class ORM extends \Kohana_ORM implements OrmInterface
     /**
      * @return \Database_Result|int
      */
-    protected function _execute_query()
+    public function execute_query(): Database_Result|int
     {
         return $this->_db_builder->execute($this->_db);
     }
 
-    public function compile(int $buildType = null): string
+    public function compile(): string
     {
-        // Required for complex selects with GROUP BY and WHERE on related entities
-        if ($buildType === null) {
-            foreach ($this->_load_with as $alias) {
-                // Skip *-to-many aliases
-                if ($this->isToManyAlias($alias)) {
-                    continue;
-                }
+        return $this->_db_builder->compile($this->_db);
+    }
 
-                // Bind auto relationships
-                $this->with($alias);
+    /**
+     * Use all _load_with relations in current SELECT query
+     *
+     * @return $this
+     */
+    protected function use_load_with(): static
+    {
+        foreach ($this->_load_with as $alias) {
+            // Skip *-to-many aliases
+            if ($this->isToManyAlias($alias)) {
+                continue;
             }
 
-            $this->_build_custom_select();
-            $this->select_all_columns();
-        } elseif ($buildType === \Database::SELECT) {
-            $this->_build_custom_select();
-        } else {
-            $this->_build($buildType);
+            // Bind auto relationships
+            $this->with($alias);
         }
 
-        return $this->_db_builder->compile($this->_db);
+        return $this;
     }
 
     protected function select_all_columns()
@@ -663,7 +673,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function compile_as_subquery(): Database_Expression
     {
-        return \DB::expr('('.$this->compile(\Database::SELECT).')');
+        return \DB::expr('('.$this->compile().')');
     }
 
     /**
@@ -673,6 +683,10 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function compile_as_subquery_and_count_all(): int
     {
+        // Required for complex selects with GROUP BY and WHERE on related entities
+        // Select all columns
+        $this->custom_select($this->_build_select(), true);
+
         $sql = 'SELECT COUNT(*) AS total FROM ('.$this->compile().') AS x';
 
         $query = \DB::query(\Database::SELECT, $sql);
@@ -844,9 +858,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function filter_datetime_column_value(
         Database_Expression|string $name,
-        DateTimeImmutable           $value,
-        string                      $operator,
-        bool                        $or = null
+        DateTimeImmutable          $value,
+        string                     $operator,
+        bool                       $or = null
     ) {
         return $or
             ? $this->or_where($name, $operator, $this->formatDateTime($value))

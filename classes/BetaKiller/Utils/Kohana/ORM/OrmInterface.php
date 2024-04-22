@@ -3,6 +3,7 @@ namespace BetaKiller\Utils\Kohana\ORM;
 
 use BetaKiller\Exception;
 use BetaKiller\Utils\Kohana\ORM;
+use Database_Result;
 use ORM_Validation_Exception;
 use Validation;
 
@@ -590,11 +591,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function join_related(string $relation_alias, string $table_alias = null, string $type = null);
 
     /**
-     * @param int|null $buildType
-     *
      * @return string
      */
-    public function compile(int $buildType = null): string;
+    public function compile(): string;
 
     /**
      * @return \Database_Expression
@@ -688,17 +687,17 @@ interface OrmInterface extends OrmQueryBuilderInterface
 
     /**
      * @param \Database_Expression|string $name
-     * @param \DateTimeImmutable                                      $value
-     * @param string                                                  $operator
-     * @param bool|null                                               $or
+     * @param \DateTimeImmutable          $value
+     * @param string                      $operator
+     * @param bool|null                   $or
      *
      * @return $this
      */
     public function filter_datetime_column_value(
         \Database_Expression|string $name,
-        \DateTimeImmutable         $value,
-        string                     $operator,
-        bool                       $or = null
+        \DateTimeImmutable          $value,
+        string                      $operator,
+        bool                        $or = null
     );
 
     /**
@@ -709,7 +708,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @return $this
      */
     public function filter_datetime_column_value_between(
-        string $name,
+        string             $name,
         \DateTimeImmutable $from,
         \DateTimeImmutable $to
     );
@@ -731,4 +730,8 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @return $this
      */
     public function filter_date_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to);
+
+    public function custom_select(array $columns = null, bool $useLoadWith = null): static;
+
+    public function execute_query(): Database_Result|int;
 }
