@@ -1,6 +1,8 @@
 <?php
 namespace BetaKiller\Utils\Kohana\Database\Query\Builder;
 
+use BetaKiller\Env\AppEnv;
+
 class Select extends \Kohana_Database_Query_Builder_Select {
     /**
      * Кеширует результаты запроса
@@ -15,7 +17,7 @@ class Select extends \Kohana_Database_Query_Builder_Select {
      */
     public function cached($lifetime = NULL, $force = FALSE)
     {
-        if (\Kohana::$environment !== \Kohana::PRODUCTION) {
+        if (!AppEnv::instance()->isCachingEnabled()) {
             return $this;
         }
 
