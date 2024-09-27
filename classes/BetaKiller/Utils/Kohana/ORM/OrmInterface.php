@@ -628,9 +628,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * relationships that have been created with other objects.
      *
      * @chainable
-     * @return  ORM
+     * @return  int
      */
-    public function delete_all();
+    public function delete_all(): int;
 
     /**
      * Get field alias for CONCAT(N) expression

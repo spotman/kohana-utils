@@ -759,15 +759,14 @@ class ORM extends \Kohana_ORM implements OrmInterface
      * relationships that have been created with other objects.
      *
      * @chainable
-     * @return  ORM
+     * @return  int
+     * @throws \BetaKiller\Exception
      */
-    public function delete_all()
+    public function delete_all(): int
     {
         $this->_build(\Database::DELETE);
 
-        $this->_db_builder->execute($this->_db);
-
-        return $this->clear();
+        return $this->_db_builder->execute($this->_db);
     }
 
     /**
