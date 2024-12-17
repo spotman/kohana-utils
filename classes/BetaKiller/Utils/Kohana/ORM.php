@@ -831,7 +831,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        $date = DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, $this->getDbTimeZone());
+        $date = DateTimeImmutable::createFromFormat(self::FORMAT_DATETIME, $value, static::getDbTimeZone());
 
         if ($date === false) {
             throw new LogicException(
@@ -887,7 +887,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             return null;
         }
 
-        $date = DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, $this->getDbTimeZone());
+        $date = DateTimeImmutable::createFromFormat(self::FORMAT_DATE, $value, static::getDbTimeZone());
 
         if ($date === false) {
             throw new LogicException(
@@ -915,7 +915,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return $this->set($name, $this->formatDate($value));
     }
 
-    protected function getDbTimeZone(): DateTimeZone
+    public static function getDbTimeZone(): DateTimeZone
     {
         // Assume DB timezone is equal to PHP timezone
         $tz = \getenv('DATABASE_TIMEZONE') ?: \date_default_timezone_get();
@@ -958,11 +958,11 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     private function formatDateTime(DateTimeImmutable $dateTime): string
     {
-        return $dateTime->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATETIME);
+        return $dateTime->setTimezone(static::getDbTimeZone())->format(self::FORMAT_DATETIME);
     }
 
     private function formatDate(DateTimeImmutable $date): string
     {
-        return $date->setTimezone($this->getDbTimeZone())->format(self::FORMAT_DATE);
+        return $date->setTimezone(static::getDbTimeZone())->format(self::FORMAT_DATE);
     }
 }
