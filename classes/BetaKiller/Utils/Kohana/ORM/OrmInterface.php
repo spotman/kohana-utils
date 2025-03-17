@@ -161,7 +161,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      *
      * @return $this
      */
-    public function with($target_path);
+    public function with(string $target_path, bool $select = null);
 
 
     /**
@@ -731,7 +731,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      */
     public function filter_date_column_value_between(string $name, \DateTimeImmutable $from, \DateTimeImmutable $to);
 
-    public function custom_select(array $columns = null, bool $useLoadWith = null): static;
+    public function custom_select(array $columns = null, bool $joinWith = null, bool $selectWith = null): static;
 
     public function execute_query(): Database_Result|int;
 }

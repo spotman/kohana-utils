@@ -1,4 +1,5 @@
 <?php
+
 namespace BetaKiller\Utils\Kohana;
 
 use BetaKiller\Utils\Kohana\ORM\OrmInterface;
@@ -398,14 +399,20 @@ class ORM extends \Kohana_ORM implements OrmInterface
             $foreign_key = $this->_belongs_to[$relation_alias]['foreign_key'];
 
             $this->join_on_model(
-                $model, $model->primary_key(), $this->object_column($foreign_key), $joinAlias
+                $model,
+                $model->primary_key(),
+                $this->object_column($foreign_key),
+                $joinAlias
             );
         } elseif (isset($this->_has_one[$relation_alias])) {
             $model       = $this->_related($relation_alias);
             $foreign_key = $this->_has_one[$relation_alias]['foreign_key'];
 
             $this->join_on_model(
-                $model, $model->object_column($foreign_key), $this->primary_key(), $joinAlias
+                $model,
+                $model->object_column($foreign_key),
+                $this->primary_key(),
+                $joinAlias
             );
         } elseif (isset($this->_has_many[$relation_alias])) {
             $model = \ORM::factory($this->_has_many[$relation_alias]['model']);
@@ -606,20 +613,23 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     protected function autocomplete_formatter_label(): string
     {
-        throw new \Kohana_Exception('Implement :class::autocomplete_formatter_label() method',
-            [':class' => get_class($this)]);
+        throw new \Kohana_Exception(
+            'Implement :class::autocomplete_formatter_label() method',
+            [':class' => get_class($this)]
+        );
     }
 
     /**
      * Creates custom SELECT query from current db builder queue
      *
      * @param array|null $columns
-     * @param bool|null  $useLoadWith
+     * @param bool|null  $joinWith
+     * @param bool|null  $selectWith
      */
-    public function custom_select(array $columns = null, bool $useLoadWith = null): static
+    public function custom_select(array $columns = null, bool $joinWith = null, bool $selectWith = null): static
     {
-        if ($useLoadWith) {
-            $this->use_load_with();
+        if ($joinWith) {
+            $this->use_load_with($selectWith);
         }
 
         $this->_build(\Database::SELECT);
@@ -649,7 +659,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      *
      * @return $this
      */
-    protected function use_load_with(): static
+    protected function use_load_with(bool $selectWith = null): static
     {
         foreach ($this->_load_with as $alias) {
             // Skip *-to-many aliases
@@ -658,7 +668,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             }
 
             // Bind auto relationships
-            $this->with($alias);
+            $this->with($alias, $selectWith);
         }
 
         return $this;
@@ -685,7 +695,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         // Required for complex selects with GROUP BY and WHERE on related entities
         // Select all columns
-        $this->custom_select($this->_build_select(), true);
+        $this->custom_select($this->_build_select(), true, true);
 
         $sql = 'SELECT COUNT(*) AS total FROM ('.$this->compile().') AS x';
 
@@ -857,9 +867,9 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function filter_datetime_column_value(
         Database_Expression|string $name,
-        DateTimeImmutable          $value,
-        string                     $operator,
-        bool                       $or = null
+        DateTimeImmutable $value,
+        string $operator,
+        bool $or = null
     ) {
         return $or
             ? $this->or_where($name, $operator, $this->formatDateTime($value))
