@@ -963,7 +963,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     protected function serialize_columns(array $columns)
     {
-        $this->_serialize_coxlumns = array_merge($this->_serialize_columns, $columns);
+        $this->_serialize_columns = array_merge($this->_serialize_columns, $columns);
     }
 
     private function formatDateTime(DateTimeImmutable $dateTime): string
