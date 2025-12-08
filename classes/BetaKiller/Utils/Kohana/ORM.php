@@ -7,6 +7,7 @@ use Database_Expression;
 use Database_Result;
 use DateTimeImmutable;
 use DateTimeZone;
+use DB;
 use LogicException;
 
 class ORM extends \Kohana_ORM implements OrmInterface
@@ -174,7 +175,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     public function randomize()
     {
-        return $this->order_by(\DB::expr('RAND()'));
+        return $this->order_by(DB::expr('RAND()'));
     }
 
     /**
@@ -191,7 +192,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
         $direction = $unknownFirst ? 'asc' : 'desc';
         $values    = $unknownFirst ? $sequence : \array_reverse($sequence);
 
-        return $this->order_by(\DB::expr('FIELD('.$name.', "'.implode('", "', $values).'")'), $direction);
+        return $this->order_by(DB::expr('FIELD('.$name.', "'.implode('", "', $values).'")'), $direction);
     }
 
     /**
@@ -292,7 +293,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
     {
         $relation = $this->_get_relation($alias);
 
-        $query = \DB::update($relation->table_name())
+        $query = DB::update($relation->table_name())
             ->set([$this->_has_many[$alias]['foreign_key'] => $value])
             ->where($relation->primary_key(), 'IN', $far_keys);
 
@@ -516,12 +517,13 @@ class ORM extends \Kohana_ORM implements OrmInterface
     }
 
     /**
-     * @param string $term           String to search for
-     * @param array  $search_columns Columns to search where
+     * @param string    $term           String to search for
+     * @param array     $search_columns Columns to search where
+     * @param bool|null $having
      *
      * @return $this
      */
-    public function search_query($term, array $search_columns)
+    public function search_query($term, array $search_columns, bool $having = null)
     {
         if ($term) {
             // Keep term lowercase to simplify search on case-sensitive encodings
@@ -541,21 +543,33 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
             // Make AND for every word
             foreach ($words as $word) {
-                $this->and_having_open();
+                $having
+                    ? $this->and_having_open()
+                    : $this->and_where_open();
 
                 foreach ($search_columns as $search_column) {
                     if (\is_string($search_column)) {
                         $search_column = $this->_db->quote_column($search_column);
                     }
 
-                    $this->or_having(
-                        \DB::expr(sprintf('LOWER(%s)', $search_column)),
-                        'LIKE',
-                        '%'.$word.'%'
-                    );
+                    if ($having) {
+                        $this->or_having(
+                            DB::expr(sprintf('LOWER(%s)', $search_column)),
+                            'LIKE',
+                            '%'.$word.'%'
+                        );
+                    } else {
+                        $this->or_where(
+                            DB::expr(sprintf('LOWER(%s)', $search_column)),
+                            'LIKE',
+                            '%'.$word.'%'
+                        );
+                    }
                 }
 
-                $this->and_having_close();
+                $having
+                    ? $this->and_having_close()
+                    : $this->and_where_close();
             }
         }
 
@@ -683,7 +697,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function compile_as_subquery(): Database_Expression
     {
-        return \DB::expr('('.$this->compile().')');
+        return DB::expr('('.$this->compile().')');
     }
 
     /**
@@ -699,7 +713,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
         $sql = 'SELECT COUNT(*) AS total FROM ('.$this->compile().') AS x';
 
-        $query = \DB::query(\Database::SELECT, $sql);
+        $query = DB::query(\Database::SELECT, $sql);
 
         $result = $query->execute($this->_db);
 

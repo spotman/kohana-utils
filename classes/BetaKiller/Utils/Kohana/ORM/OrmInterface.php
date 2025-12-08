@@ -1,4 +1,5 @@
 <?php
+
 namespace BetaKiller\Utils\Kohana\ORM;
 
 use BetaKiller\Exception;
@@ -678,12 +679,13 @@ interface OrmInterface extends OrmQueryBuilderInterface
     public function autocomplete(string $term, array $search_fields, ?bool $as_key_label_pairs = null): array;
 
     /**
-     * @param string $term           String to search for
-     * @param array  $search_columns Columns to search where
+     * @param string    $term           String to search for
+     * @param array     $search_columns Columns to search where
+     * @param bool|null $having         Use HAVING instead of WHERE
      *
      * @return $this
      */
-    public function search_query($term, array $search_columns);
+    public function search_query($term, array $search_columns, bool $having = null);
 
     /**
      * @param \Database_Expression|string $name
@@ -695,9 +697,9 @@ interface OrmInterface extends OrmQueryBuilderInterface
      */
     public function filter_datetime_column_value(
         \Database_Expression|string $name,
-        \DateTimeImmutable          $value,
-        string                      $operator,
-        bool                        $or = null
+        \DateTimeImmutable $value,
+        string $operator,
+        bool $or = null
     );
 
     /**
@@ -708,7 +710,7 @@ interface OrmInterface extends OrmQueryBuilderInterface
      * @return $this
      */
     public function filter_datetime_column_value_between(
-        string             $name,
+        string $name,
         \DateTimeImmutable $from,
         \DateTimeImmutable $to
     );
