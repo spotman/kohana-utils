@@ -876,7 +876,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     protected function set_datetime_column_value(string $name, DateTimeImmutable $value)
     {
-        return $this->set($name, $this->formatDateTime($value));
+        return $this->set($name, static::formatDateTime($value));
     }
 
     public function filter_datetime_column_value(
@@ -886,13 +886,13 @@ class ORM extends \Kohana_ORM implements OrmInterface
         bool $or = null
     ) {
         return $or
-            ? $this->or_where($name, $operator, $this->formatDateTime($value))
-            : $this->and_where($name, $operator, $this->formatDateTime($value));
+            ? $this->or_where($name, $operator, static::formatDateTime($value))
+            : $this->and_where($name, $operator, static::formatDateTime($value));
     }
 
     public function filter_datetime_column_value_between(string $name, DateTimeImmutable $from, DateTimeImmutable $to)
     {
-        return $this->where($name, 'BETWEEN', [$this->formatDateTime($from), $this->formatDateTime($to)]);
+        return $this->where($name, 'BETWEEN', [static::formatDateTime($from), static::formatDateTime($to)]);
     }
 
     /**
@@ -936,7 +936,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
      */
     protected function set_date_column_value(string $name, DateTimeImmutable $value)
     {
-        return $this->set($name, $this->formatDate($value));
+        return $this->set($name, ORM::formatDate($value));
     }
 
     public static function getDbTimeZone(): DateTimeZone
@@ -953,12 +953,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
     public function filter_date_column_value(string $name, DateTimeImmutable $value, string $operator)
     {
-        return $this->where($name, $operator, $this->formatDate($value));
+        return $this->where($name, $operator, ORM::formatDate($value));
     }
 
     public function filter_date_column_value_between(string $name, DateTimeImmutable $from, DateTimeImmutable $to)
     {
-        return $this->where($name, 'BETWEEN', [$this->formatDate($from), $this->formatDate($to)]);
+        return $this->where($name, 'BETWEEN', [ORM::formatDate($from), ORM::formatDate($to)]);
     }
 
     /**
@@ -980,12 +980,12 @@ class ORM extends \Kohana_ORM implements OrmInterface
         $this->_serialize_columns = array_merge($this->_serialize_columns, $columns);
     }
 
-    private function formatDateTime(DateTimeImmutable $dateTime): string
+    public static function formatDateTime(DateTimeImmutable $dateTime): string
     {
         return $dateTime->setTimezone(static::getDbTimeZone())->format(self::FORMAT_DATETIME);
     }
 
-    private function formatDate(DateTimeImmutable $date): string
+    public static function formatDate(DateTimeImmutable $date): string
     {
         return $date->setTimezone(static::getDbTimeZone())->format(self::FORMAT_DATE);
     }
