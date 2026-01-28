@@ -241,6 +241,17 @@ class ORM extends \Kohana_ORM implements OrmInterface
         return isset($columns[$name]);
     }
 
+    public function hasPendingOrderBy(): bool
+    {
+        foreach ($this->_db_pending as $item) {
+            if ($item['name'] === 'order_by') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Связывает элементы алиаса (с указанными первичными ключами) с текущей моделью
      *
@@ -365,7 +376,6 @@ class ORM extends \Kohana_ORM implements OrmInterface
 
         return parent::reset($next);
     }
-
 
     /**
      * @param string      $relation_alias

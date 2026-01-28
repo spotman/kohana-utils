@@ -290,4 +290,11 @@ interface OrmQueryBuilderInterface
      * @return ORM
      */
     public function reset($next = true);
+
+    /**
+     * Returns TRUE if this query has at least one "ORDER BY" statement
+     *
+     * @return bool
+     */
+    public function hasPendingOrderBy(): bool;
 }
