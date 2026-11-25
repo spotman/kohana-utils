@@ -583,7 +583,7 @@ class ORM extends \Kohana_ORM implements OrmInterface
             }
         }
 
-        return $this->cached('search');
+        return $this; //->cached('search');
     }
 
     public function autocomplete(string $term, array $search_fields, ?bool $as_key_label_pairs = null): array
